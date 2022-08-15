@@ -101,6 +101,18 @@ public class PlayerPrefsWindow : EditorWindow
         }
 
     }
+
+    internal void Import(string importCompanyName, string importProductName)
+    {
+        registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + importCompanyName + "\\" + importProductName);
+        GetAllPlayerPrefs(true);
+        Debug.Log("import");
+        foreach (var pref in ImportedPlayerPrefs)
+        {
+            pref.Save();
+        }
+    }
+
     private PlayerPrefsType playerPrefsTypes;
 
     Texture refreshIcon;
@@ -115,6 +127,7 @@ public class PlayerPrefsWindow : EditorWindow
     string newValue;
 
     List<PlayerPrefPair> deserializedPlayerPrefs = new List<PlayerPrefPair>();
+    List<PlayerPrefPair> ImportedPlayerPrefs = new List<PlayerPrefPair>();
 
     // int[] typeList;
 
@@ -144,9 +157,17 @@ public class PlayerPrefsWindow : EditorWindow
 
         string retunValue = json;
 
-        if (json.TryParseJson(out Serialzer<object> t))
-        {
+        //Debug.Log(json);
 
+        if (String.IsNullOrEmpty(json))
+        {
+            playerPrefsType = PlayerPrefsType.String;
+            retunValue = json;
+            Debug.Log(key + " Is empty !");
+        }
+        else if (json.TryParseJson(out Serialzer<object> t))
+        {
+           // Debug.Log(json);
             playerPrefsType = t.type;
             switch (t.type)
             {
@@ -226,7 +247,7 @@ public class PlayerPrefsWindow : EditorWindow
     {
         bool outBool = false;
 
-       if(s == "True")
+        if (s == "True")
         {
             outBool = true;
         }
@@ -323,7 +344,7 @@ public class PlayerPrefsWindow : EditorWindow
         if (ColorUtility.TryParseHtmlString("#" + s, out Color _Color))
         {
             outColor = _Color;
-        } 
+        }
         else if (s.Contains("{"))
         {
             s = s.Replace("{", "");
@@ -338,7 +359,7 @@ public class PlayerPrefsWindow : EditorWindow
 
             var splitString = s.Split(","[0]);
 
-        
+
             //    // Build new Vector3 from array elements
 
             outColor.r = float.Parse(splitString[0]);
@@ -357,7 +378,7 @@ public class PlayerPrefsWindow : EditorWindow
             var splitString = s.Split(","[0]);
 
 
-        //    // Build new Vector3 from array elements
+            //    // Build new Vector3 from array elements
 
             outColor.r = float.Parse(splitString[0]);
             outColor.g = float.Parse(splitString[1]);
@@ -397,7 +418,10 @@ public class PlayerPrefsWindow : EditorWindow
 
         GetAllPlayerPrefs();
     }
+    public void ImportPlayerPres()
+    {
 
+    }
     // Called for rendering and handling GUI events
     void OnGUI()
     {
@@ -521,8 +545,10 @@ public class PlayerPrefsWindow : EditorWindow
     }
 
     // Gets all PlayerPrefs data that includes keys, values and types and adds them to arrays 
-    private void GetAllPlayerPrefs()
+    private void GetAllPlayerPrefs(bool isImport = false)
     {
+        if (registryKey == null) return;
+
         foreach (string item in registryKey.GetValueNames())
         {
 
@@ -562,12 +588,15 @@ public class PlayerPrefsWindow : EditorWindow
                         if (GetInt(key, -1) == -1 && GetInt(key, 0) == 0)
                         {
                             // Fetch the float value from PlayerPrefs in memory
-                            ambiguousValue = GetFloat(key);
+                            string ambiguousValueSTR = ambiguousValue.ToString();
+                            Debug.Log(ambiguousValueSTR);
+                            ambiguousValue = GetFloat(key,float.Parse(ambiguousValueSTR));
                             pair.type = PlayerPrefsType.Float;
                         }
                         else
                         {
                             pair.type = PlayerPrefsType.Int;
+                            ambiguousValue = GetInt(key, (int)ambiguousValue);
                         }
                         //else if (GetBool(key, true) != true || GetBool(key, false) != false)
                         //{
@@ -582,7 +611,7 @@ public class PlayerPrefsWindow : EditorWindow
 
                         PlayerPrefsType type = PlayerPrefsType.String;
 
-                        ambiguousValue = TryGetCostumeType(key, out type);
+                        ambiguousValue = TryGetCostumeType(key, out type, ambiguousValue.ToString());
 
                         pair.type = type;
 
@@ -598,8 +627,15 @@ public class PlayerPrefsWindow : EditorWindow
                     tempPlayerPrefs[i] = pair;// new PlayerPrefPair() { Key = key, Value = ambiguousValue };
                     i++;
                 }
+                if (isImport)
+                {
+                    ImportedPlayerPrefs = tempPlayerPrefs.ToList();
 
-                deserializedPlayerPrefs = tempPlayerPrefs.ToList();
+                }
+                else
+                {
+                    deserializedPlayerPrefs = tempPlayerPrefs.ToList();
+                }
                 // Return the results
                 // return tempPlayerPrefs;
             }
@@ -701,6 +737,8 @@ public class PlayerPrefsWindow : EditorWindow
     // Call this function when Import button clicked
     void Import()
     {
+        ImportPrefsWizard wizard = ScriptableWizard.DisplayWizard<ImportPrefsWizard>("Import PlayerPrefs", "Import");
+
         Debug.Log("Import PlayerPrefs");
     }
 
