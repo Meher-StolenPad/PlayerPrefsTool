@@ -32,7 +32,6 @@ public class ImportPrefsWizard : ScriptableWizard
 
     private void OnWizardCreate()
     {
-        Debug.Log("dzdz");
         if (Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow)).Length >= 1)
         {
             ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).Import(importCompanyName, importProductName);
