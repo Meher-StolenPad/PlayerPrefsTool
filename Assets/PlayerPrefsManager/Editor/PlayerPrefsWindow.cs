@@ -20,17 +20,6 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-public enum PlayerPrefsType
-{
-    Int,
-    Float,
-    String,
-    Vector2,
-    Vector3,
-    Vector4,
-    Color,
-    Bool
-}
 
 public class PlayerPrefsWindow : EditorWindow
 {
@@ -68,19 +57,19 @@ public class PlayerPrefsWindow : EditorWindow
                     PlayerPrefs.SetString(Key, Value.ToString());
                     break;
                 case PlayerPrefsType.Vector3:
-                    SetVector3(Key, StringToVector3(Value.ToString()));
+                    PrefsSerialzer.SetVector3(Key, PrefsSerialzer.StringToVector3(Value.ToString()));
                     break;
                 case PlayerPrefsType.Vector2:
-                    SetVector2(Key, StringToVector2(Value.ToString()));
+                    PrefsSerialzer.SetVector2(Key, PrefsSerialzer.StringToVector2(Value.ToString()));
                     break;
                 case PlayerPrefsType.Color:
-                    SetColor(Key, StringToColor(Value.ToString()));
+                    PrefsSerialzer.SetColor(Key, PrefsSerialzer.StringToColor(Value.ToString()));
                     break;
                 case PlayerPrefsType.Vector4:
-                    SetVector4(Key, StringToVector4(Value.ToString()));
+                    PrefsSerialzer.SetVector4(Key, PrefsSerialzer.StringToVector4(Value.ToString()));
                     break;
                 case PlayerPrefsType.Bool:
-                    SetBool(Key, StringToBool(Value.ToString()));
+                    PrefsSerialzer.SetBool(Key, PrefsSerialzer.StringToBool(Value.ToString()));
                     break;
                 default:
                     break;
@@ -104,11 +93,23 @@ public class PlayerPrefsWindow : EditorWindow
 
     internal void Import(string importCompanyName, string importProductName)
     {
+        string currentCompanyName = PlayerSettings.companyName;
+        string currentProductName = PlayerSettings.productName;
+
+        PlayerSettings.productName = importProductName;
+        PlayerSettings.companyName = importCompanyName;
+
         registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + importCompanyName + "\\" + importProductName);
-        GetAllPlayerPrefs(true);
+
+        GetAllPlayerPrefs();
+
+        PlayerSettings.productName = currentProductName;
+        PlayerSettings.companyName = currentCompanyName;
+
         Debug.Log("import");
-        foreach (var pref in ImportedPlayerPrefs)
+        foreach (var pref in deserializedPlayerPrefs)
         {
+            Debug.Log(pref.Key + ":" + pref.Value.ToString());
             pref.Save();
         }
     }
@@ -123,8 +124,8 @@ public class PlayerPrefsWindow : EditorWindow
 
 
     string searchText;
-    string newKey;
-    string newValue;
+    //string newKey;
+    //string newValue;
 
     List<PlayerPrefPair> deserializedPlayerPrefs = new List<PlayerPrefPair>();
     List<PlayerPrefPair> ImportedPlayerPrefs = new List<PlayerPrefPair>();
@@ -135,260 +136,6 @@ public class PlayerPrefsWindow : EditorWindow
     RegistryKey registryKey;
     string companyName;
     string productName;
-
-    private int GetInt(string key, int defaultValue = 0)
-    {
-        return PlayerPrefs.GetInt(key, defaultValue);
-    }
-
-    private float GetFloat(string key, float defaultValue = 0.0f)
-    {
-        return PlayerPrefs.GetFloat(key, defaultValue);
-    }
-
-    private string GetString(string key, string defaultValue = "")
-    {
-        return PlayerPrefs.GetString(key, defaultValue);
-    }
-
-    private object TryGetCostumeType(string key, out PlayerPrefsType playerPrefsType, string defaultValue = "")
-    {
-        string json = PlayerPrefs.GetString(key, defaultValue);
-
-        string retunValue = json;
-
-        //Debug.Log(json);
-
-        if (String.IsNullOrEmpty(json))
-        {
-            playerPrefsType = PlayerPrefsType.String;
-            retunValue = json;
-            Debug.Log(key + " Is empty !");
-        }
-        else if (json.TryParseJson(out Serialzer<object> t))
-        {
-           // Debug.Log(json);
-            playerPrefsType = t.type;
-            switch (t.type)
-            {
-                case PlayerPrefsType.Vector3:
-
-                    retunValue = t.value.ToString();
-                    break;
-                case PlayerPrefsType.Vector2:
-                    retunValue = t.value.ToString();
-                    break;
-                case PlayerPrefsType.Color:
-                    retunValue = t.value.ToString();
-                    break;
-                case PlayerPrefsType.Vector4:
-                    retunValue = t.value.ToString();
-                    break;
-                case PlayerPrefsType.Bool:
-                    retunValue = t.value.ToString();
-                    break;
-            }
-        }
-        else
-        {
-            playerPrefsType = PlayerPrefsType.String;
-            retunValue = json;
-        }
-        return retunValue;
-    }
-
-    public static void SetVector3(string key, Vector3 _value)
-    {
-        Serialzer<Vector3> serialzer = new Serialzer<Vector3>();
-        serialzer.type = PlayerPrefsType.Vector3;
-        serialzer.value = _value;
-
-        string jsonString = JsonUtility.ToJson(serialzer);
-
-        PlayerPrefs.SetString(key, jsonString);
-    }
-    public static Vector3 StringToVector3(string s)
-    {
-        Vector3 outVector3 = Vector3.zero;
-
-        if (s.Contains("{"))
-        {
-            outVector3 = JsonUtility.FromJson<Vector3>(s);
-        }
-        else
-        {
-            //Debug.Log(s);
-
-            s = s.Replace("(", "");
-            s = s.Replace(")", "");
-
-            var splitString = s.Split(","[0]);
-
-            // Build new Vector3 from array elements
-
-            outVector3.x = float.Parse(splitString[0]);
-            outVector3.y = float.Parse(splitString[1]);
-            outVector3.z = float.Parse(splitString[2]);
-        }
-
-        return outVector3;
-    }
-    public static void SetBool(string key, bool _value)
-    {
-        Serialzer<bool> serialzer = new Serialzer<bool>();
-        serialzer.type = PlayerPrefsType.Bool;
-        serialzer.value = _value;
-
-        string jsonString = JsonUtility.ToJson(serialzer);
-
-        PlayerPrefs.SetString(key, jsonString);
-    }
-    public static bool StringToBool(string s)
-    {
-        bool outBool = false;
-
-        if (s == "True")
-        {
-            outBool = true;
-        }
-        return outBool;
-    }
-    public static void SetVector2(string key, Vector2 _value)
-    {
-        Serialzer<Vector2> serialzer = new Serialzer<Vector2>();
-        serialzer.type = PlayerPrefsType.Vector2;
-        serialzer.value = _value;
-
-        string jsonString = JsonUtility.ToJson(serialzer);
-
-        PlayerPrefs.SetString(key, jsonString);
-    }
-    public static Vector3 StringToVector2(string s)
-    {
-        Vector2 outVector3 = Vector2.zero;
-
-        if (s.Contains("{"))
-        {
-            outVector3 = JsonUtility.FromJson<Vector2>(s);
-        }
-        else
-        {
-            //Debug.Log(s);
-
-            s = s.Replace("(", "");
-            s = s.Replace(")", "");
-
-            var splitString = s.Split(","[0]);
-
-            // Build new Vector3 from array elements
-
-            outVector3.x = float.Parse(splitString[0]);
-            outVector3.y = float.Parse(splitString[1]);
-        }
-
-        return outVector3;
-    }
-
-    public static void SetVector4(string key, Vector4 _value)
-    {
-        Serialzer<Vector4> serialzer = new Serialzer<Vector4>();
-        serialzer.type = PlayerPrefsType.Vector4;
-        serialzer.value = _value;
-
-        string jsonString = JsonUtility.ToJson(serialzer);
-
-        PlayerPrefs.SetString(key, jsonString);
-    }
-    public static Vector4 StringToVector4(string s)
-    {
-        Vector4 outVector3 = Vector4.zero;
-
-        if (s.Contains("{"))
-        {
-            outVector3 = JsonUtility.FromJson<Vector4>(s);
-        }
-        else
-        {
-            s = s.Replace("(", "");
-            s = s.Replace(")", "");
-
-            var splitString = s.Split(","[0]);
-
-            // Build new Vector3 from array elements
-
-            outVector3.x = float.Parse(splitString[0]);
-            outVector3.y = float.Parse(splitString[1]);
-            outVector3.z = float.Parse(splitString[2]);
-            outVector3.w = float.Parse(splitString[3]);
-        }
-
-        return outVector3;
-    }
-
-    public static void SetColor(string key, Color _value)
-    {
-        Serialzer<Color> serialzer = new Serialzer<Color>();
-
-        serialzer.type = PlayerPrefsType.Color;
-
-        serialzer.value = _value;
-
-        string jsonString = JsonUtility.ToJson(serialzer);
-
-        PlayerPrefs.SetString(key, jsonString);
-    }
-    public static Color StringToColor(string s)
-    {
-        Color outColor = Color.white;
-
-        if (ColorUtility.TryParseHtmlString("#" + s, out Color _Color))
-        {
-            outColor = _Color;
-        }
-        else if (s.Contains("{"))
-        {
-            s = s.Replace("{", "");
-            s = s.Replace("}", "");
-            s = s.Replace('"', ' ');
-            s = s.Replace("r", "");
-            s = s.Replace("g", "");
-            s = s.Replace("b", "");
-            s = s.Replace("a", "");
-            s = s.Replace(":", "");
-            s = s.Replace(" ", "");
-
-            var splitString = s.Split(","[0]);
-
-
-            //    // Build new Vector3 from array elements
-
-            outColor.r = float.Parse(splitString[0]);
-            outColor.g = float.Parse(splitString[1]);
-            outColor.b = float.Parse(splitString[2]);
-            outColor.a = float.Parse(splitString[3]);
-
-        }
-        else
-        {
-            s = s.Replace("RGBA", "");
-            s = s.Replace("#", "");
-            s = s.Replace("(", "");
-            s = s.Replace(")", "");
-
-            var splitString = s.Split(","[0]);
-
-
-            //    // Build new Vector3 from array elements
-
-            outColor.r = float.Parse(splitString[0]);
-            outColor.g = float.Parse(splitString[1]);
-            outColor.b = float.Parse(splitString[2]);
-            outColor.a = float.Parse(splitString[3]);
-        }
-
-        return outColor;
-    }
-
 
     // Create button as a MenuItem to call the ShowWindow method
     [MenuItem("JokerCoder/PlayerPrefs Manager")]
@@ -403,8 +150,6 @@ public class PlayerPrefsWindow : EditorWindow
     void OnEnable()
     {
         searchText = "";
-        newKey = "";
-        newValue = "";
         companyName = PlayerSettings.companyName;
         productName = PlayerSettings.productName;
 
@@ -428,7 +173,7 @@ public class PlayerPrefsWindow : EditorWindow
         GUILayout.BeginVertical();
 
         DrawToolbarGUI();
-        DrawAddValueArea();
+        //DrawAddValueArea();
         DrawPlayerPrefs(GetDeserializedPlayerPrefs());
 
         GUILayout.EndVertical();
@@ -494,54 +239,54 @@ public class PlayerPrefsWindow : EditorWindow
     }
 
     // Draws area to add new PlayerPrefs' keys and values
-    void DrawAddValueArea()
-    {
-        GUILayout.BeginVertical("box");
-        GUILayout.Label("Add new PlayerPrefs", EditorStyles.boldLabel);
+    //void DrawAddValueArea()
+    //{
+    //    GUILayout.BeginVertical("box");
+    //    GUILayout.Label("Add new PlayerPrefs", EditorStyles.boldLabel);
 
-        GUILayout.Space(20);
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Key", GUILayout.MaxWidth(100));
-        newKey = GUILayout.TextField(newKey);
-        GUILayout.EndHorizontal();
+    //    GUILayout.Space(20);
+    //    GUILayout.BeginHorizontal();
+    //    GUILayout.Label("Key", GUILayout.MaxWidth(100));
+    //    newKey = GUILayout.TextField(newKey);
+    //    GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Value", GUILayout.MaxWidth(100));
-        newValue = GUILayout.TextField(newValue);
-        GUILayout.EndHorizontal();
+    //    GUILayout.BeginHorizontal();
+    //    GUILayout.Label("Value", GUILayout.MaxWidth(100));
+    //    newValue = GUILayout.TextField(newValue);
+    //    GUILayout.EndHorizontal();
 
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Type", GUILayout.MinWidth(100), GUILayout.MaxWidth(100));
-        playerPrefsTypes = (PlayerPrefsType)EditorGUILayout.EnumPopup(playerPrefsTypes);
-        if (GUILayout.Button(new GUIContent(plusIcon, "Add new PlayerPrefs data"), GUILayout.MaxWidth(40), GUILayout.MaxHeight(40)))
-        {
-            AddNewPlayerPrefsData();
-            GetAllPlayerPrefs();
-        }
-        GUILayout.EndHorizontal();
+    //    GUILayout.BeginHorizontal();
+    //    GUILayout.Label("Type", GUILayout.MinWidth(100), GUILayout.MaxWidth(100));
+    //    playerPrefsTypes = (PlayerPrefsType)EditorGUILayout.EnumPopup(playerPrefsTypes);
+    //    if (GUILayout.Button(new GUIContent(plusIcon, "Add new PlayerPrefs data"), GUILayout.MaxWidth(40), GUILayout.MaxHeight(40)))
+    //    {
+    //        AddNewPlayerPrefsData();
+    //        GetAllPlayerPrefs();
+    //    }
+    //    GUILayout.EndHorizontal();
 
-        GUILayout.EndVertical();
-    }
+    //    GUILayout.EndVertical();
+    //}
 
     // Add new PlayerPrefs and data comes from key, value and type fields on window
     void AddNewPlayerPrefsData()
     {
-        switch (playerPrefsTypes)
-        {
-            case PlayerPrefsType.Int:
-                PlayerPrefs.SetInt(newKey, int.Parse(newValue));
-                break;
-            case PlayerPrefsType.Float:
-                if (newValue.Contains("."))
-                    newValue = newValue.Replace('.', ',');
-                PlayerPrefs.SetFloat(newKey, float.Parse(newValue));
-                break;
-            case PlayerPrefsType.String:
-                PlayerPrefs.SetString(newKey, newValue);
-                break;
-        }
-        newKey = "";
-        newValue = "";
+        //switch (playerPrefsTypes)
+        //{
+        //    case PlayerPrefsType.Int:
+        //        PlayerPrefs.SetInt(newKey, int.Parse(newValue));
+        //        break;
+        //    case PlayerPrefsType.Float:
+        //        if (newValue.Contains("."))
+        //            newValue = newValue.Replace('.', ',');
+        //        PlayerPrefs.SetFloat(newKey, float.Parse(newValue));
+        //        break;
+        //    case PlayerPrefsType.String:
+        //        PlayerPrefs.SetString(newKey, newValue);
+        //        break;
+        //}
+        //newKey = "";
+        //newValue = "";
     }
 
     // Gets all PlayerPrefs data that includes keys, values and types and adds them to arrays 
@@ -585,18 +330,16 @@ public class PlayerPrefsWindow : EditorWindow
                     {
                         // If the PlayerPref is not actually an int then it must be a float, this will evaluate to true
                         // (impossible for it to be 0 and -1 at the same time)
-                        if (GetInt(key, -1) == -1 && GetInt(key, 0) == 0)
+                        if (PrefsSerialzer.GetInt(key, -1) == -1 && PrefsSerialzer.GetInt(key, 0) == 0)
                         {
                             // Fetch the float value from PlayerPrefs in memory
-                            string ambiguousValueSTR = ambiguousValue.ToString();
-                            Debug.Log(ambiguousValueSTR);
-                            ambiguousValue = GetFloat(key,float.Parse(ambiguousValueSTR));
+                            ambiguousValue = PrefsSerialzer.GetFloat(key);
                             pair.type = PlayerPrefsType.Float;
                         }
                         else
                         {
                             pair.type = PlayerPrefsType.Int;
-                            ambiguousValue = GetInt(key, (int)ambiguousValue);
+                            //ambiguousValue = PrefsSerialzer.GetInt(key, (int)ambiguousValue);
                         }
                         //else if (GetBool(key, true) != true || GetBool(key, false) != false)
                         //{
@@ -611,7 +354,7 @@ public class PlayerPrefsWindow : EditorWindow
 
                         PlayerPrefsType type = PlayerPrefsType.String;
 
-                        ambiguousValue = TryGetCostumeType(key, out type, ambiguousValue.ToString());
+                        ambiguousValue = PrefsSerialzer.TryGetCostumeType(key, out type, ambiguousValue.ToString());
 
                         pair.type = type;
 
@@ -683,19 +426,19 @@ public class PlayerPrefsWindow : EditorWindow
                     deserializedPlayerPrefs[i].TempValue = GUILayout.TextField(deserializedPlayerPrefs[i].TempValue.ToString(), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Vector3:
-                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", StringToVector3(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", PrefsSerialzer.StringToVector3(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Vector2:
-                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector2Field("", StringToVector2(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector2Field("", PrefsSerialzer.StringToVector2(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Color:
-                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ColorField(StringToColor(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ColorField(PrefsSerialzer.StringToColor(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Vector4:
-                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector4Field("", StringToVector4(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector4Field("", PrefsSerialzer.StringToVector4(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Bool:
-                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ToggleLeft("", StringToBool(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ToggleLeft("", PrefsSerialzer.StringToBool(deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
 
                     break;
                 default:
@@ -763,11 +506,5 @@ public class PlayerPrefsWindow : EditorWindow
 
     //    PlayerPrefs.SetString(key, jsonString);
     //}
-    [Serializable]
-    private class Serialzer<T>
-    {
-        public PlayerPrefsType type;
-        public T value;
-    }
 }
 
