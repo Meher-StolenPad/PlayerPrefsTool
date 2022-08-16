@@ -27,22 +27,34 @@ public class PlayerPrefsWindow : EditorWindow
     private class PlayerPrefPair
     {
         public string Key;
+        public string TempKey;
 
         public object Value;
 
         public object TempValue;
 
-        public List<object> BackupValues = new List<object>();
+        public object BackupValues;
 
         public PlayerPrefsType type;
 
         private int backupIndex;
 
+        public void SaveKey()
+        {
+            if (Key != TempKey)
+            {
+                PlayerPrefs.DeleteKey(Key);
+                Key = TempKey;
+            }
+            Save();
+        }
+
         public void Save()
         {
-            BackupValues.Add(Value);
+            BackupValues = Value;
 
             Value = TempValue;
+
 
             switch (type)
             {
@@ -76,16 +88,8 @@ public class PlayerPrefsWindow : EditorWindow
         }
         public void BackUp()
         {
-            if (BackupValues.Count <= 0) return;
-
-            backupIndex = BackupValues.Count - 1;
-
-            TempValue = BackupValues[backupIndex];
-            Debug.Log("get back up for : " + Key + " : " + BackupValues[backupIndex]);
-            backupIndex--;
-
-            if (backupIndex <= 0)
-                backupIndex = 0;
+            GUI.FocusControl(null);
+            TempValue = BackupValues;
         }
 
         public void Delete()
@@ -136,7 +140,7 @@ public class PlayerPrefsWindow : EditorWindow
         {
             return;
         }
-        Debug.Log("update Search !");
+       // Debug.Log("update Search !");
         filtredPlayerPrefs.Clear();
 
         if (string.IsNullOrEmpty(searchText))
@@ -210,7 +214,7 @@ public class PlayerPrefsWindow : EditorWindow
         filtredPlayerPrefs.Clear();
     }
 
-    string oldSearchFilter= ".";
+    string oldSearchFilter = ".";
     // Called for rendering and handling GUI events
     void OnGUI()
     {
@@ -218,7 +222,7 @@ public class PlayerPrefsWindow : EditorWindow
 
         DrawToolbarGUI();
         // DrawAddValueArea();
-        if (!String.IsNullOrEmpty(searchText) )
+        if (!String.IsNullOrEmpty(searchText))
         {
             UpdateSearch();
             DrawPlayerPrefs(filtredPlayerPrefs);
@@ -226,7 +230,7 @@ public class PlayerPrefsWindow : EditorWindow
         else
             DrawPlayerPrefs(deserializedPlayerPrefs);
 
-       if( GUILayout.Button("Add"))
+        if (GUILayout.Button("Add"))
         {
 
         }
@@ -288,6 +292,7 @@ public class PlayerPrefsWindow : EditorWindow
     {
         if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
         {
+            UpdateRegistry();
             GetAllPlayerPrefs();
         }
     }
@@ -344,10 +349,16 @@ public class PlayerPrefsWindow : EditorWindow
     }
 
     // Gets all PlayerPrefs data that includes keys, values and types and adds them to arrays 
+
+    private void UpdateRegistry()
+    {
+        registryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + companyName + "\\" + productName);
+    }
     private void GetAllPlayerPrefs(bool isImport = false)
     {
         if (registryKey == null) return;
 
+        deserializedPlayerPrefs.Clear();
         foreach (string item in registryKey.GetValueNames())
         {
 
@@ -419,7 +430,9 @@ public class PlayerPrefsWindow : EditorWindow
 
                     pair.Value = ambiguousValue;
                     pair.TempValue = ambiguousValue;
+                    pair.BackupValues = ambiguousValue;
                     pair.Key = key;
+                    pair.TempKey = key;
 
                     // Assign the key and value into the respective record in our output array
                     tempPlayerPrefs[i] = pair;// new PlayerPrefPair() { Key = key, Value = ambiguousValue };
@@ -459,7 +472,7 @@ public class PlayerPrefsWindow : EditorWindow
         {
             GUILayout.BeginHorizontal();
 
-            GUILayout.TextField(_deserializedPlayerPrefs[i].Key, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+            _deserializedPlayerPrefs[i].TempKey = GUILayout.TextField(_deserializedPlayerPrefs[i].TempKey, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
 
             switch (_deserializedPlayerPrefs[i].type)
             {
@@ -492,15 +505,11 @@ public class PlayerPrefsWindow : EditorWindow
                     break;
             }
 
-            PlayerPrefsType type = _deserializedPlayerPrefs[i].type;
-
-           // type = (PlayerPrefsType)EditorGUILayout.EnumPopup(_deserializedPlayerPrefs[i].type, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
-
             GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), GUILayout.MinWidth(50), GUILayout.MaxWidth(50));
 
             if (GUILayout.Button(new GUIContent(saveIcon, "Save current data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
-                _deserializedPlayerPrefs[i].Save();
+                _deserializedPlayerPrefs[i].SaveKey();
             }
             if (GUILayout.Button(new GUIContent(resetIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
@@ -510,6 +519,9 @@ public class PlayerPrefsWindow : EditorWindow
             {
                 _deserializedPlayerPrefs[i].Delete();
                 deserializedPlayerPrefs.Remove(_deserializedPlayerPrefs[i]);
+
+                if (filtredPlayerPrefs.Contains(_deserializedPlayerPrefs[i]))
+                    filtredPlayerPrefs.Remove(_deserializedPlayerPrefs[i]);
             }
             GUILayout.EndHorizontal();
         }
