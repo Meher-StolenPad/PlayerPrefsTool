@@ -251,6 +251,14 @@ public static class PrefsSerialzer
 
         return outColor;
     }
+
+    public static void CopyToClipboard(this string s)
+    {
+        TextEditor te = new TextEditor();
+        te.text = s;
+        te.SelectAll();
+        te.Copy();
+    }
 }
 [Serializable]
 public class Serialzer<T>

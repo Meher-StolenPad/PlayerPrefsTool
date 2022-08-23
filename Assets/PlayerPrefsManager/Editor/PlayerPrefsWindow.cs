@@ -120,7 +120,10 @@ public class PlayerPrefsWindow : EditorWindow
         }
 
     }
-
+    internal void AddPlayerPref()
+    {
+        Debug.Log("AddPlayerPref");
+    }
     private PlayerPrefsType playerPrefsTypes;
 
     Texture refreshIcon;
@@ -232,7 +235,9 @@ public class PlayerPrefsWindow : EditorWindow
 
         if (GUILayout.Button("Add"))
         {
+            CreatePrefWizard wizard = ScriptableWizard.DisplayWizard<CreatePrefWizard>("AddPlayerPref");
 
+            Debug.Log("add PlayerPrefs");
         }
         GUILayout.EndVertical();
     }
