@@ -5,6 +5,14 @@ using UnityEngine;
 
 public static class PrefsSerialzer
 {
+    public static bool HasKey(string key)
+    {
+        return PlayerPrefs.HasKey(key);
+    }
+    public static void DeleteKey(string key)
+    {
+         PlayerPrefs.DeleteKey(key);
+    }
     public static int GetInt(string key, int defaultValue = 0)
     {
         return PlayerPrefs.GetInt(key, defaultValue);
@@ -16,6 +24,41 @@ public static class PrefsSerialzer
     public static string GetString(string key, string defaultValue = "")
     {
         return PlayerPrefs.GetString(key, defaultValue);
+    }
+    public static Vector2 GetVector2(string key,Vector2 defaultValue)
+    {
+        return GetCosutomTypeValue<Vector2>(key, defaultValue);
+    }
+    public static Vector3 GetVector3(string key, Vector3 defaultValue)
+    {
+        return GetCosutomTypeValue<Vector3>(key, defaultValue);
+    }
+    public static Vector4 GetVector4(string key, Vector4 defaultValue)
+    {
+        return GetCosutomTypeValue<Vector4>(key, defaultValue);
+    }
+    public static Color GetColor(string key, Color defaultValue)
+    {
+        return GetCosutomTypeValue<Color>(key, defaultValue);
+    }
+    public static bool GetBool(string key, bool defaultValue)
+    {
+        return GetCosutomTypeValue<bool>(key, defaultValue);
+    }
+
+    private static T GetCosutomTypeValue<T>(string key,T defaultValue)
+    {
+        object returnvalue = default;
+        Serialzer<T> serialzer = JsonUtility.FromJson<Serialzer<T>>(PlayerPrefs.GetString(key));
+        if(serialzer != null)
+        {
+            returnvalue = serialzer.value;
+        }
+        else
+        {
+            returnvalue = defaultValue;
+        }
+        return (T)returnvalue;  
     }
     public static object TryGetCostumeType(string key, out PlayerPrefsType playerPrefsType, string defaultValue = "")
     {
@@ -62,6 +105,7 @@ public static class PrefsSerialzer
         }
         return retunValue;
     }
+
     public static void SetVector3(string key, Vector3 _value)
     {
         Serialzer<Vector3> serialzer = new Serialzer<Vector3>();
@@ -128,13 +172,14 @@ public static class PrefsSerialzer
 
         PlayerPrefs.SetString(key, jsonString);
     }
-    public static Vector3 StringToVector2(string s)
+    public static Vector2 StringToVector2(string s)
     {
         Vector2 outVector3 = Vector2.zero;
 
         if (s.Contains("{"))
         {
             outVector3 = JsonUtility.FromJson<Vector2>(s);
+            Debug.Log("out vector 2" + outVector3);
         }
         else
         {

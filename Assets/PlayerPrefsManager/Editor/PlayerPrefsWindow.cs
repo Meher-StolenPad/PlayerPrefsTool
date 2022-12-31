@@ -120,9 +120,39 @@ public class PlayerPrefsWindow : EditorWindow
         }
 
     }
-    internal void AddPlayerPref()
+    internal void AddPlayerPref(string key,PlayerPrefsType playerPrefsType,object value)
     {
         Debug.Log("AddPlayerPref");
+        switch (playerPrefsType)
+        {
+            case PlayerPrefsType.Int:
+                PlayerPrefs.SetInt(key,(int)value);
+                break;
+            case PlayerPrefsType.Float:
+                PlayerPrefs.SetFloat(key, (float)value);
+                break;
+            case PlayerPrefsType.String:
+                PlayerPrefs.SetString(key, (string)value);
+                break;
+            case PlayerPrefsType.Vector2:
+                PrefsSerialzer.SetVector2(key, (Vector2)value);
+                break;
+            case PlayerPrefsType.Vector3:
+                PrefsSerialzer.SetVector3(key, (Vector3)value);
+                break;
+            case PlayerPrefsType.Vector4:
+                PrefsSerialzer.SetVector4(key, (Vector4)value);
+                break;
+            case PlayerPrefsType.Color:
+                PrefsSerialzer.SetColor(key, (Color)value);
+                break;
+            case PlayerPrefsType.Bool:
+                PrefsSerialzer.SetBool(key, (bool)value);
+                break;
+            default:
+                break;
+        }
+        Refresh(); 
     }
     private PlayerPrefsType playerPrefsTypes;
 
@@ -297,11 +327,14 @@ public class PlayerPrefsWindow : EditorWindow
     {
         if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
         {
-            UpdateRegistry();
-            GetAllPlayerPrefs();
+            Refresh();
         }
     }
-
+    private void Refresh()
+    {
+        UpdateRegistry();
+        GetAllPlayerPrefs();
+    }
     // Draws area to add new PlayerPrefs' keys and values
     void DrawAddValueArea()
     {
@@ -366,13 +399,6 @@ public class PlayerPrefsWindow : EditorWindow
         deserializedPlayerPrefs.Clear();
         foreach (string item in registryKey.GetValueNames())
         {
-
-            //  Debug.Log("Key : " + key.ToString() + registryKey.GetValue(key).GetType().ToString());
-
-            //  string _key = item.Remove(item.LastIndexOf('_'));
-            //keyList[counter] = _key;
-            // pair.Key = _key;
-
             if (registryKey != null)
             {
                 // Get an array of what keys (registry value names) are stored

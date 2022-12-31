@@ -1,9 +1,9 @@
+using Facebook.Unity.Settings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using System;
-using Facebook.Unity.Settings;
+using UnityEngine;
 
 public class PrivacyCreatorWizard : ScriptableWizard
 {
@@ -17,7 +17,7 @@ public class PrivacyCreatorWizard : ScriptableWizard
         // Creates the wizard for display
         ScriptableWizard.DisplayWizard("Create Privacy Page",
             typeof(PrivacyCreatorWizard),
-            "Create Privacy !","Add Facebook Id");
+            "Create Privacy !", "Add Facebook Id");
     }
     void OnWizardUpdate()
     {
@@ -32,22 +32,39 @@ public class PrivacyCreatorWizard : ScriptableWizard
             FacebookId = FacebookSettings.AppId;
         }
     }
+    GameObject ObjectHolder;
+
     private void OnWizardCreate()
     {
         //GameName = Application.productName;
+        if (ObjectHolder == null)
+        {
+            ObjectHolder = new GameObject();
+            cs = ObjectHolder.AddComponent<CommunicateWithServer>();
+        }
+        else
+            cs = ObjectHolder.GetComponent<CommunicateWithServer>();
 
-        cs = ((CommunicateWithServer)Resources.FindObjectsOfTypeAll(typeof(CommunicateWithServer))[0]);
+        //   cs = ((CommunicateWithServer)Resources.FindObjectsOfTypeAll(typeof(CommunicateWithServer))[0]);
+
         if (EditorUtility.DisplayDialog("Create Privacy page ?",
                "Are you sure you want to create privacy page for  " + GameName
                + " ?", "Create ", "Cancel"))
         {
             cs.OnLinkCreated += ShowPopup;
             cs.SendPrivacyRequest(GameName);
+            Debug.Log("SendPrivacyRequest : "+ GameName);
         }
     }
     void OnWizardOtherButton()
     {
-        cs = ((CommunicateWithServer)Resources.FindObjectsOfTypeAll(typeof(CommunicateWithServer))[0]);
+        if (ObjectHolder == null)
+        {
+            ObjectHolder = new GameObject();
+            cs = ObjectHolder.AddComponent<CommunicateWithServer>();
+        }
+        else
+            cs = ObjectHolder.GetComponent<CommunicateWithServer>();
 
         ShowPopupFacebook(FacebookId);
     }
@@ -56,7 +73,7 @@ public class PrivacyCreatorWizard : ScriptableWizard
     {
         link.CopyToClipboard();
 
-        PrivacyPopup wizard = ScriptableWizard.DisplayWizard<PrivacyPopup>("Privacy Link","Copy");
+        PrivacyPopup wizard = ScriptableWizard.DisplayWizard<PrivacyPopup>("Privacy Link", "Copy");
         wizard.PrivacyLink = link;
         wizard.helpString = link;
 
@@ -64,11 +81,15 @@ public class PrivacyCreatorWizard : ScriptableWizard
     }
     public void ShowPopupFacebook(string FacebookId)
     {
-       if( EditorUtility.DisplayDialog("Add Facebook Id Added to AppTxt ?",
-               "Are you sure you want to Add the Facebook ID : ' " + FacebookId
-               + " ' to app-ads.txt ?", "Add", "Cancel"))
+        if (EditorUtility.DisplayDialog("Add Facebook Id Added to AppTxt ?",
+                "Are you sure you want to Add the Facebook ID : ' " + FacebookId
+                + " ' to app-ads.txt ?", "Add", "Cancel"))
         {
             cs.SendFacebookRequest(FacebookId);
         }
+    }
+    private void OnDisable()
+    {
+       // DestroyImmediate(ObjectHolder);
     }
 }

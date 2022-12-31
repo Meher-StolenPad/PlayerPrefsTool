@@ -27,12 +27,13 @@ public class CreatePrefWizard : ScriptableWizard
     {
         
     }
-
+    private string oldKey;
+    private bool canChooseThisKey;
     private void OnInspectorUpdate()
     {
         createButtonName = "Add " + Key + " to player prefs";
 
-        helpString = "Please set the color of the light!";
+        helpString = "Note : you cant' add a new key that already have a value !";
 
         if (String.IsNullOrEmpty(Key)){
             errorString = "Please set Key name";
@@ -40,8 +41,20 @@ public class CreatePrefWizard : ScriptableWizard
         }
         else
         {
-            errorString = "";
-            isValid = true;
+            if(Key != oldKey)
+            {
+                if (PlayerPrefs.HasKey(Key))
+                {
+                    errorString = "This Key has already a value";
+                    isValid = false;
+                }
+                else
+                {
+                    errorString = "";
+                    isValid = true;
+                }
+                oldKey = Key;
+            }
         }
         maxSize = new Vector2(300, 300);
 
@@ -65,7 +78,7 @@ public class CreatePrefWizard : ScriptableWizard
 
         if (Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow)).Length >= 1)
         {
-           ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref();
+           ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref(Key, type, value);
         }
     }
     private void DrawValueField()
@@ -78,27 +91,35 @@ public class CreatePrefWizard : ScriptableWizard
         {
             case PlayerPrefsType.Int:
                 valuetempint = EditorGUILayout.IntField(valuetempint, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempint;
                 break;
             case PlayerPrefsType.Float:
                 valuetempfloat = EditorGUILayout.FloatField(valuetempfloat, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempfloat;
                 break;
             case PlayerPrefsType.String:
                 valuetempString = EditorGUILayout.TextField(valuetempString, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempString;
                 break;
             case PlayerPrefsType.Vector2:
                 valuetempVector2 = EditorGUILayout.Vector2Field("", valuetempVector2, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempVector2;
                 break;
             case PlayerPrefsType.Vector3:
                 valuetempVector3 = EditorGUILayout.Vector3Field("", valuetempVector3, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempVector3;
                 break;
             case PlayerPrefsType.Vector4:
                 valuetempVecotr4 = EditorGUILayout.Vector4Field("", valuetempVecotr4, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempVecotr4;
                 break;
             case PlayerPrefsType.Color:
                 valuetempColor = EditorGUILayout.ColorField(valuetempColor, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempColor;
                 break;
             case PlayerPrefsType.Bool:
                 valuetempBool = EditorGUILayout.ToggleLeft("", valuetempBool, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                value = valuetempBool;
                 break;
         }
         GUILayout.EndHorizontal();
