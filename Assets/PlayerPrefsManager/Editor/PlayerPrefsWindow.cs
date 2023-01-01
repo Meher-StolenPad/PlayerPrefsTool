@@ -15,7 +15,9 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -91,7 +93,6 @@ public class PlayerPrefsWindow : EditorWindow
             GUI.FocusControl(null);
             TempValue = BackupValues;
         }
-
         public void Delete()
         {
             PlayerPrefs.DeleteKey(Key);
@@ -120,13 +121,13 @@ public class PlayerPrefsWindow : EditorWindow
         }
 
     }
-    internal void AddPlayerPref(string key,PlayerPrefsType playerPrefsType,object value)
+    internal void AddPlayerPref(string key, PlayerPrefsType playerPrefsType, object value)
     {
         Debug.Log("AddPlayerPref");
         switch (playerPrefsType)
         {
             case PlayerPrefsType.Int:
-                PlayerPrefs.SetInt(key,(int)value);
+                PlayerPrefs.SetInt(key, (int)value);
                 break;
             case PlayerPrefsType.Float:
                 PlayerPrefs.SetFloat(key, (float)value);
@@ -152,7 +153,7 @@ public class PlayerPrefsWindow : EditorWindow
             default:
                 break;
         }
-        Refresh(); 
+        Refresh();
     }
     private PlayerPrefsType playerPrefsTypes;
 
@@ -163,6 +164,8 @@ public class PlayerPrefsWindow : EditorWindow
     Texture deleteIcon;
 
     private Action OnSearchChanged;
+    public bool ShowEditorPrefs;
+    public bool EditorPrefsAvailable;
     private void OnSearchTextChanged()
     {
         UpdateSearch();
@@ -173,7 +176,7 @@ public class PlayerPrefsWindow : EditorWindow
         {
             return;
         }
-       // Debug.Log("update Search !");
+        // Debug.Log("update Search !");
         filtredPlayerPrefs.Clear();
 
         if (string.IsNullOrEmpty(searchText))
@@ -277,11 +280,11 @@ public class PlayerPrefsWindow : EditorWindow
     {
         GUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-        //   DrawSortButton();
+        DrawSortButton();
         DrawMoreButton();
         DrawSearchField();
         DrawRefreshButton();
-
+        DrawShowEditorPrefsButton();
         GUILayout.EndHorizontal();
     }
 
@@ -290,7 +293,12 @@ public class PlayerPrefsWindow : EditorWindow
     {
         if (GUILayout.Button("Sort", EditorStyles.toolbarPopup, GUILayout.MaxWidth(50)))
         {
+            GenericMenu menu = new GenericMenu();
+            menu.AddItem(new GUIContent("alphabetically"), false, Sort);
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("Type"), false, Sort);
 
+            menu.ShowAsContext();
         }
     }
 
@@ -302,7 +310,9 @@ public class PlayerPrefsWindow : EditorWindow
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Delete All"), false, DeleteAll);
             menu.AddSeparator("");
-            menu.AddItem(new GUIContent("Import"), false, Import);
+            menu.AddItem(new GUIContent("Import directly"), false, Import);
+            menu.AddSeparator("");
+            menu.AddItem(new GUIContent("Import from file"), false, ReadBackupFile);
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Export"), false, Export);
 
@@ -329,6 +339,18 @@ public class PlayerPrefsWindow : EditorWindow
         {
             Refresh();
         }
+    }
+    void DrawShowEditorPrefsButton()
+    {
+        ShowEditorPrefs = EditorGUILayout.ToggleLeft(new GUIContent("Show Editor prefs"), ShowEditorPrefs, GUILayout.MinWidth(30));
+        if (EditorPrefsAvailable != ShowEditorPrefs)
+        {
+            Refresh();
+        }
+        //if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        //{
+        //    Refresh();
+        //}
     }
     private void Refresh()
     {
@@ -368,22 +390,7 @@ public class PlayerPrefsWindow : EditorWindow
     // Add new PlayerPrefs and data comes from key, value and type fields on window
     void AddNewPlayerPrefsData()
     {
-        //switch (playerPrefsTypes)
-        //{
-        //    case PlayerPrefsType.Int:
-        //        PlayerPrefs.SetInt(newKey, int.Parse(newValue));
-        //        break;
-        //    case PlayerPrefsType.Float:
-        //        if (newValue.Contains("."))
-        //            newValue = newValue.Replace('.', ',');
-        //        PlayerPrefs.SetFloat(newKey, float.Parse(newValue));
-        //        break;
-        //    case PlayerPrefsType.String:
-        //        PlayerPrefs.SetString(newKey, newValue);
-        //        break;
-        //}
-        //newKey = "";
-        //newValue = "";
+
     }
 
     // Gets all PlayerPrefs data that includes keys, values and types and adds them to arrays 
@@ -485,26 +492,31 @@ public class PlayerPrefsWindow : EditorWindow
     {
         return deserializedPlayerPrefs;
     }
-
     // Draw Scrollable view for PlayerPrefs list and PlayerPrefs rows that gets data from registryKey
     void DrawPlayerPrefs(List<PlayerPrefPair> _deserializedPlayerPrefs)
     {
+
         GUILayout.BeginVertical();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Key", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
-        GUILayout.Label("Value", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
-        GUILayout.Label("Type", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+        GUILayout.Label("Key", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
+        GUILayout.Label("Value", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
+        GUILayout.Label("Type", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
         GUILayout.Label("", EditorStyles.boldLabel, GUILayout.MinWidth(75), GUILayout.MaxWidth(75));
         GUILayout.EndHorizontal();
         scrollView = EditorGUILayout.BeginScrollView(scrollView);
 
         for (int i = 0; i < _deserializedPlayerPrefs.Count; i++)
         {
+            if (!ShowEditorPrefs)
+            {
+                if (_deserializedPlayerPrefs[i].TempKey.ToLower().Contains("unity"))
+                    continue;
+            }
             GUILayout.BeginHorizontal();
 
-            _deserializedPlayerPrefs[i].TempKey = GUILayout.TextField(_deserializedPlayerPrefs[i].TempKey, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
-
+            GUILayout.TextField(_deserializedPlayerPrefs[i].TempKey, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+            // GUILayout.TextArea(_deserializedPlayerPrefs[i].TempKey, EditorStyles.textField, GUILayout.ExpandHeight(true));
             switch (_deserializedPlayerPrefs[i].type)
             {
                 case PlayerPrefsType.Int:
@@ -514,7 +526,7 @@ public class PlayerPrefsWindow : EditorWindow
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.FloatField((float)_deserializedPlayerPrefs[i].TempValue, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.String:
-                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextField(_deserializedPlayerPrefs[i].TempValue.ToString(), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextArea(_deserializedPlayerPrefs[i].TempValue.ToString(), EditorStyles.textField, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.Vector3:
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", PrefsSerialzer.StringToVector3(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
@@ -549,7 +561,7 @@ public class PlayerPrefsWindow : EditorWindow
             if (GUILayout.Button(new GUIContent(deleteIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
                 _deserializedPlayerPrefs[i].Delete();
-                deserializedPlayerPrefs.Remove(_deserializedPlayerPrefs[i]);
+                OnDeleteElement += Refresh;
 
                 if (filtredPlayerPrefs.Contains(_deserializedPlayerPrefs[i]))
                     filtredPlayerPrefs.Remove(_deserializedPlayerPrefs[i]);
@@ -560,12 +572,39 @@ public class PlayerPrefsWindow : EditorWindow
         EditorGUILayout.EndScrollView();
 
         GUILayout.EndVertical();
+        OnDeleteElement?.Invoke();
+        OnDeleteElement -= Refresh;
     }
+    private Action OnDeleteElement;
 
     // Call this function when Delete All button clicked
     void DeleteAll()
     {
-        PlayerPrefs.DeleteAll();
+        int dialogResult = EditorUtility.DisplayDialogComplex(
+               "All Player Prefs Will be deleted",
+               "Do you want to create a backup file for your current prefs ?",
+               "Yes", "Don't Create", "Cancel");
+
+        switch (dialogResult)
+        {
+            case 0: //Create backup
+                Export();
+                PlayerPrefs.DeleteAll();
+                Refresh();
+
+                break;
+            case 1: //Don't create a backup
+                PlayerPrefs.DeleteAll();
+                Refresh();
+                break;
+            case 2: //Cancel process (Basically do nothing for now.)
+                break;
+            default:
+                Debug.LogWarning("Something went wrong when clearing player prefs");
+                break;
+        }
+        //PlayerPrefs.DeleteAll();
+        //Refresh();
     }
 
     // Call this function when Import button clicked
@@ -579,10 +618,129 @@ public class PlayerPrefsWindow : EditorWindow
     // Call this function when Export button clicked
     void Export()
     {
-        Debug.Log("Export PlayerPrefs");
+        var backupstring = CreateBackup();
+        string newBackupString = PlayerPrefsGlobalVariables.CreatedText;
+        string playerprefsSpecific = "//Player prefs for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'
+            + "//Created at : " + DateTime.Now + "\n//Created by "+UnityEditor.CloudProjectSettings.userName +'\n';
+        newBackupString += playerprefsSpecific;
 
+        newBackupString += backupstring;
+
+        string path = EditorUtility.OpenFolderPanel("Backup path", "", "PPbackup.txt");
+        path += "/PPbackup.txt";
+        if (!File.Exists(path))
+        {
+            File.WriteAllText(path, newBackupString);
+        }
+        else
+        {
+            path = PrefsSerialzer.NextAvailableFilename(path);
+            File.WriteAllText(path, newBackupString);
+        }
+        Debug.Log(path);
         // string addItemJsonString = "{\"fields\":{\"ID\":\"" + ID + "\",\"DeviceName\":\"" + deviceName + "\"}}";
+    }
+    private string CreateBackup()
+    {
+        ExportSerialzerHolder exportSerialzerHolder = new ExportSerialzerHolder();
 
+        foreach (var item in deserializedPlayerPrefs)
+        {
+            ExportSerialzer toExport = new ExportSerialzer();
+            toExport.type = item.type;
+            toExport.key = item.Key;
+            toExport.value = item.Value.ToString();
+            exportSerialzerHolder.exportlist.Add(toExport);
+        }
+        string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);
+        return jsonString;
+    }
+    public void ReadBackupFile()
+    {
+        string[] filters = new string[] { "text files", "txt", "All files", "*" };
+        string path = EditorUtility.OpenFilePanelWithFilters("Load backup file", "", filters);
+
+        if (string.IsNullOrEmpty(path)) return;
+
+
+
+       var stringArray = File.ReadLines(path).Where(line => !line.StartsWith("//")).ToArray();
+        var newString = string.Empty;
+
+        foreach (var item in stringArray)
+        {
+            newString += item;
+        }
+        //string backuptext = File.ReadAllText(path);
+        //backuptext = backuptext.Replace(PlayerPrefsGlobalVariables.CreatedText, "");
+
+        ExportSerialzerHolder exportSerialzerHolder = JsonUtility.FromJson<ExportSerialzerHolder>(newString);
+        // create pair list from load
+        List<PlayerPrefPair> pairs = new List<PlayerPrefPair>();
+
+        foreach (var item in exportSerialzerHolder.exportlist)
+        {
+            PlayerPrefPair ppp = new PlayerPrefPair();
+            ppp.Key = item.key;
+            ppp.TempKey = item.key;
+            ppp.type = item.type;
+
+            switch (item.type)
+            {
+                case PlayerPrefsType.Int:
+                    ppp.Value = int.Parse(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.Float:
+                    ppp.Value = float.Parse(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.String:
+                    ppp.Value = item.value;
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.Vector2:
+                    ppp.Value = PrefsSerialzer.StringToVector2(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.Vector3:
+                    ppp.Value = PrefsSerialzer.StringToVector3(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.Vector4:
+                    ppp.Value = PrefsSerialzer.StringToVector4(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+
+                    break;
+                case PlayerPrefsType.Color:
+                    ppp.Value = PrefsSerialzer.StringToColor(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+
+                    break;
+                case PlayerPrefsType.Bool:
+                    ppp.Value = PrefsSerialzer.StringToBool(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                default:
+                    break;
+            }
+            ppp.Save();
+        }
+        Refresh();
+    }
+
+    private void Sort()
+    {
+        deserializedPlayerPrefs = deserializedPlayerPrefs.OrderBy(go => go.Key).ToList();
+        DrawPlayerPrefs(deserializedPlayerPrefs);
     }
 }
 
