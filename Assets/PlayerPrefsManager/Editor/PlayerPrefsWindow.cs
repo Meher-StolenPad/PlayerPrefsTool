@@ -202,7 +202,10 @@ public class PlayerPrefsWindow : EditorWindow
             string fullKey = deserializedPlayerPrefs[i].Key;
             string displayKey = fullKey;
 
-            if (displayKey.ToLower().Contains(searchText.ToLower()))
+            string fullvalue = deserializedPlayerPrefs[i].TempValue.ToString();
+            string displayValue = fullvalue;
+
+            if (displayKey.ToLower().Contains(searchText.ToLower()) || fullvalue.ToLower().Contains(searchText.ToLower()))
             {
                 filtredPlayerPrefs.Add(deserializedPlayerPrefs[i]);
             }
@@ -278,12 +281,7 @@ public class PlayerPrefsWindow : EditorWindow
         else
             DrawPlayerPrefs(deserializedPlayerPrefs);
 
-        if (GUILayout.Button("Add"))
-        {
-            CreatePrefWizard wizard = ScriptableWizard.DisplayWizard<CreatePrefWizard>("AddPlayerPref");
-
-            Debug.Log("add PlayerPrefs");
-        }
+        DrawBottomButtons();
         GUILayout.EndVertical();
     }
 
@@ -301,7 +299,34 @@ public class PlayerPrefsWindow : EditorWindow
         DrawRevertAll();
         GUILayout.EndHorizontal();
     }
+    private void DrawBottomButtons()
+    {
+        GUILayout.BeginHorizontal();
+        Color oldBackgroundColor = GUI.backgroundColor;
 
+        GUI.backgroundColor = oldBackgroundColor;
+
+        GUI.backgroundColor = Color.green;
+
+        if (GUILayout.Button(new GUIContent(plusIcon, "Add New Player Pref"), EditorStyles.miniButtonLeft, GUILayout.MaxWidth(300)))
+        {
+            CreatePrefWizard wizard = ScriptableWizard.DisplayWizard<CreatePrefWizard>("AddPlayerPref");
+        }
+        GUI.backgroundColor = Color.red;
+
+        if (GUILayout.Button(new GUIContent(deleteIcon, "Delete all PlayerPrefs data"), EditorStyles.miniButtonRight, GUILayout.MaxWidth(300)))
+        {
+            DeleteAll();
+        }
+        GUI.backgroundColor = oldBackgroundColor;
+
+        //if (GUILayout.Button("Add"))
+        //{
+        //   
+
+        //    Debug.Log("add PlayerPrefs");
+        //}
+    }
     // Sort all PlayerPrefs alphabetically
     void DrawSortButton()
     {
@@ -322,8 +347,6 @@ public class PlayerPrefsWindow : EditorWindow
         if (GUILayout.Button("More", EditorStyles.toolbarDropDown, GUILayout.MaxWidth(50)))
         {
             GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Delete All"), false, DeleteAll);
-            menu.AddSeparator("");
             menu.AddItem(new GUIContent("Import directly"), false, Import);
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Import from file"), false, ReadBackupFile);
@@ -337,7 +360,7 @@ public class PlayerPrefsWindow : EditorWindow
     // Draws search field for finding specific PlayerPrefs
     void DrawSearchField()
     {
-        searchText = GUILayout.TextField(searchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.MinWidth(150)); // It's name written wrong by team in Unity
+        searchText = GUILayout.TextField(searchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.MinWidth(230)); // It's name written wrong by team in Unity
         if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton"))) // It's name written wrong by team in Unity
         {
             // Remove focus if cleared
@@ -657,7 +680,7 @@ public class PlayerPrefsWindow : EditorWindow
     void DeleteAll()
     {
         int dialogResult = EditorUtility.DisplayDialogComplex(
-               "All Player Prefs Will be deleted",
+               "All Player Prefs Will be deleted !",
                "Do you want to create a backup file for your current prefs ?",
                "Yes", "Don't Create", "Cancel");
 
