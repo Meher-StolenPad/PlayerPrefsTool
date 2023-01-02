@@ -21,7 +21,12 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-
+public enum SortType
+{
+    None,
+    Name,
+    Type
+}
 public class PlayerPrefsWindow : EditorWindow
 {
     private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
@@ -161,7 +166,7 @@ public class PlayerPrefsWindow : EditorWindow
         Refresh();
     }
     private PlayerPrefsType playerPrefsTypes;
-
+    private SortType SortType;
     Texture refreshIcon;
     Texture plusIcon;
     Texture saveIcon;
@@ -303,9 +308,9 @@ public class PlayerPrefsWindow : EditorWindow
         if (GUILayout.Button("Sort", EditorStyles.toolbarPopup, GUILayout.MaxWidth(50)))
         {
             GenericMenu menu = new GenericMenu();
-            menu.AddItem(new GUIContent("alphabetically"), false, Sort);
+            menu.AddItem(new GUIContent("Name"), false, SortWithName);
             menu.AddSeparator("");
-            menu.AddItem(new GUIContent("Type"), false, Sort);
+            menu.AddItem(new GUIContent("Type"), false, SortWithType);
 
             menu.ShowAsContext();
         }
@@ -355,6 +360,7 @@ public class PlayerPrefsWindow : EditorWindow
         if (EditorPrefsAvailable != ShowEditorPrefs)
         {
             Refresh();
+            EditorPrefsAvailable = ShowEditorPrefs;
         }
         //ShowEditorPrefs = EditorGUILayout.ToggleLeft(new GUIContent("Show Editor prefs"), ShowEditorPrefs, GUILayout.MinWidth(30));
         //if (EditorPrefsAvailable != ShowEditorPrefs)
@@ -513,6 +519,16 @@ public class PlayerPrefsWindow : EditorWindow
                 deserializedPlayerPrefs = tempPlayerPrefs.ToList();
                 // Return the results
                 // return tempPlayerPrefs;
+                // Get Sort Type
+                switch (SortType)
+                {
+                    case SortType.Name:
+                        deserializedPlayerPrefs = deserializedPlayerPrefs.OrderBy(go => go.Key).ToList();
+                        break;
+                    case SortType.Type:
+                        deserializedPlayerPrefs = deserializedPlayerPrefs.OrderBy(go => go.type).ToList();
+                        break;
+                }
             }
             else
             {
@@ -529,14 +545,22 @@ public class PlayerPrefsWindow : EditorWindow
     // Draw Scrollable view for PlayerPrefs list and PlayerPrefs rows that gets data from registryKey
     void DrawPlayerPrefs(List<PlayerPrefPair> _deserializedPlayerPrefs)
     {
+        GUIStyle style = EditorStyles.toolbar;
+        style.fontSize = 12;
+        style.fontStyle = FontStyle.Bold;
+        style.alignment = TextAnchor.MiddleCenter;
+        Color oldBackgroundColor = GUI.backgroundColor;
 
+        GUI.backgroundColor = new Color(0.56f, 0.56f, 0.56f);
         GUILayout.BeginVertical();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Key", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
-        GUILayout.Label("Value", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
-        GUILayout.Label("Type", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
-        GUILayout.Label("", EditorStyles.boldLabel, GUILayout.MinWidth(75), GUILayout.MaxWidth(75));
+        GUILayout.Label("Key", style, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+        GUILayout.Label("Value", style, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+        GUILayout.Label("Type", style, GUILayout.MinWidth(100), GUILayout.MaxWidth(50));
+        GUILayout.Label("Modify", style, GUILayout.MinWidth(75), GUILayout.MaxWidth(150));
+
+        GUI.backgroundColor = oldBackgroundColor;
 
         GUILayout.EndHorizontal();
         scrollView = EditorGUILayout.BeginScrollView(scrollView);
@@ -550,7 +574,11 @@ public class PlayerPrefsWindow : EditorWindow
             }
 
             GUILayout.BeginHorizontal();
-            GUILayout.TextField(_deserializedPlayerPrefs[i].TempKey, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+            GUIStyle style3 = EditorStyles.toolbar;
+
+           style3 = EditorStyles.textField;
+
+            GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
             // GUILayout.TextArea(_deserializedPlayerPrefs[i].TempKey, EditorStyles.textField, GUILayout.ExpandHeight(true));
             switch (_deserializedPlayerPrefs[i].type)
             {
@@ -584,17 +612,27 @@ public class PlayerPrefsWindow : EditorWindow
                 default:
                     break;
             }
+            GUIStyle style2 = EditorStyles.miniTextField;
+            style2.fontSize = 12;
+            style2.fontStyle = FontStyle.Bold;
+            style2.alignment = TextAnchor.MiddleCenter;
 
-            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), GUILayout.MinWidth(50), GUILayout.MaxWidth(70));
-
+            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), style2, GUILayout.MinWidth(50), GUILayout.MaxWidth(70));
+            GUI.backgroundColor = Color.green;
             if (GUILayout.Button(new GUIContent(saveIcon, "Save current data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
                 _deserializedPlayerPrefs[i].SaveKey();
             }
+            GUI.backgroundColor = Color.yellow;
+
             if (GUILayout.Button(new GUIContent(resetIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
                 _deserializedPlayerPrefs[i].BackUp();
             }
+            GUI.backgroundColor = oldBackgroundColor;
+
+            GUI.backgroundColor = Color.red;
+
             if (GUILayout.Button(new GUIContent(deleteIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
                 _deserializedPlayerPrefs[i].Delete();
@@ -603,6 +641,7 @@ public class PlayerPrefsWindow : EditorWindow
                 if (filtredPlayerPrefs.Contains(_deserializedPlayerPrefs[i]))
                     filtredPlayerPrefs.Remove(_deserializedPlayerPrefs[i]);
             }
+            GUI.backgroundColor = oldBackgroundColor;
             GUILayout.EndHorizontal();
         }
 
@@ -779,10 +818,21 @@ public class PlayerPrefsWindow : EditorWindow
         Refresh();
     }
 
-    private void Sort()
+    private void SortWithName()
     {
-        deserializedPlayerPrefs = deserializedPlayerPrefs.OrderBy(go => go.Key).ToList();
-        DrawPlayerPrefs(deserializedPlayerPrefs);
+        if(SortType != SortType.Name)
+        {
+            SortType = SortType.Name;
+            Refresh();
+        }
+    }
+    private void SortWithType()
+    {
+        if (SortType != SortType.Type)
+        {
+            SortType = SortType.Type;
+            Refresh();
+        }
     }
 }
 
