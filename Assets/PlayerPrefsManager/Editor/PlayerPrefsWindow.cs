@@ -175,8 +175,8 @@ public class PlayerPrefsWindow : EditorWindow
     Texture ApplyAllIcon;   
 
     private Action OnSearchChanged;
-    public bool ShowEditorPrefs;
-    public bool EditorPrefsAvailable;
+    public bool ShowEditorPrefs = true;
+    public bool EditorPrefsAvailable = true;
     private void OnSearchTextChanged()
     {
         UpdateSearch();

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-public class TetsPrefs : MonoBehaviour
+public class TestPrefs : MonoBehaviour
 {
     public Color color;
     private enum PlayerPrefsType
