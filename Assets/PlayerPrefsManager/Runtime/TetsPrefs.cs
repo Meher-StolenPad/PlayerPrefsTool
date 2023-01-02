@@ -34,6 +34,7 @@ public class TetsPrefs : MonoBehaviour
         PrefsSerialzer.SetVector4("TestVector4", new Vector4(55, 66f,77f,88f));
         PrefsSerialzer.SetColor("TestColor", Color.green);
         PrefsSerialzer.SetBool("TestBool", true);
+        PrefsSerialzer.SetDateTime("TestDateTime", DateTime.Now);
 
         Debug.Log("Vector 2 " + PrefsSerialzer.GetVector2("TestVector2", Vector2.zero));
         Debug.Log("Vector 3 " + PrefsSerialzer.GetVector3("TestVector3", Vector3.zero));

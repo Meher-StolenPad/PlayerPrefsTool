@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,6 +96,9 @@ public static class PrefsSerialzer
                     retunValue = t.value.ToString();
                     break;
                 case PlayerPrefsType.Bool:
+                    retunValue = t.value.ToString();
+                    break;
+                case PlayerPrefsType.DateTime:
                     retunValue = t.value.ToString();
                     break;
             }
@@ -242,7 +246,6 @@ public static class PrefsSerialzer
         serialzer.value = _value;
 
         string jsonString = JsonUtility.ToJson(serialzer);
-
         PlayerPrefs.SetString(key, jsonString);
     }
     public static Color StringToColor(string s)
@@ -295,6 +298,31 @@ public static class PrefsSerialzer
         }
 
         return outColor;
+    }
+
+    public static void SetDateTime(string key, DateTime _value)
+    {
+        Serialzer<DateTime> serialzer = new Serialzer<DateTime>();
+
+        serialzer.type = PlayerPrefsType.DateTime; 
+
+        serialzer.value = _value;
+        //JsonConvert.SerializeObject(DateTime.Now)
+        string jsonString = JsonConvert.SerializeObject(serialzer);
+        PlayerPrefs.SetString(key, jsonString);
+    }
+    public static DateTime? StringToDateTime(string s)
+    {
+        //date = JsonConvert.DeserializeObject<DateTime>(s);
+
+        if (DateTime.TryParse(s,out DateTime d))
+        {
+            return  d;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public static void CopyToClipboard(this string s)
@@ -353,6 +381,7 @@ public static class PrefsSerialzer
 public class Serialzer<T>
 {
     public PlayerPrefsType type;
+    [SerializeField]
     public T value;
 }
 [Serializable]
@@ -376,5 +405,6 @@ public enum PlayerPrefsType
     Vector3,
     Vector4,
     Color,
-    Bool
+    Bool,   
+    DateTime
 }

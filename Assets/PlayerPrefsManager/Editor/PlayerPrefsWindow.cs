@@ -57,7 +57,6 @@ public class PlayerPrefsWindow : EditorWindow
 
             Value = TempValue;
 
-
             switch (type)
             {
                 case PlayerPrefsType.Int:
@@ -83,6 +82,12 @@ public class PlayerPrefsWindow : EditorWindow
                     break;
                 case PlayerPrefsType.Bool:
                     PrefsSerialzer.SetBool(Key, PrefsSerialzer.StringToBool(Value.ToString()));
+                    break;
+                case PlayerPrefsType.DateTime:
+                    if(PrefsSerialzer.StringToDateTime(Value.ToString()) != null)
+                    {
+                        PrefsSerialzer.SetDateTime(Key, ((DateTime)PrefsSerialzer.StringToDateTime(Value.ToString())));
+                    }
                     break;
                 default:
                     break;
@@ -162,6 +167,7 @@ public class PlayerPrefsWindow : EditorWindow
     Texture saveIcon;
     Texture resetIcon;
     Texture deleteIcon;
+    Texture ApplyAllIcon;   
 
     private Action OnSearchChanged;
     public bool ShowEditorPrefs;
@@ -243,6 +249,7 @@ public class PlayerPrefsWindow : EditorWindow
         saveIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/PlayerPrefsManager/Icons/save_Icon.png", typeof(Texture));
         resetIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/PlayerPrefsManager/Icons/reset_Icon.png", typeof(Texture));
         deleteIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/PlayerPrefsManager/Icons/delete_Icon.png", typeof(Texture));
+        ApplyAllIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/PlayerPrefsManager/Icons/apply_Icon.png", typeof(Texture));
 
         OnSearchChanged += OnSearchTextChanged;
 
@@ -285,6 +292,8 @@ public class PlayerPrefsWindow : EditorWindow
         DrawSearchField();
         DrawRefreshButton();
         DrawShowEditorPrefsButton();
+        DrawApplyAll();
+        DrawRevertAll();
         GUILayout.EndHorizontal();
     }
 
@@ -342,15 +351,40 @@ public class PlayerPrefsWindow : EditorWindow
     }
     void DrawShowEditorPrefsButton()
     {
-        ShowEditorPrefs = EditorGUILayout.ToggleLeft(new GUIContent("Show Editor prefs"), ShowEditorPrefs, GUILayout.MinWidth(30));
+        ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.MaxWidth(150));
         if (EditorPrefsAvailable != ShowEditorPrefs)
         {
             Refresh();
         }
+        //ShowEditorPrefs = EditorGUILayout.ToggleLeft(new GUIContent("Show Editor prefs"), ShowEditorPrefs, GUILayout.MinWidth(30));
+        //if (EditorPrefsAvailable != ShowEditorPrefs)
+        //{
+        //    Refresh();
+        //}
         //if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
         //{
         //    Refresh();
         //}
+    }
+    private void DrawApplyAll()
+    {
+        if (GUILayout.Button(new GUIContent(ApplyAllIcon, "Save all Changes"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        {
+            foreach (var item in deserializedPlayerPrefs)
+            {
+                item.Save();
+            }
+        }
+    }
+    private void DrawRevertAll()
+    {
+        if (GUILayout.Button(new GUIContent(resetIcon, "Revert all changes"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        {
+            foreach (var item in deserializedPlayerPrefs)
+            {
+                item.BackUp();
+            }
+        }
     }
     private void Refresh()
     {
@@ -503,6 +537,7 @@ public class PlayerPrefsWindow : EditorWindow
         GUILayout.Label("Value", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
         GUILayout.Label("Type", EditorStyles.boldLabel, GUILayout.MinWidth(100), GUILayout.MaxWidth(220));
         GUILayout.Label("", EditorStyles.boldLabel, GUILayout.MinWidth(75), GUILayout.MaxWidth(75));
+
         GUILayout.EndHorizontal();
         scrollView = EditorGUILayout.BeginScrollView(scrollView);
 
@@ -513,8 +548,8 @@ public class PlayerPrefsWindow : EditorWindow
                 if (_deserializedPlayerPrefs[i].TempKey.ToLower().Contains("unity"))
                     continue;
             }
-            GUILayout.BeginHorizontal();
 
+            GUILayout.BeginHorizontal();
             GUILayout.TextField(_deserializedPlayerPrefs[i].TempKey, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
             // GUILayout.TextArea(_deserializedPlayerPrefs[i].TempKey, EditorStyles.textField, GUILayout.ExpandHeight(true));
             switch (_deserializedPlayerPrefs[i].type)
@@ -542,13 +577,15 @@ public class PlayerPrefsWindow : EditorWindow
                     break;
                 case PlayerPrefsType.Bool:
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ToggleLeft("", PrefsSerialzer.StringToBool(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
-
+                    break;
+                case PlayerPrefsType.DateTime:
+                    GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_deserializedPlayerPrefs[i].TempValue.ToString()).ToString(), EditorStyles.textField, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 default:
                     break;
             }
 
-            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), GUILayout.MinWidth(50), GUILayout.MaxWidth(50));
+            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), GUILayout.MinWidth(50), GUILayout.MaxWidth(70));
 
             if (GUILayout.Button(new GUIContent(saveIcon, "Save current data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
             {
@@ -726,6 +763,11 @@ public class PlayerPrefsWindow : EditorWindow
                     break;
                 case PlayerPrefsType.Bool:
                     ppp.Value = PrefsSerialzer.StringToBool(item.value);
+                    ppp.BackupValues = ppp.Value;
+                    ppp.TempValue = ppp.Value;
+                    break;
+                case PlayerPrefsType.DateTime:
+                    ppp.Value = PrefsSerialzer.StringToDateTime(item.value);
                     ppp.BackupValues = ppp.Value;
                     ppp.TempValue = ppp.Value;
                     break;
