@@ -620,7 +620,7 @@ public class PlayerPrefsWindow : EditorWindow
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.FloatField((float)_deserializedPlayerPrefs[i].TempValue, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.String:
-                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextArea(_deserializedPlayerPrefs[i].TempValue.ToString(), EditorStyles.textField, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextArea(_deserializedPlayerPrefs[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.MinWidth(200));
                     break;
                 case PlayerPrefsType.Vector3:
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", PrefsSerialzer.StringToVector3(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
@@ -638,7 +638,7 @@ public class PlayerPrefsWindow : EditorWindow
                     _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Toggle("", PrefsSerialzer.StringToBool(_deserializedPlayerPrefs[i].TempValue.ToString()),GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 case PlayerPrefsType.DateTime:
-                    GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_deserializedPlayerPrefs[i].TempValue.ToString()).ToString(), EditorStyles.textField, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_deserializedPlayerPrefs[i].TempValue.ToString()).ToString(), EditorStyles.toolbarTextField, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
                     break;
                 default:
                     break;
