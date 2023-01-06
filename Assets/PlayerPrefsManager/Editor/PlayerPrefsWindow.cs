@@ -95,6 +95,57 @@ public class PlayerPrefsWindow : EditorWindow
         {
             PlayerPrefs.DeleteKey(Key);
         }
+        public bool isEqual()
+        {   
+            bool returnValue = false ;
+
+            switch (type)
+            {
+                case PlayerPrefsType.Int:
+                    returnValue = (int)TempValue == (int)Value;
+                    break;
+                case PlayerPrefsType.Float:
+                    returnValue = (float)TempValue == (float)Value;
+                    break;
+                case PlayerPrefsType.String:
+                    returnValue = String.Equals(TempValue.ToString(),Value.ToString());
+                    break;
+                case PlayerPrefsType.Vector2:
+                    var v2c = PrefsSerialzer.StringToVector2(Value.ToString());
+                    var v2t = PrefsSerialzer.StringToVector2(TempValue.ToString());
+                    returnValue = v2c == v2t;
+
+                    break;
+                case PlayerPrefsType.Vector3:
+                    var v3c = PrefsSerialzer.StringToVector3(Value.ToString());
+                    var v3t = PrefsSerialzer.StringToVector3(TempValue.ToString());
+                    returnValue = v3c == v3t;
+                    break;
+                case PlayerPrefsType.Vector4:
+                    var v4c = PrefsSerialzer.StringToVector4(Value.ToString());
+                    var v4t = PrefsSerialzer.StringToVector4(TempValue.ToString());
+                    returnValue = v4c == v4t;
+                    break;
+                case PlayerPrefsType.Color:
+                    var cc = PrefsSerialzer.StringToColor(Value.ToString());
+                    var ct = PrefsSerialzer.StringToColor(TempValue.ToString());
+                    returnValue = cc == ct;
+                    break;
+                case PlayerPrefsType.Bool:
+                    var bc = PrefsSerialzer.StringToBool(Value.ToString());
+                    var bt = PrefsSerialzer.StringToBool(TempValue.ToString());
+                    returnValue = bc == bt;
+                    break;
+                case PlayerPrefsType.DateTime:
+                    var tc = PrefsSerialzer.StringToDateTime(Value.ToString());
+                    var tt = PrefsSerialzer.StringToDateTime(TempValue.ToString());
+                    returnValue = tc == tt;
+                    break;
+                default:
+                    break;
+            }
+            return returnValue;
+        }
     }
 
     internal void Import(string importCompanyName, string importProductName)
@@ -271,8 +322,10 @@ public class PlayerPrefsWindow : EditorWindow
         }
         else
             DrawPlayerPrefs(deserializedPlayerPrefs);
-
+        EditorGUILayout.Space(10);
         DrawBottomButtons();
+        EditorGUILayout.Space(10);
+
         GUILayout.EndVertical();
     }
 
@@ -593,6 +646,16 @@ public class PlayerPrefsWindow : EditorWindow
             Color oldstylecolor = style.normal.textColor;
 
             style4.normal.textColor = Color.red;
+            if (!_deserializedPlayerPrefs[i].isEqual())
+            {
+                style3.fontStyle = FontStyle.Bold;
+                style3.normal.textColor = Color.green;
+            }
+            else
+            {
+                style3.fontStyle = FontStyle.Normal;
+                style.normal.textColor = Color.white;
+            }
 
             if (isSearchDraw)
             {
@@ -618,7 +681,10 @@ public class PlayerPrefsWindow : EditorWindow
                 {
                     style3.normal.textColor = Color.yellow;
                 }
+                
             }
+            style3.fontStyle = FontStyle.Normal;
+            style3.normal.textColor = Color.white;
 
             // GUILayout.TextArea(_deserializedPlayerPrefs[i].TempKey, EditorStyles.textField, GUILayout.ExpandHeight(true));
             switch (_deserializedPlayerPrefs[i].type)
