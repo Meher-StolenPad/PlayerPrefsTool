@@ -231,6 +231,9 @@ public class PlayerPrefsWindow : EditorWindow
         PlayerPrefsWindow window = (PlayerPrefsWindow)GetWindow(typeof(PlayerPrefsWindow));
         window.titleContent = new GUIContent("PlayerPrefs Manager");
         window.Show();
+        Vector2 minSize = window.minSize;
+        minSize.x = 600;
+        window.minSize = minSize;
     }
 
     // Set variables at the beginning of window
@@ -287,29 +290,53 @@ public class PlayerPrefsWindow : EditorWindow
     }
     private void DrawBottomButtons()
     {
-        GUILayout.BeginHorizontal();
-        Color oldBackgroundColor = GUI.backgroundColor;
+        GUILayout.FlexibleSpace();
 
-        GUI.backgroundColor = oldBackgroundColor;
-
-        GUI.backgroundColor = Color.green;
-
-        if (GUILayout.Button(new GUIContent(plusIcon, "Add New Player Pref"), EditorStyles.miniButtonLeft, GUILayout.MaxWidth(300)))
+        EditorGUILayout.BeginHorizontal();
+        float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
+        // Delete all PlayerPrefs
+        if (GUILayout.Button("Add New Pref", GUILayout.Width(buttonWidth)))
         {
             CreatePrefWizard wizard = ScriptableWizard.DisplayWizard<CreatePrefWizard>("AddPlayerPref");
         }
-        GUI.backgroundColor = Color.red;
 
-        if (GUILayout.Button(new GUIContent(deleteIcon, "Delete all PlayerPrefs data"), EditorStyles.miniButtonRight, GUILayout.MaxWidth(300)))
+        GUILayout.FlexibleSpace();
+
+        // Mainly needed for OSX, this will encourage PlayerPrefs to save to file (but still may take a few seconds)
+        if (GUILayout.Button("Delete All", GUILayout.Width(buttonWidth)))
         {
             DeleteAll();
         }
-        GUI.backgroundColor = oldBackgroundColor;
+
+        EditorGUILayout.EndHorizontal();
+
+        //GUILayout.BeginHorizontal();
+        //Color oldBackgroundColor = GUI.backgroundColor;
+
+        //GUI.backgroundColor = oldBackgroundColor;
+
+        //GUI.backgroundColor = Color.green;
+        //float FullbuttonWidth = (EditorGUIUtility.currentViewWidth-10) / 2f;
+
+        //if (GUILayout.Button(new GUIContent(plusIcon, "Add New Player Pref"), EditorStyles.miniButtonLeft, GUILayout.Width(FullbuttonWidth)))
+        //{
+        //    CreatePrefWizard wizard = ScriptableWizard.DisplayWizard<CreatePrefWizard>("AddPlayerPref");
+        //}
+        //GUILayout.FlexibleSpace();
+
+        //GUI.backgroundColor = Color.red;
+
+        //if (GUILayout.Button(new GUIContent(deleteIcon, "Delete all PlayerPrefs data"), EditorStyles.miniButtonRight, GUILayout.Width(FullbuttonWidth)))
+        //{
+        //    DeleteAll();
+        //}
+        //GUI.backgroundColor = oldBackgroundColor;
     }
     // Shows popup that includes Import/Export options
     void DrawImpExpButton()
     {
-        if (GUILayout.Button("Import/Export", EditorStyles.toolbarDropDown, GUILayout.MaxWidth(100)))
+        float buttonWidth = (EditorGUIUtility.currentViewWidth) / 4f;
+        if (GUILayout.Button("Import/Export", EditorStyles.toolbarDropDown, GUILayout.Width((EditorGUIUtility.currentViewWidth) /4f)))
         {
             GenericMenu menu = new GenericMenu();
             menu.AddItem(new GUIContent("Import directly"), false, Import);
@@ -325,7 +352,9 @@ public class PlayerPrefsWindow : EditorWindow
     // Draws search field for finding specific PlayerPrefs
     void DrawSearchField()
     {
-        searchText = GUILayout.TextField(searchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.MinWidth(230)); // It's name written wrong by team in Unity
+        float buttonWidth = (EditorGUIUtility.currentViewWidth) / 4f;
+
+        searchText = GUILayout.TextField(searchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.Width(buttonWidth)); // It's name written wrong by team in Unity
         if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton"))) // It's name written wrong by team in Unity
         {
             // Remove focus if cleared
@@ -337,14 +366,19 @@ public class PlayerPrefsWindow : EditorWindow
     // Draws button to refresh all PlayerPrefs data
     void DrawRefreshButton()
     {
-        if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
+        FullbuttonWidth = (FullbuttonWidth / 7)/1.5f;
+
+        if (GUILayout.Button(new GUIContent(refreshIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
         {
             Refresh();
         }
     }
     void DrawShowEditorPrefsButton()
     {
-        ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.MaxWidth(150));
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
+        FullbuttonWidth = (FullbuttonWidth / 7)*4;
+        ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth));
         if (EditorPrefsAvailable != ShowEditorPrefs)
         {
             Refresh();
@@ -353,7 +387,10 @@ public class PlayerPrefsWindow : EditorWindow
     }
     private void DrawApplyAll()
     {
-        if (GUILayout.Button(new GUIContent(ApplyAllIcon, "Save all Changes"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
+        FullbuttonWidth = (FullbuttonWidth / 7);
+
+        if (GUILayout.Button(new GUIContent(ApplyAllIcon, "Save all Changes"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
         {
             foreach (var item in deserializedPlayerPrefs)
             {
@@ -363,7 +400,10 @@ public class PlayerPrefsWindow : EditorWindow
     }
     private void DrawRevertAll()
     {
-        if (GUILayout.Button(new GUIContent(resetIcon, "Revert all changes"), EditorStyles.toolbarButton, GUILayout.MaxWidth(30)))
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
+        FullbuttonWidth = (FullbuttonWidth /7);
+
+        if (GUILayout.Button(new GUIContent(resetIcon, "Revert all changes"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
         {
             foreach (var item in deserializedPlayerPrefs)
             {
@@ -524,49 +564,19 @@ public class PlayerPrefsWindow : EditorWindow
     // Draw Scrollable view for PlayerPrefs list and PlayerPrefs rows that gets data from registryKey
     void DrawPlayerPrefs(List<PlayerPrefPair> _deserializedPlayerPrefs,bool isSearchDraw = false)
     {
-        GUIStyle style = EditorStyles.toolbar;
-        style.fontSize = 12;
-        style.fontStyle = FontStyle.Bold;
-        style.alignment = TextAnchor.MiddleCenter;
-        Color oldBackgroundColor = GUI.backgroundColor;
+        GUIStyle style;
+        Color oldBackgroundColor;
 
-        GUIStyle styletoolbar = EditorStyles.toolbarDropDown;
-        styletoolbar.fontSize = 12;
-        styletoolbar.fontStyle = FontStyle.Bold;
-        styletoolbar.alignment = TextAnchor.MiddleCenter;
+        DrawTitles(out style, out oldBackgroundColor);
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth-20) / 10;
+        //float valuebuttonWidth = (EditorGUIUtility.currentViewWidth) / 10;
+            
+        // scrollView = GUI.BeginScrollView(scrollView, new Rect(0, 0, 220, 200));
 
-        GUI.backgroundColor = new Color(0.56f, 0.56f, 0.56f);
-        GUILayout.BeginVertical();
+        //scrollView = GUILayout.BeginScrollView(scrollView, false, true, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Toggle(SortType == SortType.Name, "Key", styletoolbar, GUILayout.MaxWidth(205)))
-        {
-            if(SortType != SortType.Name)
-            {
-                SortType = SortType.Name;
-                Refresh();
-            }
+        scrollView = GUILayout.BeginScrollView(scrollView, GUIStyle.none, GUI.skin.verticalScrollbar, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
-        }
-
-
-        // GUILayout.Toggle("Key", styletoolbar, GUILayout.MinWidth(205), GUILayout.MaxWidth(205));
-        GUILayout.Label("Value", style, GUILayout.MinWidth(200), GUILayout.MaxWidth(200));
-        //GUILayout.Label("Type", styletoolbar, GUILayout.MinWidth(75), GUILayout.MaxWidth(75));
-        if (GUILayout.Toggle(SortType == SortType.Type, "Type", styletoolbar, GUILayout.MaxWidth(75)))
-        {
-            if (SortType != SortType.Type)
-            {
-                SortType = SortType.Type;
-                Refresh();
-            }
-        }
-        GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.MaxWidth(110));
-
-        GUI.backgroundColor = oldBackgroundColor;
-
-        GUILayout.EndHorizontal();
-        scrollView = EditorGUILayout.BeginScrollView(scrollView);
 
         for (int i = 0; i < _deserializedPlayerPrefs.Count; i++)
         {
@@ -590,17 +600,17 @@ public class PlayerPrefsWindow : EditorWindow
                 {
                     style3.normal.textColor = Color.yellow;
 
-                    GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.Width(FullbuttonWidth*3f));
                     style3.normal.textColor = oldstylecolor;
                 }
                 else
                 {
-                    GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.Width(FullbuttonWidth * 3f));
                 }
             }
             else
             {
-                GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                GUILayout.Label(_deserializedPlayerPrefs[i].TempKey, style3, GUILayout.Width(FullbuttonWidth * 3f));
             }
             if (isSearchDraw)
             {
@@ -614,31 +624,31 @@ public class PlayerPrefsWindow : EditorWindow
             switch (_deserializedPlayerPrefs[i].type)
             {
                 case PlayerPrefsType.Int:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.IntField((int)_deserializedPlayerPrefs[i].TempValue, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.IntField((int)_deserializedPlayerPrefs[i].TempValue, GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Float:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.FloatField((float)_deserializedPlayerPrefs[i].TempValue, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.FloatField((float)_deserializedPlayerPrefs[i].TempValue, GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.String:
-                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextArea(_deserializedPlayerPrefs[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.MinWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = GUILayout.TextArea(_deserializedPlayerPrefs[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Vector3:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", PrefsSerialzer.StringToVector3(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector3Field("", PrefsSerialzer.StringToVector3(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Vector2:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector2Field("", PrefsSerialzer.StringToVector2(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector2Field("", PrefsSerialzer.StringToVector2(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Color:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ColorField(PrefsSerialzer.StringToColor(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.ColorField(PrefsSerialzer.StringToColor(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Vector4:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector4Field("", PrefsSerialzer.StringToVector4(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Vector4Field("", PrefsSerialzer.StringToVector4(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.Bool:
-                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Toggle("", PrefsSerialzer.StringToBool(_deserializedPlayerPrefs[i].TempValue.ToString()),GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    _deserializedPlayerPrefs[i].TempValue = EditorGUILayout.Toggle("", PrefsSerialzer.StringToBool(_deserializedPlayerPrefs[i].TempValue.ToString()), GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 case PlayerPrefsType.DateTime:
-                    GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_deserializedPlayerPrefs[i].TempValue.ToString()).ToString(), EditorStyles.toolbarTextField, GUILayout.MinWidth(100), GUILayout.MaxWidth(200));
+                    GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_deserializedPlayerPrefs[i].TempValue.ToString()).ToString(), EditorStyles.toolbarTextField, GUILayout.Width(FullbuttonWidth * 4));
                     break;
                 default:
                     break;
@@ -650,15 +660,15 @@ public class PlayerPrefsWindow : EditorWindow
             style2.fontStyle = FontStyle.Bold;
             style2.alignment = TextAnchor.MiddleCenter;
 
-            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), style2, GUILayout.MinWidth(50), GUILayout.MaxWidth(70));
+            GUILayout.Label(_deserializedPlayerPrefs[i].type.ToString(), style2, GUILayout.Width(FullbuttonWidth * 1.5f));
             GUI.backgroundColor = Color.green;
-            if (GUILayout.Button(new GUIContent(saveIcon, "Save current data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
+            if (GUILayout.Button(new GUIContent(saveIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth * 0.45f)))
             {
                 _deserializedPlayerPrefs[i].SaveKey();
             }
             GUI.backgroundColor = Color.yellow;
 
-            if (GUILayout.Button(new GUIContent(resetIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
+            if (GUILayout.Button(new GUIContent(resetIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth * 0.5f)))
             {
                 _deserializedPlayerPrefs[i].BackUp();
             }
@@ -666,7 +676,7 @@ public class PlayerPrefsWindow : EditorWindow
 
             GUI.backgroundColor = Color.red;
 
-            if (GUILayout.Button(new GUIContent(deleteIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.MaxWidth(35), GUILayout.MaxHeight(35)))
+            if (GUILayout.Button(new GUIContent(deleteIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth * 0.45f)))
             {
                 _deserializedPlayerPrefs[i].Delete();
                 OnDeleteElement += Refresh;
@@ -684,6 +694,55 @@ public class PlayerPrefsWindow : EditorWindow
         OnDeleteElement?.Invoke();
         OnDeleteElement -= Refresh;
     }
+
+    private void DrawTitles(out GUIStyle style, out Color oldBackgroundColor)
+    {
+        style = EditorStyles.toolbar;
+        style.fontSize = 12;
+        style.fontStyle = FontStyle.Bold;
+        style.alignment = TextAnchor.MiddleCenter;
+        oldBackgroundColor = GUI.backgroundColor;
+        GUIStyle styletoolbar = EditorStyles.toolbarDropDown;
+        styletoolbar.fontSize = 12;
+        styletoolbar.fontStyle = FontStyle.Bold;
+        styletoolbar.alignment = TextAnchor.MiddleCenter;
+
+        GUI.backgroundColor = new Color(0.56f, 0.56f, 0.56f);
+        GUILayout.BeginVertical();
+
+        GUILayout.BeginHorizontal();
+
+        float FullbuttonWidth = (EditorGUIUtility.currentViewWidth-10)/10;
+
+        if (GUILayout.Toggle(SortType == SortType.Name, "Key", styletoolbar, GUILayout.Width(FullbuttonWidth*3)))
+        {
+            if (SortType != SortType.Name)
+            {
+                SortType = SortType.Name;
+                Refresh();
+            }
+
+        }
+
+
+        // GUILayout.Toggle("Key", styletoolbar, GUILayout.MinWidth(205), GUILayout.MaxWidth(205));
+        GUILayout.Label("Value", style, GUILayout.MinWidth(200), GUILayout.Width(FullbuttonWidth * 4));
+        //GUILayout.Label("Type", styletoolbar, GUILayout.MinWidth(75), GUILayout.MaxWidth(75));
+        if (GUILayout.Toggle(SortType == SortType.Type, "Type", styletoolbar, GUILayout.Width(FullbuttonWidth*1.5f)))
+        {
+            if (SortType != SortType.Type)
+            {
+                SortType = SortType.Type;
+                Refresh();
+            }
+        }
+        GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.Width(FullbuttonWidth *1.5f));
+
+        GUI.backgroundColor = oldBackgroundColor;
+
+        GUILayout.EndHorizontal();
+    }
+
     private Action OnDeleteElement;
 
     // Call this function when Delete All button clicked
