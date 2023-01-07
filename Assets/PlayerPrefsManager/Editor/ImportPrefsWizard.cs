@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 public class ImportPrefsWizard : ScriptableWizard
 {
@@ -14,15 +14,6 @@ public class ImportPrefsWizard : ScriptableWizard
         importCompanyName = PlayerSettings.companyName;
         importProductName = PlayerSettings.productName;
     }
-
-    private void OnInspectorUpdate()
-    {
-        //if (Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsEditor)).Length == 0)
-        //{
-        //    // Close();
-        //}
-    }
-
     protected override bool DrawWizardGUI()
     {
         GUILayout.Label("Import PlayerPrefs from another project, also useful if you change product or company name", EditorStyles.wordWrappedLabel);

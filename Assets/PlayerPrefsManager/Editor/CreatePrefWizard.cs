@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,27 +18,22 @@ public class CreatePrefWizard : ScriptableWizard
     private Vector4 valuetempVecotr4;
     private Color valuetempColor;
     private bool valuetempBool;
-
-    // [SerializeField] PlayerPrefsType type;
-    private void OnEnable()
-    {
-        
-    }
     private string oldKey;
-    private bool canChooseThisKey;
+
     private void OnInspectorUpdate()
     {
         createButtonName = "Add " + Key + " to player prefs";
 
         helpString = "Note : you cant' add a new key that already have a value !";
 
-        if (String.IsNullOrEmpty(Key)){
+        if (String.IsNullOrEmpty(Key))
+        {
             errorString = "Please set Key name";
             isValid = false;
         }
         else
         {
-            if(Key != oldKey)
+            if (Key != oldKey)
             {
                 if (PlayerPrefs.HasKey(Key))
                 {
@@ -59,7 +51,6 @@ public class CreatePrefWizard : ScriptableWizard
         maxSize = new Vector2(300, 300);
 
     }
-
     protected override bool DrawWizardGUI()
     {
         GUILayout.BeginVertical();
@@ -78,7 +69,7 @@ public class CreatePrefWizard : ScriptableWizard
 
         if (Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow)).Length >= 1)
         {
-           ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref(Key, type, value);
+            ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref(Key, type, value);
         }
     }
     private void DrawValueField()
@@ -125,5 +116,3 @@ public class CreatePrefWizard : ScriptableWizard
         GUILayout.EndHorizontal();
     }
 }
-
-// post request : "Game name"

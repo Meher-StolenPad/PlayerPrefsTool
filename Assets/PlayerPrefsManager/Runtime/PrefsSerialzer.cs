@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,13 +9,14 @@ using Debug = UnityEngine.Debug;
 
 public static class PrefsSerialzer
 {
+    private static string numberPattern = " ({0})";
     public static bool HasKey(string key)
     {
         return PlayerPrefs.HasKey(key);
     }
     public static void DeleteKey(string key)
     {
-         PlayerPrefs.DeleteKey(key);
+        PlayerPrefs.DeleteKey(key);
     }
     public static int GetInt(string key, int defaultValue = 0)
     {
@@ -30,7 +30,7 @@ public static class PrefsSerialzer
     {
         return PlayerPrefs.GetString(key, defaultValue);
     }
-    public static Vector2 GetVector2(string key,Vector2 defaultValue)
+    public static Vector2 GetVector2(string key, Vector2 defaultValue)
     {
         return GetCosutomTypeValue<Vector2>(key, defaultValue);
     }
@@ -50,12 +50,11 @@ public static class PrefsSerialzer
     {
         return GetCosutomTypeValue<bool>(key, defaultValue);
     }
-
-    private static T GetCosutomTypeValue<T>(string key,T defaultValue)
+    private static T GetCosutomTypeValue<T>(string key, T defaultValue)
     {
         object returnvalue = default;
         Serialzer<T> serialzer = JsonUtility.FromJson<Serialzer<T>>(PlayerPrefs.GetString(key));
-        if(serialzer != null)
+        if (serialzer != null)
         {
             returnvalue = serialzer.value;
         }
@@ -63,7 +62,7 @@ public static class PrefsSerialzer
         {
             returnvalue = defaultValue;
         }
-        return (T)returnvalue;  
+        return (T)returnvalue;
     }
     public static object TryGetCostumeType(string key, out PlayerPrefsType playerPrefsType, string defaultValue = "")
     {
@@ -113,7 +112,6 @@ public static class PrefsSerialzer
         }
         return retunValue;
     }
-
     public static void SetVector3(string key, Vector3 _value)
     {
         Serialzer<Vector3> serialzer = new Serialzer<Vector3>();
@@ -229,9 +227,6 @@ public static class PrefsSerialzer
             s = s.Replace(")", "");
 
             var splitString = s.Split(","[0]);
-
-            // Build new Vector3 from array elements
-
             outVector3.x = float.Parse(splitString[0]);
             outVector3.y = float.Parse(splitString[1]);
             outVector3.z = float.Parse(splitString[2]);
@@ -307,7 +302,7 @@ public static class PrefsSerialzer
     {
         Serialzer<DateTime> serialzer = new Serialzer<DateTime>();
 
-        serialzer.type = PlayerPrefsType.DateTime; 
+        serialzer.type = PlayerPrefsType.DateTime;
 
         serialzer.value = _value;
         //JsonConvert.SerializeObject(DateTime.Now)
@@ -316,18 +311,15 @@ public static class PrefsSerialzer
     }
     public static DateTime? StringToDateTime(string s)
     {
-        //date = JsonConvert.DeserializeObject<DateTime>(s);
-
-        if (DateTime.TryParse(s,out DateTime d))
+        if (DateTime.TryParse(s, out DateTime d))
         {
-            return  d;
+            return d;
         }
         else
         {
             return null;
         }
     }
-
     public static void CopyToClipboard(this string s)
     {
         TextEditor te = new TextEditor();
@@ -335,8 +327,6 @@ public static class PrefsSerialzer
         te.SelectAll();
         te.Copy();
     }
-    private static string numberPattern = " ({0})";
-
     public static string NextAvailableFilename(string path)
     {
         // Short-cut if already available
@@ -350,7 +340,6 @@ public static class PrefsSerialzer
         // Otherwise just append the pattern to the path and return next filename
         return GetNextFilename(path + numberPattern);
     }
-
     private static string GetNextFilename(string pattern)
     {
         string tmp = string.Format(pattern, 1);
@@ -400,8 +389,29 @@ public static class PrefsSerialzer
             Error = (sender, args) => { success = false; args.ErrorContext.Handled = true; },
             MissingMemberHandling = MissingMemberHandling.Error
         };
+
         result = JsonConvert.DeserializeObject<T>(@this, settings);
         return success;
+    }
+    public static bool IsValidJson(this string src)
+    {
+        try
+        {
+            var asToken = JToken.Parse(src);
+            JArray array = JArray.Parse(src);
+            foreach (JObject content in array.Children<JObject>())
+            {
+                foreach (JProperty prop in content.Properties())
+                {
+                    Debug.Log(prop.Name);
+                }
+            }
+            return asToken.Type == JTokenType.Object || asToken.Type == JTokenType.Array;
+        }
+        catch (Exception)  // Typically a JsonReaderException exception if you want to specify.
+        {
+            return false;
+        }
     }
 }
 [Serializable]
@@ -422,7 +432,7 @@ public class ExportSerialzer
 public class ExportSerialzerHolder
 {
     public List<ExportSerialzer> exportlist = new List<ExportSerialzer>();
-}   
+}
 public enum PlayerPrefsType
 {
     Int,
@@ -432,6 +442,6 @@ public enum PlayerPrefsType
     Vector3,
     Vector4,
     Color,
-    Bool,   
+    Bool,
     DateTime
 }
