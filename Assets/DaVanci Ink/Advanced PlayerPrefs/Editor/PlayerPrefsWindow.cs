@@ -31,6 +31,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             public bool isKeyFounded = false;
             public bool isValueFounded = false;
+            public bool isEncrypted = false;
             public void SaveKey()
             {
                 if (Key != TempKey)
@@ -38,33 +39,33 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     PlayerPrefs.DeleteKey(Key);
                     Key = TempKey;
                 }
-                Save();
+                 Save();
             }
             public void Save()
             {
                 BackupValues = Value;
 
                 Value = TempValue;
-
+                
                 switch (type)
                 {
                     case PlayerPrefsType.Int:
-                        PlayerPrefs.SetInt(Key, (int)Value);
+                        PrefsSerialzer.SetInt(Key, (int)Value, isEncrypted);
                         break;
                     case PlayerPrefsType.Float:
-                        PlayerPrefs.SetFloat(Key, (float)Value);
+                        PrefsSerialzer.SetFloat(Key, Value.ToString(),isEncrypted);
                         break;
                     case PlayerPrefsType.String:
-                        PlayerPrefs.SetString(Key, Value.ToString());
+                        PrefsSerialzer.SetString(Key, Value.ToString(),isEncrypted);
                         break;
                     case PlayerPrefsType.Vector3:
                         PrefsSerialzer.SetVector3(Key, PrefsSerialzer.StringToVector3(Value.ToString()));
                         break;
                     case PlayerPrefsType.Vector2:
-                        PrefsSerialzer.SetVector2(Key, PrefsSerialzer.StringToVector2(Value.ToString()));
+                        PrefsSerialzer.SetVector2(Key, PrefsSerialzer.StringToVector2(Value.ToString()),isEncrypted);
                         break;
                     case PlayerPrefsType.Color:
-                        PrefsSerialzer.SetColor(Key, PrefsSerialzer.StringToColor(Value.ToString()),false);
+                        PrefsSerialzer.SetColor(Key, PrefsSerialzer.StringToColor(Value.ToString()), false);
                         break;
                     case PlayerPrefsType.HDRColor:
                         PrefsSerialzer.SetColor(Key, PrefsSerialzer.StringToColor(Value.ToString()), true);
@@ -113,13 +114,31 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 switch (type)
                 {
                     case PlayerPrefsType.Int:
-                        returnValue = (int)TempValue == (int)Value;
+                        if (isEncrypted)
+                        {
+                            var ic = PrefsSerialzer.StringToInt(Value.ToString());
+                            var it = PrefsSerialzer.StringToInt(TempValue.ToString());
+                            returnValue = ic == it;
+                        }
+                        else
+                        {
+                            returnValue = (int)TempValue == (int)Value;
+                        }
                         break;
                     case PlayerPrefsType.Float:
-                        returnValue = (float)TempValue == (float)Value;
+                        if (isEncrypted)
+                        {
+                            var ic = PrefsSerialzer.StringToFloat(Value.ToString());
+                            var it = PrefsSerialzer.StringToFloat(TempValue.ToString());
+                            returnValue = ic == it;
+                        }
+                        else
+                        {
+                            returnValue = (float)TempValue == (float)Value;
+                        }
                         break;
                     case PlayerPrefsType.String:
-                        returnValue = String.Equals(TempValue.ToString(), Value.ToString());
+                        returnValue = String.Equals(TempValue, Value);
                         break;
                     case PlayerPrefsType.Vector2:
                         var v2c = PrefsSerialzer.StringToVector2(Value.ToString());
@@ -381,7 +400,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Refresh();
                 }
             }
-            GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.Width((FullbuttonWidth * 1.5f)+10));
+            GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.Width((FullbuttonWidth * 1.5f) + 10));
 
             GUI.backgroundColor = oldBackgroundColor;
 
@@ -440,6 +459,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 else
                 {
+                    if (_playerPrefsHolderList[i].isEncrypted)
+                    {
+                        style3.normal.textColor = Color.magenta;
+                    }
+                    else
+                    {
+                        style3.normal.textColor = Color.white;
+                    }
                     GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
                 }
                 if (isSearchDraw)
@@ -457,16 +484,32 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 else
                 {
+
                     style3.normal.textColor = Color.white;
                     style3.fontStyle = FontStyle.Normal;
                 }
+
                 switch (_playerPrefsHolderList[i].type)
                 {
                     case PlayerPrefsType.Int:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField((int)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                        if (_playerPrefsHolderList[i].isEncrypted)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField(PrefsSerialzer.StringToInt(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        else
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField((int)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                        }
                         break;
                     case PlayerPrefsType.Float:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField((float)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                        if (_playerPrefsHolderList[i].isEncrypted)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField(PrefsSerialzer.StringToFloat(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        else
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField((float)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                        }
                         break;
                     case PlayerPrefsType.String:
                         _playerPrefsHolderList[i].TempValue = GUILayout.TextArea(_playerPrefsHolderList[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(FullWindowWidth * 4));
@@ -478,7 +521,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2Field("", PrefsSerialzer.StringToVector2(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
                         break;
                     case PlayerPrefsType.Color:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none,PrefsSerialzer.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()),true,true, false,GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, PrefsSerialzer.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, false, GUILayout.Width(FullWindowWidth * 4));
                         break;
                     case PlayerPrefsType.HDRColor:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, PrefsSerialzer.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, true, GUILayout.Width(FullWindowWidth * 4));
@@ -493,7 +536,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         GUILayout.TextArea(PrefsSerialzer.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), EditorStyles.toolbarTextField, GUILayout.Width(FullWindowWidth * 4));
                         break;
                     case PlayerPrefsType.Byte:
-                        _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)PrefsSerialzer.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4)),0,255);
+                        _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)PrefsSerialzer.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4)), 0, 255);
                         break;
                     case PlayerPrefsType.Double:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.DoubleField(PrefsSerialzer.StringToDouble(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
@@ -613,11 +656,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
 
-                            PlayerPrefsType type = PlayerPrefsType.String;
+                            ReturnType returnValues = null;
 
-                            savedValue = PrefsSerialzer.TryGetCostumeType(key, out type, savedValue.ToString());
+                            savedValue = PrefsSerialzer.TryGetCostumeType(key, out returnValues, savedValue.ToString());
 
-                            pair.type = type;
+                            pair.type = returnValues.PlayerPrefsType;
+                            pair.isEncrypted = returnValues.IsEncrypted;
+
                         }
 
                         pair.Value = savedValue;
@@ -627,6 +672,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.TempKey = key;
 
                         tempPlayerPrefs[i] = pair;
+
                         i++;
                     }
                     PlayerPrefHolderList = tempPlayerPrefs.ToList();
@@ -688,48 +734,48 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             UpdateRegistry();
             GetAllPlayerPrefs();
         }
-        internal void AddPlayerPref(string key, PlayerPrefsType playerPrefsType, object value)
+        internal void AddPlayerPref(string key, PlayerPrefsType playerPrefsType, object value, bool useEncryption)
         {
             switch (playerPrefsType)
             {
                 case PlayerPrefsType.Int:
-                    PlayerPrefs.SetInt(key, (int)value);
+                    PrefsSerialzer.SetInt(key, (int)value,useEncryption);
                     break;
                 case PlayerPrefsType.Float:
-                    PlayerPrefs.SetFloat(key, (float)value);
+                    PrefsSerialzer.SetFloat(key,value.ToString(),useEncryption);
                     break;
                 case PlayerPrefsType.String:
-                    PlayerPrefs.SetString(key, (string)value);
+                    PrefsSerialzer.SetString(key, (string)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector2:
-                    PrefsSerialzer.SetVector2(key, (Vector2)value);
+                    PrefsSerialzer.SetVector2(key, (Vector2)value,useEncryption);
                     break;
                 case PlayerPrefsType.Vector3:
-                    PrefsSerialzer.SetVector3(key, (Vector3)value);
+                    PrefsSerialzer.SetVector3(key, (Vector3)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector4:
-                    PrefsSerialzer.SetVector4(key, (Vector4)value);
+                    PrefsSerialzer.SetVector4(key, (Vector4)value, useEncryption);
                     break;
                 case PlayerPrefsType.Color:
-                    PrefsSerialzer.SetColor(key, (Color)value,false);
+                    PrefsSerialzer.SetColor(key, (Color)value, false, useEncryption);
                     break;
                 case PlayerPrefsType.HDRColor:
-                    PrefsSerialzer.SetColor(key, (Color)value, true);
+                    PrefsSerialzer.SetColor(key, (Color)value, true, useEncryption);
                     break;
                 case PlayerPrefsType.Bool:
-                    PrefsSerialzer.SetBool(key, (bool)value);
+                    PrefsSerialzer.SetBool(key, (bool)value, useEncryption);
                     break;
                 case PlayerPrefsType.Byte:
-                    PrefsSerialzer.SetByte(key, (byte)value);
+                    PrefsSerialzer.SetByte(key, (byte)value, useEncryption);
                     break;
                 case PlayerPrefsType.Double:
-                    PrefsSerialzer.SetDoube(key, (double)value);
+                    PrefsSerialzer.SetDoube(key, (double)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector2Int:
-                    PrefsSerialzer.SetVector2Int(key, (Vector2Int)value);
+                    PrefsSerialzer.SetVector2Int(key, (Vector2Int)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector3Int:
-                    PrefsSerialzer.SetVector3Int(key, (Vector3Int)value);
+                    PrefsSerialzer.SetVector3Int(key, (Vector3Int)value, useEncryption);
                     break;
                 default:
                     break;

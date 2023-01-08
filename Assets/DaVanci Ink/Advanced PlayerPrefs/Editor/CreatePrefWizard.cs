@@ -27,6 +27,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private DateTime valueDateTime;
         private string oldKey;
 
+        private bool UseEncryption;
+
         private void OnInspectorUpdate()
         {
             createButtonName = "Add " + Key + " to player prefs";
@@ -76,11 +78,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow)).Length >= 1)
             {
-                ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref(Key, type, value);
+                ((PlayerPrefsWindow)Resources.FindObjectsOfTypeAll(typeof(PlayerPrefsWindow))[0]).AddPlayerPref(Key, type, value,UseEncryption);
             }
         }
         private void DrawValueField()
         {
+            UseEncryption = EditorGUILayout.Toggle("Use Encryption", UseEncryption);
+
             GUILayout.BeginHorizontal();
 
             GUILayout.Label("Value", EditorStyles.wordWrappedLabel);

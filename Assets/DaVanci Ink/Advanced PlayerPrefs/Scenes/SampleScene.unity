@@ -235,7 +235,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd3697bb24c49084aa25489d346af999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  testEncription: 
+  CriptedEncription: B+dtn1LLLAQu7ocpSb246cNILDc5e4gO/8P1QEcHygEb8w0pyDpZQisOcdo5UyfzYk6M9bvWX+FClebtyW1rO2BJoUwBrNG0bie08dW1/Ss=
+  key: A60A5770FE5E7AB200BA9CFC94E4E8B0
+  iv: 1234567887654321
 --- !u!4 &1470230929
 Transform:
   m_ObjectHideFlags: 0
