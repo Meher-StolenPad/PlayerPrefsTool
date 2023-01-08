@@ -1,3 +1,4 @@
+using DaVanciInk.AdvancedPlayerPrefs;
 using Facebook.Unity.Settings;
 using System;
 using System.Collections;
