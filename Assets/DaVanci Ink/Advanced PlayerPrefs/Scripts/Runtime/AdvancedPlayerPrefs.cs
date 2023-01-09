@@ -8,12 +8,14 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using System.Runtime.CompilerServices;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+[assembly: InternalsVisibleTo("AdvancedPlayerPrefsEditor")]
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
-    public enum PlayerPrefsType
+    internal enum PlayerPrefsType
     {
         Int,
         Float,
@@ -31,12 +33,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         DateTime
     }
 
-    public class ReturnType
+    internal class ReturnType
     {
         public PlayerPrefsType PlayerPrefsType = PlayerPrefsType.String;
         public bool IsEncrypted;
     }
-    public static class PrefsSerialzer
+    public static class AdvancedPlayerPrefs
     {
         private static readonly string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
         private static readonly string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/EncryptionSettings";
@@ -45,7 +47,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static string numberPattern = " ({0})";
         private static EncryptionSettings EncryptionSettings;
 #if UNITY_EDITOR
-        public static bool SelectSettings(bool select = true)
+        internal static bool SelectSettings(bool select = true)
         {
             string path = AssetDatabase.GetAssetPath(EncryptionSettings);
 
@@ -60,7 +62,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return true;
             }
         }
-        public static void CreateSettings()
+        internal static void CreateSettings()
         {
             EncryptionSettings en = ScriptableObject.CreateInstance<EncryptionSettings>();
 
@@ -72,7 +74,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EncryptionSettings = en;
         }
 #endif
-
         private static void TryLoadSettings()
         {
             if (EncryptionSettings == null)
@@ -167,11 +168,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return (T)returnvalue;
         }
-        public static string ReturnObjectValue(Serialzer<object> data)
+        internal static string ReturnObjectValue(Serialzer<object> data)
         {
             return data.value.ToString();
         }
-        public static object TryGetCostumeType(string key, out ReturnType returnType, string defaultValue = "")
+        internal static object TryGetCostumeType(string key, out ReturnType returnType, string defaultValue = "")
         {
             string json = PlayerPrefs.GetString(key, defaultValue);
 
@@ -232,7 +233,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetInt(key, value);
             }
         }
-        public static int StringToInt(string s)
+        internal static int StringToInt(string s)
         {
             return int.Parse(s);
         }
@@ -271,7 +272,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetFloat(key, floatValue);
             }
         }
-        public static float StringToFloat(string s)
+        internal static float StringToFloat(string s)
         {
             return float.Parse(s);
         }
@@ -310,7 +311,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static Vector3 StringToVector3(string s)
+        internal static Vector3 StringToVector3(string s)
         {
             Vector3 outVector3 = Vector3.zero;
 
@@ -353,7 +354,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static Vector3Int StringToVector3Int(string s)
+        internal static Vector3Int StringToVector3Int(string s)
         {
             Vector3 outVector3 = Vector3.zero;
 
@@ -396,7 +397,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static byte StringToByte(string s)
+        internal static byte StringToByte(string s)
         {
             return Byte.Parse(s);
         }
@@ -417,7 +418,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static double StringToDouble(string s)
+        internal static double StringToDouble(string s)
         {
             return double.Parse(s);
         }
@@ -439,7 +440,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static bool StringToBool(string s)
+        internal static bool StringToBool(string s)
         {
             bool outBool = false;
 
@@ -468,7 +469,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
 
         }
-        public static Vector2 StringToVector2(string s)
+        internal static Vector2 StringToVector2(string s)
         {
             Vector2 outVector3 = Vector2.zero;
 
@@ -512,7 +513,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static Vector2Int StringToVector2Int(string s)
+        internal static Vector2Int StringToVector2Int(string s)
         {
             //  Debug.Log("Vector2Int : " + s);
 
@@ -556,7 +557,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static Vector4 StringToVector4(string s)
+        internal static Vector4 StringToVector4(string s)
         {
             Vector4 outVector3 = Vector4.zero;
 
@@ -606,7 +607,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static Color StringToColor(string s)
+        internal static Color StringToColor(string s)
         {
             Color outColor = Color.white;
 
@@ -677,7 +678,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
-        public static DateTime? StringToDateTime(string s)
+        internal static DateTime? StringToDateTime(string s)
         {
             if (DateTime.TryParse(s, out DateTime d))
             {
@@ -688,14 +689,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return null;
             }
         }
-        public static void CopyToClipboard(this string s)
+        internal static void CopyToClipboard(this string s)
         {
             TextEditor te = new TextEditor();
             te.text = s;
             te.SelectAll();
             te.Copy();
         }
-        public static string NextAvailableFilename(string path)
+        internal static string NextAvailableFilename(string path)
         {
             // Short-cut if already available
             if (!File.Exists(path))
@@ -708,7 +709,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             // Otherwise just append the pattern to the path and return next filename
             return GetNextFilename(path + numberPattern);
         }
-        private static string GetNextFilename(string pattern)
+        internal static string GetNextFilename(string pattern)
         {
             string tmp = string.Format(pattern, 1);
             if (tmp == pattern)
@@ -761,7 +762,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             result = JsonConvert.DeserializeObject<T>(@this, settings);
             return success;
         }
-        public static bool IsValidJson(this string src)
+        internal static bool IsValidJson(this string src)
         {
             try
             {
@@ -781,7 +782,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return false;
             }
         }
-        public static string Encryption(string inputData)
+        internal static string Encryption(string inputData)
         {
             TryLoadSettings();
 
@@ -805,7 +806,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return Convert.ToBase64String(result);
         }
 
-        public static string Decryption(string inputData)
+        internal static string Decryption(string inputData)
         {
             string returnstring = inputData;
             TryLoadSettings();
@@ -847,7 +848,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     }
     [Serializable]
-    public class Serialzer<T>
+    internal class Serialzer<T>
     {
         public bool isEncrypted;
         public PlayerPrefsType TypeBeforeEncryption;
@@ -856,14 +857,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public T value;
     }
     [Serializable]
-    public class ExportSerialzer
+    internal class ExportSerialzer
     {
         public string key;
         public PlayerPrefsType type;
         public string value;
     }
     [Serializable]
-    public class ExportSerialzerHolder
+    internal class ExportSerialzerHolder
     {
         public List<ExportSerialzer> exportlist = new List<ExportSerialzer>();
     }

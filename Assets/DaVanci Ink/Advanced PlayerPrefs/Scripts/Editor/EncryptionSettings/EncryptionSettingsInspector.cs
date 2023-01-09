@@ -7,7 +7,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     [CustomEditor(typeof(EncryptionSettings))]
     [CanEditMultipleObjects]
-    public class EncryptionSettingsInspector : Editor
+    internal class EncryptionSettingsInspector : Editor
     {
         private EncryptionSettings encryptionSetting;
         private static bool DisplaySetKeys
@@ -62,9 +62,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case 0: //Create backup
                         encryptionSetting.ExportKeys();
                         encryptionSetting.RefreshKeys();
+                        EditorUtility.SetDirty(encryptionSetting);
+                        AssetDatabase.SaveAssets();
                         break;
                     case 1: //Don't create a backup
                         encryptionSetting.RefreshKeys();
+                        EditorUtility.SetDirty(encryptionSetting);
+                        AssetDatabase.SaveAssets();
                         break;
                     case 2: //Cancel process (Basically do nothing for now.)
                         break;
@@ -136,10 +140,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                             case 0: //Create backup
                                 encryptionSetting.ExportKeys();
                                 encryptionSetting.SetKeys(Key);
+                                EditorUtility.SetDirty(encryptionSetting);
+                                AssetDatabase.SaveAssets();
                                 break;
                             case 1: //Don't create a backup
                                 encryptionSetting.SetKeys(Key);
-
+                                EditorUtility.SetDirty(encryptionSetting);
+                                AssetDatabase.SaveAssets();
                                 break;
                             case 2: //Cancel process (Basically do nothing for now.)
                                 break;

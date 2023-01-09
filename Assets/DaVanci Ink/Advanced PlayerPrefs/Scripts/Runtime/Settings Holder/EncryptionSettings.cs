@@ -10,7 +10,7 @@ using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
     [Serializable]
-    public class KeysExporter
+    internal class KeysExporter
     {
         public string Key;
 
@@ -25,19 +25,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     }
     //[CreateAssetMenu(fileName = "EncryptionSettings", menuName = "EncryptionSettingsHolder/Settings", order = 1)]
 
-    public class EncryptionSettings : ScriptableObject
+    internal class EncryptionSettings : ScriptableObject
     {
 
         public string Key = "A60A5770FE5E7AB200BA9CFC94E4E8B0";
         public readonly string Iv = "1234567887654321";
         public string SavedKey = "A610A2573704FE55E67A7B28008BA79C6FC5944E43E82B01";
         private char[] Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-        [HideInInspector] public bool useDeviceKey;
-        public string GetKey()
+        [HideInInspector] internal bool useDeviceKey;
+        internal string GetKey()
         {
             return Key;
         }
-        public string Getiv()
+        internal string Getiv()
         {
             return Iv;
         }
@@ -49,7 +49,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Key += SavedKey.Substring(i, 2);
             }
         }
-        public void SetSavedKeyFromKeys()
+        internal void SetSavedKeyFromKeys()
         {
             SavedKey = string.Empty;
             for (int i = 0; i < Iv.Length; i++)
@@ -58,24 +58,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 SavedKey += Iv[i];
             }
         }
-        public void RefreshKeys()
+        internal void RefreshKeys()
         {
             Key = CreateKey(32);
             SetSavedKeyFromKeys();
         }
-        public void ExportKeys()
+        internal void ExportKeys()
         {
             Export();
         }
-        public void ImportKeys()
+        internal void ImportKeys()
         {
             Export();
         }
-        public void SetKeys(string _key)
+        internal void SetKeys(string _key)
         {
             Key = _key;
         }
-        public string CreateKey(int _lenght)
+        internal string CreateKey(int _lenght)
         {
             byte[] data = new byte[_lenght];
             using (RNGCryptoServiceProvider crypto = new RNGCryptoServiceProvider())
@@ -108,7 +108,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             else
             {
-                path = PrefsSerialzer.NextAvailableFilename(path);
+                path = AdvancedPlayerPrefs.NextAvailableFilename(path);
                 File.WriteAllText(path, newBackupString);
             }
             Debug.Log(path);

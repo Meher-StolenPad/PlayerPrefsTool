@@ -72,8 +72,6 @@ public class PrivacyCreatorWizard : ScriptableWizard
 
     public void ShowPopup(string link)
     {
-        link.CopyToClipboard();
-
         PrivacyPopup wizard = ScriptableWizard.DisplayWizard<PrivacyPopup>("Privacy Link", "Copy");
         wizard.PrivacyLink = link;
         wizard.helpString = link;
