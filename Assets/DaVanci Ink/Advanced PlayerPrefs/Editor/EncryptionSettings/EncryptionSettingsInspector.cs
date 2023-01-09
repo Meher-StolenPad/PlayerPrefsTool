@@ -16,30 +16,35 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             set => EditorPrefs.SetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplaySetKeys), value);
         }
         private string Key = string.Empty;
-        private string Lv = string.Empty;
-        private bool ShowErrorText => Key.Length == 32 && Lv.Length == 16;
+        private string Iv = string.Empty;
+        private bool ShowErrorText => Key.Length == 32 && Iv.Length == 16;
         private GUIStyle Textstyle;
         private GUIStyle Intstyle;  
-        private string LogError = "Key must be in 32 byte and Lv must be in 16 byte";
-
+        private string LogError = "Key must be in 32 byte and Iv must be in 16 byte";
+        private bool ShowKeys;
         private void OnEnable()
         {
             encryptionSetting = (EncryptionSettings)target;
+            Key = encryptionSetting.GetKey();
+            Iv = encryptionSetting.Getiv();
+            // encryptionSetting.SetSavedKeyFromKeys(encryptionSetting.GetKey(), encryptionSetting.Getiv());
         }
         public override void OnInspectorGUI()
         {
             Textstyle = new GUIStyle(EditorStyles.boldLabel);
             Textstyle.normal.textColor = Color.red;
             Intstyle = new GUIStyle(EditorStyles.miniLabel);
+            float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
 
             GUI.enabled = false;
             base.OnInspectorGUI();
+            GUILayout.Space(10);
+          
             GUI.enabled = true;
             GUILayout.FlexibleSpace();
+            GUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
-
-            float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
 
             if (GUILayout.Button("Refresh Keys", GUILayout.Width(buttonWidth)))
             {
@@ -101,9 +106,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.Space(5);
 
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Lv",GUILayout.Width(buttonWidth * 0.1f));
-                Lv = GUILayout.TextArea(Lv, EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(buttonWidth * 0.9f));
-                if (Lv.Length != 16)
+                GUILayout.Label("Iv",GUILayout.Width(buttonWidth * 0.1f));
+                Iv = GUILayout.TextArea(Iv, EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(buttonWidth * 0.9f));
+                if (Iv.Length != 16)
                 {
                     Intstyle.normal.textColor = Color.red;
                 }
@@ -112,7 +117,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Intstyle.normal.textColor = Color.white;
 
                 }
-                EditorGUILayout.IntField(Lv.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
+                EditorGUILayout.IntField(Iv.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
                 EditorGUILayout.EndHorizontal();
                 GUI.enabled = ShowErrorText;
                 GUILayout.Space(5);
@@ -131,10 +136,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             case 0: //Create backup
                                 encryptionSetting.ExportKeys();
-                                encryptionSetting.SetKeys(Key, Lv);
+                                encryptionSetting.SetKeys(Key, Iv);
                                 break;
                             case 1: //Don't create a backup
-                                encryptionSetting.SetKeys(Key, Lv);
+                                encryptionSetting.SetKeys(Key, Iv);
 
                                 break;
                             case 2: //Cancel process (Basically do nothing for now.)
@@ -164,14 +169,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.EndVertical();
 
             }
-            string howToUse = "HOW TO USE:  \n " +
-                "ATTENTION : \n" +
-                "- When you change your current key or Lv,you will lose all the encrypted date \n" +
-                "- Make Sure before you change the encryption settings to create a backup for your old keys \n" +
+            string howToUse = "ATTENTION :  \n " +
+                "  When you change your current key or iv,you will lose all the encrypted data \n" +
+                "  Make Sure before you change the encryption settings to create a backup for your old keys \n" +
                 "  Or use the Advanced playerPrefs tool to Decrypte all your player Prefs,and create a backup file \n" +
-                "2- You can upload your playerPrefs settings again and encrypte them with the new keys \n"
+                "  You can upload your playerPrefs settings again and encrypte them with the new keys \n"
                 ;
             EditorGUILayout.HelpBox(howToUse, MessageType.Info);
+
+            DrawHorizontalLine(Color.white);
         }
         private void ReadBackupFile()
         {
@@ -191,17 +197,28 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
                 KeysExporter KeysExporter = JsonUtility.FromJson<KeysExporter>(newString);
-                Debug.Log(KeysExporter.Key);
                 Key = KeysExporter.Key;
-                Lv = KeysExporter.Lv;
+                Iv = KeysExporter.Iv;
 
             }
             catch (Exception e)
             {
-
+                string ex = e.ToString();
             }
            
 
         }
+        private void DrawHorizontalLine(Color color)
+        {
+            var horizontalLine = new GUIStyle();
+            horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
+            horizontalLine.margin = new RectOffset(0, 0, 4, 4);
+            horizontalLine.fixedHeight = 1;
+            var c = GUI.color;
+            GUI.color = color;
+            GUILayout.Box(GUIContent.none, horizontalLine);
+            GUI.color = c;
+        }
+
     }
 }

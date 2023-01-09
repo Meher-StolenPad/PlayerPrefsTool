@@ -8,6 +8,9 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
     public enum PlayerPrefsType
@@ -27,6 +30,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         HDRColor,
         DateTime
     }
+
     public class ReturnType
     {
         public PlayerPrefsType PlayerPrefsType = PlayerPrefsType.String;
@@ -34,15 +38,46 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     }
     public static class PrefsSerialzer
     {
+        private static readonly string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
+        private static readonly string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/EncryptionSettings";
+        private static readonly string EncryptionSettingsFileName = "EncryptionSettings.asset";
+
         private static string numberPattern = " ({0})";
         private static EncryptionSettings EncryptionSettings;
+#if UNITY_EDITOR
+        public static bool SelectSettings(bool select = true)
+        {
+            string path = AssetDatabase.GetAssetPath(EncryptionSettings);
 
-        private static void GetKeys()
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+            else
+            {
+                if (select)
+                    Selection.objects = new UnityEngine.Object[] { EncryptionSettings };
+                return true;
+            }
+        }
+        public static void CreateSettings()
+        {
+            EncryptionSettings en = ScriptableObject.CreateInstance<EncryptionSettings>();
+
+            if (!Directory.Exists(EncryptionSettingsPath))
+            {
+                Directory.CreateDirectory(EncryptionSettingsPath);
+            }
+            AssetDatabase.CreateAsset(en, EncryptionSettingsPath + EncryptionSettingsFileName);
+            EncryptionSettings = en;
+        }
+#endif
+
+        private static void TryLoadSettings()
         {
             if (EncryptionSettings == null)
             {
-                EncryptionSettings = Resources.Load<EncryptionSettings>("AdvancedPlayerPrefs/EncryptionSettings");
-
+                EncryptionSettings = Resources.Load<EncryptionSettings>(EncryptionSettingsResourcesPath);
             }
         }
         public static bool HasKey(string key)
@@ -61,9 +96,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             float returnFloat = PlayerPrefs.GetFloat(key, defaultValue);
 
-            if(returnFloat == defaultValue)
+            if (returnFloat == defaultValue)
             {
-                returnFloat= GetCosutomTypeValue<float>(key, defaultValue);
+                returnFloat = GetCosutomTypeValue<float>(key, defaultValue);
             }
 
             return returnFloat;
@@ -111,7 +146,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static T GetCosutomTypeValue<T>(string key, T defaultValue)
         {
             object returnvalue = default;
-            string d=  Decryption(PlayerPrefs.GetString(key));
+            string d = Decryption(PlayerPrefs.GetString(key));
             Serialzer<T> serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
             if (serialzer != null)
             {
@@ -170,7 +205,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return retunValue;
         }
-        public static void SetInt(string key, int value, bool useEncryption=false)
+        public static void SetInt(string key, int value, bool useEncryption = false)
         {
             Debug.Log("SetInt : " + value);
             if (useEncryption)
@@ -209,11 +244,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetFloat(key, value);
             }
         }
-        public static void SetFloat(string key, string value, bool useEncryption=false)
+        public static void SetFloat(string key, string value, bool useEncryption = false)
         {
             var floatValue = float.Parse(value);
-
-            Debug.Log("SetFloat : " + value);
             if (useEncryption)
             {
                 Serialzer<float> serialzer = new Serialzer<float>();
@@ -231,11 +264,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static float StringToFloat(string s)
         {
-            return float.Parse(s);    
+            return float.Parse(s);
         }
-        public static void SetString(string key, string value, bool useEncryption=false)
+        public static void SetString(string key, string value, bool useEncryption = false)
         {
-            Debug.Log("SetString : " + value);
             if (useEncryption)
             {
                 Serialzer<string> serialzer = new Serialzer<string>();
@@ -279,8 +311,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             else
             {
-                //Debug.Log(s);
-
                 s = s.Replace("(", "");
                 s = s.Replace(")", "");
 
@@ -410,7 +440,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return outBool;
         }
-        public static void SetVector2(string key, Vector2 _value, bool useEncryption=false)
+        public static void SetVector2(string key, Vector2 _value, bool useEncryption = false)
         {
             Serialzer<Vector2> serialzer = new Serialzer<Vector2>();
             serialzer.type = PlayerPrefsType.Vector2;
@@ -499,7 +529,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return new Vector2Int((int)outVector3.x, (int)outVector3.y);
         }
 
-        public static void SetVector4(string key, Vector4 _value,bool useEncryption = false)
+        public static void SetVector4(string key, Vector4 _value, bool useEncryption = false)
         {
             Serialzer<Vector4> serialzer = new Serialzer<Vector4>();
             serialzer.type = PlayerPrefsType.Vector4;
@@ -744,13 +774,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static string Encryption(string inputData)
         {
-            GetKeys();
+            TryLoadSettings();
+
+            if (EncryptionSettings == null)
+            {
+                return inputData;
+            }
 
             AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
             AEScryptoProvider.BlockSize = 128;
             AEScryptoProvider.KeySize = 256;
-            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Key);
-            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Lv);
+            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.GetKey());
+            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Getiv());
             AEScryptoProvider.Mode = CipherMode.CBC;
             AEScryptoProvider.Padding = PaddingMode.PKCS7;
 
@@ -764,15 +799,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static string Decryption(string inputData)
         {
             string returnstring = inputData;
-            GetKeys();
-
+            TryLoadSettings();
+            if (EncryptionSettings == null)
+            {
+                return returnstring;
+            }
             try
             {
                 AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
                 AEScryptoProvider.BlockSize = 128;
                 AEScryptoProvider.KeySize = 256;
-                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Key);
-                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Lv);
+                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.GetKey());
+                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Getiv());
                 AEScryptoProvider.Mode = CipherMode.CBC;
                 AEScryptoProvider.Padding = PaddingMode.PKCS7;
 
@@ -786,10 +824,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 catch (Exception e)
                 {
+                    string ex = e.ToString();
                 }
             }
-            catch (InvalidCastException e)
+            catch (Exception e)
             {
+                string ex = e.ToString();
             }
 
             return returnstring;
