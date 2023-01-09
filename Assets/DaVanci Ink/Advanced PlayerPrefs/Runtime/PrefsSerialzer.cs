@@ -146,8 +146,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static T GetCosutomTypeValue<T>(string key, T defaultValue)
         {
             object returnvalue = default;
-            string d = Decryption(PlayerPrefs.GetString(key));
-            Serialzer<T> serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
+
+            string savedValue = PlayerPrefs.GetString(key);
+            string d = Decryption(savedValue);
+            Serialzer<T> serialzer = null;
+
+            if (!String.Equals(d, savedValue))
+            {
+                //decryption failed
+                serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
+            }
+
             if (serialzer != null)
             {
                 returnvalue = serialzer.value;
@@ -727,7 +736,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             return string.Format(pattern, max);
         }
-        public static bool ValidateJSON(this string s)
+        private static bool ValidateJSON(this string s)
         {
             try
             {
@@ -740,7 +749,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return false;
             }
         }
-        public static bool TryParseJson<T>(this string @this, out T result)
+        private static bool TryParseJson<T>(this string @this, out T result)
         {
             bool success = true;
             var settings = new JsonSerializerSettings

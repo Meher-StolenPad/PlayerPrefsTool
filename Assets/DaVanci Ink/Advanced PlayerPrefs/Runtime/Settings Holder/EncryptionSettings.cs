@@ -13,16 +13,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     public class KeysExporter
     {
         public string Key;
-        public string Iv;
 
         public KeysExporter()
         {
         }
 
-        public KeysExporter(string key, string iv)
+        public KeysExporter(string key)
         {
             Key = key;
-            Iv = iv;
         }
     }
     //[CreateAssetMenu(fileName = "EncryptionSettings", menuName = "EncryptionSettingsHolder/Settings", order = 1)]
@@ -30,14 +28,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     public class EncryptionSettings : ScriptableObject
     {
 
-        //private string Key = "A60A5770FE5E7AB200BA9CFC94E4E8B0";
-        //private string Iv = "1234567887654321";
-        [SerializeField] private string SavedKey = "A610A2573704FE55E67A7B28008BA79C6FC5944E43E82B01";
-        [SerializeField] private string Key="";
-        [SerializeField] private string Iv="";
-
+        public string Key = "A60A5770FE5E7AB200BA9CFC94E4E8B0";
+        public readonly string Iv = "1234567887654321";
+        public string SavedKey = "A610A2573704FE55E67A7B28008BA79C6FC5944E43E82B01";
         private char[] Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-
+        [HideInInspector] public bool useDeviceKey;
         public string GetKey()
         {
             return Key;
@@ -49,28 +44,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void GetKeysFromSavedKey()
         {
             Key = String.Empty;
-            Iv = String.Empty;
             for (int i = 0; i < SavedKey.Length; i+=3)
             {
                 Key += SavedKey.Substring(i, 2);
-                Iv += SavedKey.Substring(i+3, 1);
             }
         }
-        public void SetSavedKeyFromKeys(string key,string iv)
+        public void SetSavedKeyFromKeys()
         {
             SavedKey = string.Empty;
-            for (int i = 0; i < iv.Length; i++)
+            for (int i = 0; i < Iv.Length; i++)
             {
-                SavedKey += key.Substring(i*2, 2);
-                SavedKey += iv[i];
+                SavedKey += Key.Substring(i*2, 2);
+                SavedKey += Iv[i];
             }
-            Debug.Log(SavedKey);
         }
         public void RefreshKeys()
         {
             Key = CreateKey(32);
-            Iv = CreateKey(16);
-            SetSavedKeyFromKeys(Key, Iv);
+            SetSavedKeyFromKeys();
         }
         public void ExportKeys()
         {
@@ -80,10 +71,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             Export();
         }
-        public void SetKeys(string _key,string _iv)
+        public void SetKeys(string _key)
         {
             Key = _key;
-            Iv = _iv;
         }
         public string CreateKey(int _lenght)
         {
@@ -125,7 +115,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private string CreateBackup()
         {
-            KeysExporter keysExporter = new KeysExporter(Key, Iv);
+            KeysExporter keysExporter = new KeysExporter(Key);
             string jsonString = JsonUtility.ToJson(keysExporter, true);
             return jsonString;
         }

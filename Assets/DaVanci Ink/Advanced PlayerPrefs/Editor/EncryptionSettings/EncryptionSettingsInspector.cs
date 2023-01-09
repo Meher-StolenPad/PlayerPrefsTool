@@ -15,9 +15,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             get => EditorPrefs.GetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplaySetKeys));
             set => EditorPrefs.SetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplaySetKeys), value);
         }
+        private static bool DisplayRuntimeSettings
+        {   
+            get => EditorPrefs.GetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
+            set => EditorPrefs.SetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
+        }
         private string Key = string.Empty;
-        private string Iv = string.Empty;
-        private bool ShowErrorText => Key.Length == 32 && Iv.Length == 16;
+        private bool ShowErrorText => Key.Length == 32;
         private GUIStyle Textstyle;
         private GUIStyle Intstyle;  
         private string LogError = "Key must be in 32 byte and Iv must be in 16 byte";
@@ -26,7 +30,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             encryptionSetting = (EncryptionSettings)target;
             Key = encryptionSetting.GetKey();
-            Iv = encryptionSetting.Getiv();
             // encryptionSetting.SetSavedKeyFromKeys(encryptionSetting.GetKey(), encryptionSetting.Getiv());
         }
         public override void OnInspectorGUI()
@@ -35,6 +38,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Textstyle.normal.textColor = Color.red;
             Intstyle = new GUIStyle(EditorStyles.miniLabel);
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
+            float newbuttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 3f;
 
             GUI.enabled = false;
             base.OnInspectorGUI();
@@ -46,7 +50,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             EditorGUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Refresh Keys", GUILayout.Width(buttonWidth)))
+            if (GUILayout.Button("Refresh Keys", GUILayout.Width(newbuttonWidth)))
             {
                 int dialogResult = EditorUtility.DisplayDialogComplex(
                   "All Player Prefs encrypted will be undercreptable !",
@@ -72,11 +76,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.FlexibleSpace();
 
-            if (GUILayout.Button("Export Keys", GUILayout.Width(buttonWidth)))
+            if (GUILayout.Button("Export Keys", GUILayout.Width(newbuttonWidth)))
             {
                 encryptionSetting.ExportKeys();
             }
-
+            if (GUILayout.Button("Generate Saved Key", GUILayout.Width(newbuttonWidth)))
+            {
+                encryptionSetting.SetSavedKeyFromKeys();
+            }
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
@@ -105,20 +112,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.EndHorizontal();
                 GUILayout.Space(5);
 
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Iv",GUILayout.Width(buttonWidth * 0.1f));
-                Iv = GUILayout.TextArea(Iv, EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(buttonWidth * 0.9f));
-                if (Iv.Length != 16)
-                {
-                    Intstyle.normal.textColor = Color.red;
-                }
-                else
-                {
-                    Intstyle.normal.textColor = Color.white;
-
-                }
-                EditorGUILayout.IntField(Iv.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
-                EditorGUILayout.EndHorizontal();
+                //EditorGUILayout.BeginHorizontal();
+                //GUILayout.Label("Iv",GUILayout.Width(buttonWidth * 0.1f));
+                //GUILayout.TextArea(encryptionSetting.Iv, EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(buttonWidth * 0.9f));
+              
+                //EditorGUILayout.IntField(encryptionSetting.Iv.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
+                //EditorGUILayout.EndHorizontal();
                 GUI.enabled = ShowErrorText;
                 GUILayout.Space(5);
                 EditorGUILayout.BeginHorizontal();
@@ -136,10 +135,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             case 0: //Create backup
                                 encryptionSetting.ExportKeys();
-                                encryptionSetting.SetKeys(Key, Iv);
+                                encryptionSetting.SetKeys(Key);
                                 break;
                             case 1: //Don't create a backup
-                                encryptionSetting.SetKeys(Key, Iv);
+                                encryptionSetting.SetKeys(Key);
 
                                 break;
                             case 2: //Cancel process (Basically do nothing for now.)
@@ -169,6 +168,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.EndVertical();
 
             }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
             string howToUse = "ATTENTION :  \n " +
                 "  When you change your current key or iv,you will lose all the encrypted data \n" +
                 "  Make Sure before you change the encryption settings to create a backup for your old keys \n" +
@@ -177,7 +179,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 ;
             EditorGUILayout.HelpBox(howToUse, MessageType.Info);
 
-            DrawHorizontalLine(Color.white);
+            DrawHorizontalLine(Color.grey);
+            DisplayRuntimeSettings = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayRuntimeSettings, "Runtime Settings");
+
+            if (DisplayRuntimeSettings)
+            {
+                encryptionSetting.useDeviceKey = EditorGUILayout.ToggleLeft("Use Device Key", encryptionSetting.useDeviceKey, GUILayout.Width(buttonWidth * 4f));
+            }
         }
         private void ReadBackupFile()
         {
@@ -198,8 +206,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 KeysExporter KeysExporter = JsonUtility.FromJson<KeysExporter>(newString);
                 Key = KeysExporter.Key;
-                Iv = KeysExporter.Iv;
-
             }
             catch (Exception e)
             {

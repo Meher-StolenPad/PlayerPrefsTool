@@ -15,18 +15,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
       
         private void Start()
         {
-            PrefsSerialzer.SetFloat("TestAgain", 10.2247745f,true);
-            PrefsSerialzer.SetVector3("TestVector3", new Vector3(0.5f, 55, 10), true);
-            PrefsSerialzer.SetVector2("TestVector2", new Vector2(0.4f, 0.3f), true);
-            PrefsSerialzer.SetVector4("TestVector4", new Vector4(55, 66f, 77f, 88f), true);
-            PrefsSerialzer.SetColor("TestColor", Color.green,false, true);
-            PrefsSerialzer.SetColor("TestColorHDR", Color.blue,true, true);
-            PrefsSerialzer.SetBool("TestBool", true, true);
-            PrefsSerialzer.SetDateTime("TestDateTime", DateTime.Now, true);
-            PrefsSerialzer.SetByte("TestByte", 5,true);
-            PrefsSerialzer.SetDoube("TestDouble", 54.444484, true);
-            PrefsSerialzer.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
-            PrefsSerialzer.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
+            //PrefsSerialzer.SetFloat("TestAgain", 10.2247745f,true);
+            //PrefsSerialzer.SetVector3("TestVector3", new Vector3(0.5f, 55, 10), true);
+            //PrefsSerialzer.SetVector2("TestVector2", new Vector2(0.4f, 0.3f), true);
+            //PrefsSerialzer.SetVector4("TestVector4", new Vector4(55, 66f, 77f, 88f), true);
+            //PrefsSerialzer.SetColor("TestColor", Color.green,false, true);
+            //PrefsSerialzer.SetColor("TestColorHDR", Color.blue,true, true);
+            //PrefsSerialzer.SetBool("TestBool", true, true);
+            //PrefsSerialzer.SetDateTime("TestDateTime", DateTime.Now, true);
+            //PrefsSerialzer.SetByte("TestByte", 5,true);
+            //PrefsSerialzer.SetDoube("TestDouble", 54.444484, true);
+            //PrefsSerialzer.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
+            //PrefsSerialzer.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
 
             Debug.Log("Float " + PrefsSerialzer.GetFloat("TestAgain", 1f));
             Debug.Log("Float " + PrefsSerialzer.GetFloat("TestAgaidddn", 1f));
