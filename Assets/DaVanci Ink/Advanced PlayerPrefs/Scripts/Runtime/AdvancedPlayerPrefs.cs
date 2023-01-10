@@ -49,6 +49,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 #if UNITY_EDITOR
         internal static bool SelectSettings(bool select = true)
         {
+            TryLoadSettings();
+
             string path = AssetDatabase.GetAssetPath(EncryptionSettings);
 
             if (string.IsNullOrEmpty(path))
@@ -74,11 +76,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EncryptionSettings = en;
         }
 #endif
-        private static void TryLoadSettings()
+        private static bool TryLoadSettings()
         {
             if (EncryptionSettings == null)
             {
                 EncryptionSettings = Resources.Load<EncryptionSettings>(EncryptionSettingsResourcesPath);
+                if(EncryptionSettings == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
             }
         }
         public static bool HasKey(string key)

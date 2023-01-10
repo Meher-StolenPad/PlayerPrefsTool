@@ -38,7 +38,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Textstyle.normal.textColor = Color.red;
             Intstyle = new GUIStyle(EditorStyles.miniLabel);
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
-            float newbuttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 3f;
+            float newbuttonWidth = (EditorGUIUtility.currentViewWidth - 40) / 3f;
 
             GUI.enabled = false;
             base.OnInspectorGUI();
@@ -84,7 +84,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 encryptionSetting.ExportKeys();
             }
-            if (GUILayout.Button("Generate Saved Key", GUILayout.Width(newbuttonWidth)))
+            GUILayout.FlexibleSpace();
+
+            if (GUILayout.Button("Generate Key", GUILayout.Width(newbuttonWidth)))
             {
                 encryptionSetting.SetSavedKeyFromKeys();
             }

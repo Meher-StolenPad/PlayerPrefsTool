@@ -232,7 +232,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private bool settingsFounded;
 
-        [MenuItem("DavanciCode/PlayerPrefs Manager")]
+        [MenuItem("DavanciCode/PlayerPrefs Manager Tool %e", priority =2)]
         public static void ShowWindow()
         {
             PlayerPrefsWindow PlayerPrefsWindow = (PlayerPrefsWindow)GetWindow(typeof(PlayerPrefsWindow));

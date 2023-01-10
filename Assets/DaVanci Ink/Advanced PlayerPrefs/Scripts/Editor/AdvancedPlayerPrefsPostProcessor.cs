@@ -9,7 +9,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     public class AdvancedPlayerPrefsPostProcessor : AssetPostprocessor
     {
-#if UNITY_2021_OR_NEWER
+#if UNITY_2021_2_OR_NEWER
         static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths,bool didDomainReload)
         {
             var inPackages = string.Empty;
@@ -20,7 +20,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!string.IsNullOrEmpty(inPackages))
             {
                 //Show Advanced PlayerPrefs Package Installer
-                PlayerPrefsWindow.ShowWindow();
+                AdvancedPlayerPrefsInstallerPanel.ShowWindow();
             }
         }
 #else
@@ -35,7 +35,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!string.IsNullOrEmpty(inPackages))
             {
                 //Show Advanced PlayerPrefs Package Installer
-                PlayerPrefsWindow.ShowWindow();
+                AdvancedPlayerPrefsInstallerPanel.ShowWindow();
+
             }
         }
 #endif
