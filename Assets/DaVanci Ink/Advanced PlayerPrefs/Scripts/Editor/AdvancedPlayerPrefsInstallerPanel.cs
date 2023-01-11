@@ -43,6 +43,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.fontStyle = FontStyle.Bold;
             style2.alignment = TextAnchor.MiddleCenter;
             style2.normal.textColor = Color.white;
+            style2.normal.background = Texture2D.whiteTexture;
 
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10);
             GUILayout.BeginArea(new Rect(0, 0, 825 / 2 - 10, 240 / 2), cover);
@@ -62,13 +63,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             int iButtonWidth = 150;
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
-           // GUI.backgroundColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+
+            GUI.backgroundColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             style2.normal.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
-            style2.normal.background = ShowButtonNormal;
 
-            style2.hover.background = MakeBackgroundTexture(10,10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
             style2.hover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-
+            style2.hover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
+            //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             //style2.onHover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
             //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
 
@@ -77,7 +78,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefsWindow.ShowWindow();
             }
 
-            style2.normal.textColor = PlayerPrefsGlobalVariables.SetupButtonColor;
+            GUI.backgroundColor = PlayerPrefsGlobalVariables.SetupButtonColor;
+
+            style2.normal.textColor = PlayerPrefsGlobalVariables.SetupButtonTextColor;
             style2.normal.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.SetupButtonTextColor);
 
             style2.hover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.SetupButtonColor);

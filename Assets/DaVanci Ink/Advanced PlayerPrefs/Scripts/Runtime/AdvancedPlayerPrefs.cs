@@ -103,6 +103,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             PlayerPrefs.DeleteKey(key);
         }
+        public static void DeleteAll()
+        {
+            PlayerPrefs.DeleteAll();
+        }
         public static int GetInt(string key, int defaultValue = 0)
         {
             return PlayerPrefs.GetInt(key, defaultValue);
@@ -231,7 +235,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetInt(string key, int value, bool useEncryption = false)
         {
-            Debug.Log("SetInt : " + value);
             if (useEncryption)
             {
                 Serialzer<int> serialzer = new Serialzer<int>();

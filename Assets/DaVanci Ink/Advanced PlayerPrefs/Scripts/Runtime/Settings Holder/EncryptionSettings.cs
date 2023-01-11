@@ -1,12 +1,12 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using UnityEditor;
-using UnityEngine;
 
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
     [Serializable]
@@ -44,7 +44,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void GetKeysFromSavedKey()
         {
             Key = String.Empty;
-            for (int i = 0; i < SavedKey.Length; i+=3)
+            for (int i = 0; i < SavedKey.Length; i += 3)
             {
                 Key += SavedKey.Substring(i, 2);
             }
@@ -54,7 +54,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             SavedKey = string.Empty;
             for (int i = 0; i < Iv.Length; i++)
             {
-                SavedKey += Key.Substring(i*2, 2);
+                SavedKey += Key.Substring(i * 2, 2);
                 SavedKey += Iv[i];
             }
         }
@@ -89,6 +89,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return result.ToString();
         }
+
+#if UNITY_EDITOR
         private void Export()
         {
             var backupstring = CreateBackup();
@@ -119,5 +121,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(keysExporter, true);
             return jsonString;
         }
+#endif
     }
 }

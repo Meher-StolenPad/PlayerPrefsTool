@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     internal class PlayerPrefsWindow : EditorWindow
     {
         #region Player Pref Holder Class
-        private class PlayerPrefHolder
+        internal class PlayerPrefHolder
         {
             public string Key;
             public string TempKey;
@@ -39,30 +38,30 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     PlayerPrefs.DeleteKey(Key);
                     Key = TempKey;
                 }
-                 Save();
+                Save();
             }
             public void Save()
             {
                 BackupValues = Value;
 
                 Value = TempValue;
-                
+
                 switch (type)
                 {
                     case PlayerPrefsType.Int:
                         AdvancedPlayerPrefs.SetInt(Key, (int)Value, isEncrypted);
                         break;
                     case PlayerPrefsType.Float:
-                        AdvancedPlayerPrefs.SetFloat(Key, Value.ToString(),isEncrypted);
+                        AdvancedPlayerPrefs.SetFloat(Key, Value.ToString(), isEncrypted);
                         break;
                     case PlayerPrefsType.String:
-                        AdvancedPlayerPrefs.SetString(Key, Value.ToString(),isEncrypted);
+                        AdvancedPlayerPrefs.SetString(Key, Value.ToString(), isEncrypted);
                         break;
                     case PlayerPrefsType.Vector3:
                         AdvancedPlayerPrefs.SetVector3(Key, AdvancedPlayerPrefs.StringToVector3(Value.ToString()), isEncrypted);
                         break;
                     case PlayerPrefsType.Vector2:
-                        AdvancedPlayerPrefs.SetVector2(Key, AdvancedPlayerPrefs.StringToVector2(Value.ToString()),isEncrypted);
+                        AdvancedPlayerPrefs.SetVector2(Key, AdvancedPlayerPrefs.StringToVector2(Value.ToString()), isEncrypted);
                         break;
                     case PlayerPrefsType.Color:
                         AdvancedPlayerPrefs.SetColor(Key, AdvancedPlayerPrefs.StringToColor(Value.ToString()), false, isEncrypted);
@@ -229,10 +228,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private Texture RevertButtonIcon;
         private Texture DeleteButtonIcon;
         private Texture ApplyAllButtonIcon;
+        private Texture ExportButtonIcon;
 
         private bool settingsFounded;
 
-        [MenuItem("DavanciCode/PlayerPrefs Manager Tool %e", priority =2)]
+        [MenuItem("DavanciCode/PlayerPrefs Manager Tool %e", priority = 2)]
         public static void ShowWindow()
         {
             PlayerPrefsWindow PlayerPrefsWindow = (PlayerPrefsWindow)GetWindow(typeof(PlayerPrefsWindow));
@@ -254,10 +254,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             RevertButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/reset_Icon.png", typeof(Texture));
             DeleteButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/delete_Icon.png", typeof(Texture));
             ApplyAllButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/apply_Icon.png", typeof(Texture));
+            ExportButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/d_popout_icon.png", typeof(Texture));
 
             GetAllPlayerPrefs();
             FiltredPlayerPrefHolderList.Clear();
             settingsFounded = AdvancedPlayerPrefs.SelectSettings(false);
+            //tempExportPath = ExportPath;
         }
 
         #region GUI Region
@@ -283,20 +285,25 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EditorGUILayout.Space(5);
             DrawHorizontalLine(Color.grey);
 
-            DrawBottomButtons();
-            EditorGUILayout.Space(10);
+            DrawExportFields();
+            EditorGUILayout.Space(5);
+            //DrawHorizontalLine(Color.grey);
+
+            //DrawBottomButtons();
+            //EditorGUILayout.Space(10);
 
             GUILayout.EndVertical();
         }
         private void DrawToolbarGUI()
         {
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
-            DrawImpExpButton();
+            DrawShowEditorPrefsButton();
+            //DrawImpExpButton();
             DrawSearchField();
             DrawRefreshButton();
-            DrawShowEditorPrefsButton();
             DrawApplyAll();
             DrawRevertAll();
+            DrawDeletAllButton();
             GUILayout.EndHorizontal();
         }
         private void DrawImpExpButton()
@@ -307,7 +314,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GenericMenu menu = new GenericMenu();
                 menu.AddItem(new GUIContent("Import directly"), false, Import);
                 menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Import from file"), false, ReadBackupFile);
+                menu.AddItem(new GUIContent("Import from file"), false, GetBackupFromFile);
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Export"), false, Export);
 
@@ -316,9 +323,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void DrawSearchField()
         {
-            float buttonWidth = (EditorGUIUtility.currentViewWidth) / 4f;
+            float buttonWidth = (EditorGUIUtility.currentViewWidth) / 3f;
 
-            SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.Width(buttonWidth));
+            SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle("ToolbarSeachTextField"), GUILayout.Width(buttonWidth+15));
             if (GUILayout.Button("", GUI.skin.FindStyle("ToolbarSeachCancelButton")))
             {
                 SearchText = "";
@@ -339,12 +346,28 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
             FullbuttonWidth = (FullbuttonWidth / 7) * 4;
-            ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth));
+            ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth+4));
             if (EditorPrefsAvailable != ShowEditorPrefs)
             {
                 Refresh();
                 EditorPrefsAvailable = ShowEditorPrefs;
             }
+        }
+        private void DrawDeletAllButton()
+        {
+            float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 5f;
+            FullbuttonWidth = (FullbuttonWidth / 7) * 4;
+
+            if(GUILayout.Button("Delete All", GUILayout.Width(FullbuttonWidth + 4)))
+            {
+                DeleteAll();
+            }
+            //ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth + 4));
+            //if (EditorPrefsAvailable != ShowEditorPrefs)
+            //{
+            //    Refresh();
+            //    EditorPrefsAvailable = ShowEditorPrefs;
+            //}
         }
         private void DrawApplyAll()
         {
@@ -601,8 +624,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void DrawBottomButtons()
         {
-            GUILayout.FlexibleSpace();
-
             EditorGUILayout.BeginHorizontal();
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
             // Delete all PlayerPrefs
@@ -618,10 +639,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
 
             EditorGUILayout.EndHorizontal();
-        }   
+        }
         private void DrawHorizontalLine(Color color)
         {
-            var   horizontalLine = new GUIStyle();
+            var horizontalLine = new GUIStyle();
             horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
             horizontalLine.margin = new RectOffset(0, 0, 4, 4);
             horizontalLine.fixedHeight = 1;
@@ -631,10 +652,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUI.color = c;
         }
 
-        private void DrawAddPlayerPrefs()
-        {
-
-        }
         [SerializeField] string Key = "";
 
         [SerializeField] PlayerPrefsType type;
@@ -658,7 +675,30 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string oldKey;
 
         private bool UseEncryption;
-        private bool DisplayAddPlayerPrefs; 
+        private bool DisplayAddPlayerPrefs;
+        private bool DisplayExportPlayerPrefs;
+        private bool DisplayImportPlayerPrefs;
+        private string tempExportPath;
+        private string ImportCompanyName;
+        private string ImportProductName; 
+        private string ExportPath
+        {
+            get => EditorPrefs.GetString(nameof(PlayerPrefsWindow) + "." + nameof(ExportPath));
+            set
+            {
+                if (SavePathType == SavePathType.Absolute)
+                    EditorPrefs.SetString(nameof(PlayerPrefsWindow) + "." + nameof(ExportPath), value);
+                else
+                    tempExportPath = value;
+            }
+        }
+        private SavePathType SavePathType
+        {
+            get => (SavePathType)EditorPrefs.GetInt(nameof(PlayerPrefsWindow) + "." + nameof(SavePathType),0);
+            set => EditorPrefs.SetInt(nameof(PlayerPrefsWindow) + "." + nameof(SavePathType), (int)value);
+        }
+        private SavePathType oldSavePathType;
+
         private void DrawValueField()
         {
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
@@ -704,7 +744,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         value = valuetempfloat;
                         break;
                     case PlayerPrefsType.String:
-                        valuetempString = EditorGUILayout.TextField(valuetempString, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200), GUILayout.MinHeight(100),GUILayout.ExpandWidth(true)) ;
+                        valuetempString = EditorGUILayout.TextField(valuetempString, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200), GUILayout.MinHeight(100), GUILayout.ExpandWidth(true));
                         value = valuetempString;
                         break;
                     case PlayerPrefsType.Vector2:
@@ -769,7 +809,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 if (GUILayout.Button("Select Settings"))
                 {
-                    settingsFounded= AdvancedPlayerPrefs.SelectSettings();
+                    settingsFounded = AdvancedPlayerPrefs.SelectSettings();
                     if (!settingsFounded)
                     {
                         int dialogResult = EditorUtility.DisplayDialogComplex(
@@ -781,7 +821,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             case 0: //Create backup
                                 AdvancedPlayerPrefs.CreateSettings();
-                                settingsFounded= AdvancedPlayerPrefs.SelectSettings();
+                                settingsFounded = AdvancedPlayerPrefs.SelectSettings();
                                 break;
                             case 1: //Don't create a backup
                                 break;
@@ -803,7 +843,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     GUI.enabled = false;
                 }
                 // Delete all PlayerPrefs
-                if (GUILayout.Button("Add "+Key+ " Prefs", GUILayout.Width(buttonWidth)))
+                if (GUILayout.Button("Add " + Key + " Prefs", GUILayout.Width(buttonWidth)))
                 {
                     AddPlayerPref(Key, type, value, UseEncryption);
                 }
@@ -822,9 +862,131 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.EndHorizontal();
 
             }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+        }
+        private void DrawExportFields()
+        {
+            float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 20;
+            GUIStyle style3 = EditorStyles.textField;
+            GUIStyle style4 = EditorStyles.miniButton;
+            style4.alignment = TextAnchor.MiddleCenter;
+
+
+            GUIStyle LabelStyle = EditorStyles.boldLabel;
+            LabelStyle.stretchWidth = false;
+
+            DisplayExportPlayerPrefs = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayExportPlayerPrefs, "Export/Import Settings");
+
+            if (DisplayExportPlayerPrefs)
+            {
+                EditorGUILayout.Space(10);
+                GUILayout.Label("Export settings :", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 4));
+                GUILayout.Space(10);
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Label("Export path", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 3));
+
+                SavePathType = (SavePathType)EditorGUILayout.EnumPopup(SavePathType, GUILayout.Width(FullWindowWidth * 3f));
+
+                GUILayout.Space(5);
+                GUI.enabled = false;
+
+                tempExportPath = GUILayout.TextField(tempExportPath, style3, GUILayout.Width(FullWindowWidth * 10f));
+                GUI.enabled = true;
+
+                if (SavePathType != oldSavePathType && SavePathType != SavePathType.Absolute)
+                {
+                    tempExportPath = AdvancedPlayerPrefsExportManager.GetPathWithType(SavePathType);
+                    oldSavePathType = SavePathType;
+                }
+                if (SavePathType != oldSavePathType && SavePathType == SavePathType.Absolute)
+                {
+                    tempExportPath = ExportPath;
+                    oldSavePathType = SavePathType;
+                }
+                GUILayout.Space(5);
+
+                if (GUILayout.Button(new GUIContent("...", "Select Export Folder"), style4, GUILayout.Width(FullWindowWidth)))
+                {
+                    string path = EditorUtility.OpenFolderPanel("Backup path", "", "");
+                    if (path.Length > 0)
+                    {
+                        SavePathType = SavePathType.Absolute;
+                        ExportPath = path;
+                        tempExportPath = ExportPath;
+                    }
+                    //ExportPath = path.Length > 0 ? path : ExportPath;
+                }
+                GUILayout.Space(5);
+
+                if (GUILayout.Button(new GUIContent(ExportButtonIcon, "Open Export Folder"), EditorStyles.miniButtonMid, GUILayout.Width(FullWindowWidth / 1.5f)))
+                {
+                    AdvancedPlayerPrefsExportManager.ShowExplorer(tempExportPath);
+                }
+
+                GUILayout.EndHorizontal();
+                GUILayout.Space(10);
+
+                EditorGUILayout.BeginHorizontal();
+                float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) /2f;
+                GUILayout.Space(buttonWidth/3 +50);
+
+                if (GUILayout.Button(new GUIContent("Export"), GUILayout.Width(buttonWidth/2)))
+                {
+                    Export();
+                }
+                GUILayout.Space(5);
+
+
+                if (GUILayout.Button("Import from file", GUILayout.Width(buttonWidth/2)))
+                {
+                    GetBackupFromFile();
+                }
+                // Delete all PlayerPrefs
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(10);
+                GUILayout.Label("Import From settings :", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 5));
+                GUILayout.Space(10);
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Label("Company Name", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth *4));
+              
+                GUILayout.Space(5);
+
+                ImportCompanyName = GUILayout.TextField(ImportCompanyName, style3, GUILayout.Width(FullWindowWidth * 10f));
+
+                if(string.IsNullOrEmpty(ImportCompanyName) || string.IsNullOrEmpty(ImportProductName))
+                {
+                    GUI.enabled = false;
+                }
+                if (GUILayout.Button("Import from Settings", GUILayout.Width(buttonWidth / 2)))
+                {
+                    Import(ImportCompanyName, ImportProductName);
+                }
+                GUI.enabled = true;
+
+                GUILayout.EndHorizontal();
+                GUILayout.Space(5);
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Label("Prodcut Name", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 4));
+
+                GUILayout.Space(5);
+
+                ImportProductName = GUILayout.TextField(ImportProductName, style3, GUILayout.Width(FullWindowWidth * 10f));
+
+                GUILayout.EndHorizontal();
+
+            }
+
+            EditorGUILayout.EndFoldoutHeaderGroup();
 
         }
-
         #endregion
 
         private void UpdateRegistry()
@@ -953,16 +1115,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             switch (playerPrefsType)
             {
                 case PlayerPrefsType.Int:
-                    AdvancedPlayerPrefs.SetInt(key, (int)value,useEncryption);
+                    AdvancedPlayerPrefs.SetInt(key, (int)value, useEncryption);
                     break;
                 case PlayerPrefsType.Float:
-                    AdvancedPlayerPrefs.SetFloat(key,value.ToString(),useEncryption);
+                    AdvancedPlayerPrefs.SetFloat(key, value.ToString(), useEncryption);
                     break;
                 case PlayerPrefsType.String:
                     AdvancedPlayerPrefs.SetString(key, (string)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector2:
-                    AdvancedPlayerPrefs.SetVector2(key, (Vector2)value,useEncryption);
+                    AdvancedPlayerPrefs.SetVector2(key, (Vector2)value, useEncryption);
                     break;
                 case PlayerPrefsType.Vector3:
                     AdvancedPlayerPrefs.SetVector3(key, (Vector3)value, useEncryption);
@@ -1044,7 +1206,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 pref.Save();
             }
-
         }
         private void Import()
         {
@@ -1052,151 +1213,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             Debug.Log("Import PlayerPrefs");
         }
+
+        private void GetBackupFromFile()
+        {
+            var backupPairs = AdvancedPlayerPrefsExportManager.ReadBackupFile();
+            if (backupPairs != null)
+            {
+                Refresh();
+            }
+        }
         private void Export()
         {
-            var backupstring = CreateBackup();
-            string newBackupString = PlayerPrefsGlobalVariables.CreatedText;
-            string playerprefsSpecific = "//Player prefs for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'
-                + "//Created at : " + DateTime.Now + "\n//Created by " + UnityEditor.CloudProjectSettings.userName + '\n';
-            newBackupString += playerprefsSpecific;
-
-            newBackupString += backupstring;
-
-            string path = EditorUtility.OpenFolderPanel("Backup path", "", "PPbackup.txt");
-            path += "/PPbackup.txt";
-            if (!File.Exists(path))
-            {
-                File.WriteAllText(path, newBackupString);
-            }
-            else
-            {
-                path = AdvancedPlayerPrefs.NextAvailableFilename(path);
-                File.WriteAllText(path, newBackupString);
-            }
-            Debug.Log(path);
-        }
-        private string CreateBackup()
-        {
-            ExportSerialzerHolder exportSerialzerHolder = new ExportSerialzerHolder();
-
-            foreach (var item in PlayerPrefHolderList)
-            {
-                ExportSerialzer toExport = new ExportSerialzer();
-                toExport.type = item.type;
-                toExport.key = item.Key;
-                toExport.value = item.Value.ToString();
-                exportSerialzerHolder.exportlist.Add(toExport);
-            }
-            string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);
-            return jsonString;
-        }
-        private void ReadBackupFile()
-        {
-            string[] filters = new string[] { "text files", "txt", "All files", "*" };
-            string path = EditorUtility.OpenFilePanelWithFilters("Load backup file", "", filters);
-
-            if (string.IsNullOrEmpty(path)) return;
-
-
-
-            var stringArray = File.ReadLines(path).Where(line => !line.StartsWith("//")).ToArray();
-            var newString = string.Empty;
-
-            foreach (var item in stringArray)
-            {
-                newString += item;
-            }
-
-            ExportSerialzerHolder exportSerialzerHolder = JsonUtility.FromJson<ExportSerialzerHolder>(newString);
-            // create pair list from load
-            List<PlayerPrefHolder> pairs = new List<PlayerPrefHolder>();
-
-            foreach (var item in exportSerialzerHolder.exportlist)
-            {
-                PlayerPrefHolder ppp = new PlayerPrefHolder();
-                ppp.Key = item.key;
-                ppp.TempKey = item.key;
-                ppp.type = item.type;
-
-                switch (item.type)
-                {
-                    case PlayerPrefsType.Int:
-                        ppp.Value = int.Parse(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Float:
-                        ppp.Value = float.Parse(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.String:
-                        ppp.Value = item.value;
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Vector2:
-                        ppp.Value = AdvancedPlayerPrefs.StringToVector2(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Vector3:
-                        ppp.Value = AdvancedPlayerPrefs.StringToVector3(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Vector4:
-                        ppp.Value = AdvancedPlayerPrefs.StringToVector4(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-
-                        break;
-                    case PlayerPrefsType.Color:
-                        ppp.Value = AdvancedPlayerPrefs.StringToColor(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.HDRColor:
-                        ppp.Value = AdvancedPlayerPrefs.StringToColor(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Bool:
-                        ppp.Value = AdvancedPlayerPrefs.StringToBool(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.DateTime:
-                        ppp.Value = AdvancedPlayerPrefs.StringToDateTime(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Byte:
-                        ppp.Value = AdvancedPlayerPrefs.StringToByte(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Double:
-                        ppp.Value = AdvancedPlayerPrefs.StringToDouble(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Vector2Int:
-                        ppp.Value = AdvancedPlayerPrefs.StringToVector2Int(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    case PlayerPrefsType.Vector3Int:
-                        ppp.Value = AdvancedPlayerPrefs.StringToVector3Int(item.value);
-                        ppp.BackupValues = ppp.Value;
-                        ppp.TempValue = ppp.Value;
-                        break;
-                    default:
-                        break;
-                }
-                ppp.Save();
-            }
-            Refresh();
+            AdvancedPlayerPrefsExportManager.Export(PlayerPrefHolderList, ExportPath, SavePathType);
         }
         #endregion
     }
