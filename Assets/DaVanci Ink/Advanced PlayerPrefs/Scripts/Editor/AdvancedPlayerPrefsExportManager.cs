@@ -88,10 +88,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);
             return jsonString;
         }
-        internal static List<PlayerPrefHolder>  ReadBackupFile()
+        internal static List<PlayerPrefHolder>  ReadBackupFile(string tempPath)
         {
             string[] filters = new string[] { "text files", "txt", "All files", "*" };
-            string path = EditorUtility.OpenFilePanelWithFilters("Load backup file", "", filters);
+            string path = EditorUtility.OpenFilePanelWithFilters("Load backup file", tempPath, filters);
 
             if (string.IsNullOrEmpty(path)) return null;
 

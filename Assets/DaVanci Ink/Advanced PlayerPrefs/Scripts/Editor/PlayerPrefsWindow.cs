@@ -307,21 +307,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawDeletAllButton();
             GUILayout.EndHorizontal();
         }
-        private void DrawImpExpButton()
-        {
-            float buttonWidth = (EditorGUIUtility.currentViewWidth) / 4f;
-            if (GUILayout.Button("Import/Export", EditorStyles.toolbarDropDown, GUILayout.Width((EditorGUIUtility.currentViewWidth) / 4f)))
-            {
-                GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Import directly"), false, Import);
-                menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Import from file"), false, GetBackupFromFile);
-                menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Export"), false, Export);
+        //private void DrawImpExpButton()
+        //{
+        //    float buttonWidth = (EditorGUIUtility.currentViewWidth) / 4f;
+        //    if (GUILayout.Button("Import/Export", EditorStyles.toolbarDropDown, GUILayout.Width((EditorGUIUtility.currentViewWidth) / 4f)))
+        //    {
+        //        GenericMenu menu = new GenericMenu();
+        //        menu.AddItem(new GUIContent("Import directly"), false, Import);
+        //        menu.AddSeparator("");
+        //        menu.AddItem(new GUIContent("Import from file"), false, GetBackupFromFile);
+        //        menu.AddSeparator("");
+        //        menu.AddItem(new GUIContent("Export"), false, Export);
 
-                menu.ShowAsContext();
-            }
-        }
+        //        menu.ShowAsContext();
+        //    }
+        //}
         private void DrawSearchField()
         {
             float buttonWidth = (EditorGUIUtility.currentViewWidth) / 3f;
@@ -941,7 +941,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 if (GUILayout.Button("Import from file", GUILayout.Width(buttonWidth/2)))
                 {
-                    GetBackupFromFile();
+                    GetBackupFromFile(tempExportPath);
                 }
                 // Delete all PlayerPrefs
 
@@ -1214,9 +1214,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Debug.Log("Import PlayerPrefs");
         }
 
-        private void GetBackupFromFile()
+        private void GetBackupFromFile(string tempPath)
         {
-            var backupPairs = AdvancedPlayerPrefsExportManager.ReadBackupFile();
+            //AdvancedPlayerPrefsExportManager.m_exportPath = tempExportPath;
+
+            var backupPairs = AdvancedPlayerPrefsExportManager.ReadBackupFile(tempPath);
             if (backupPairs != null)
             {
                 Refresh();
