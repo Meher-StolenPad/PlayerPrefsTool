@@ -288,6 +288,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawExportFields();
             EditorGUILayout.Space(5);
             //DrawHorizontalLine(Color.grey);
+            GUILayout.FlexibleSpace();
 
             //DrawBottomButtons();
             //EditorGUILayout.Space(10);
@@ -676,8 +677,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private bool UseEncryption;
         private bool DisplayAddPlayerPrefs;
-        private bool DisplayExportPlayerPrefs;
-        private bool DisplayImportPlayerPrefs;
+        private bool DisplayExportPlayerPrefs = true;
         private string tempExportPath;
         private string ImportCompanyName;
         private string ImportProductName; 
