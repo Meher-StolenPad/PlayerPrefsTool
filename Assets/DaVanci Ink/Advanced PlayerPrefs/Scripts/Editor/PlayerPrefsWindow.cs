@@ -1207,12 +1207,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 pref.Save();
             }
         }
-        private void Import()
-        {
-            ImportPrefsWizard wizard = ScriptableWizard.DisplayWizard<ImportPrefsWizard>("Import PlayerPrefs", "Import");
-
-            Debug.Log("Import PlayerPrefs");
-        }
 
         private void GetBackupFromFile(string tempPath)
         {
