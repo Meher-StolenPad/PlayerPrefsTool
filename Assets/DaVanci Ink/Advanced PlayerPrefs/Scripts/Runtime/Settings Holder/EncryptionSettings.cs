@@ -63,14 +63,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Key = CreateKey(32);
             SetSavedKeyFromKeys();
         }
-        internal void ExportKeys()
-        {
-            Export();
-        }
-        internal void ImportKeys()
-        {
-            Export();
-        }
+       
         internal void SetKeys(string _key)
         {
             Key = _key;
@@ -91,6 +84,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
 
 #if UNITY_EDITOR
+        internal void ExportKeys()
+        {
+            Export();
+        }
+        internal void ImportKeys()
+        {
+            Export();
+        }
         private void Export()
         {
             var backupstring = CreateBackup();
