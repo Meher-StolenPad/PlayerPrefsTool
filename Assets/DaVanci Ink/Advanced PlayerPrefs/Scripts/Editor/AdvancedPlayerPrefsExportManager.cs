@@ -52,14 +52,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 m_exportPath = GetPathWithType(_savePathType);
 
             var backupstring = CreateBackup(PlayerPrefHolderList);
-            string newBackupString = PlayerPrefsGlobalVariables.CreatedText;
+            string newBackupString = AdvancedPlayerPrefsGlobalVariables.BackupCreatedText;
             string playerprefsSpecific = "//Player prefs for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'
                 + "//Created at : " + DateTime.Now + "\n//Created by " + UnityEditor.CloudProjectSettings.userName + '\n';
             newBackupString += playerprefsSpecific;
 
             newBackupString += backupstring;
 
-            //ExportPath = EditorUtility.OpenFolderPanel("Backup path", "", "PPbackup.txt");
             string ExportPathFile = m_exportPath + "/PPbackup.txt";
             if (!File.Exists(ExportPathFile))
             {
@@ -83,6 +82,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 toExport.type = item.type;
                 toExport.key = item.Key;
                 toExport.value = item.Value.ToString();
+                toExport.isEncrypted = item.isEncrypted;
                 exportSerialzerHolder.exportlist.Add(toExport);
             }
             string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);
@@ -106,8 +106,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
 
             ExportSerialzerHolder exportSerialzerHolder = JsonUtility.FromJson<ExportSerialzerHolder>(newString);
-            // create pair list from load
+
             List<PlayerPrefHolder> pairs = new List<PlayerPrefHolder>();
+
+            if (exportSerialzerHolder == null) return pairs;
+            // create pair list from load
 
             foreach (var item in exportSerialzerHolder.exportlist)
             {
@@ -115,7 +118,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 ppp.Key = item.key;
                 ppp.TempKey = item.key;
                 ppp.type = item.type;
-
+                ppp.isEncrypted = item.isEncrypted;
                 switch (item.type)
                 {
                     case PlayerPrefsType.Int:

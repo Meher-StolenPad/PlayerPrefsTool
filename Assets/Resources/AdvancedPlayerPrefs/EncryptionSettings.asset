@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd43ad784555004093e2e51165c1481, type: 3}
   m_Name: EncryptionSettings
   m_EditorClassIdentifier: 
-  Key: zyM3W8ChfschWoswMqGrt7WcdcPDOIdL
-  SavedKey: zy1M32W83Ch4fs5ch6Wo7sw8Mq8Gr7t76Wc5dc4PD3OI2dL1
+  Key: 9G0xp9IYDV6hrJt8yCz8nSyTbPoCYuED
+  Iv: EVZLpitk8audubAM
+  SavedKey: 9GLE0xAVp9JZIYILDVYp6h7irJFtt8TkyCL8z8SanSduyTUdbPGuoCybYu1AEDVM
+  useDeviceKey: 1

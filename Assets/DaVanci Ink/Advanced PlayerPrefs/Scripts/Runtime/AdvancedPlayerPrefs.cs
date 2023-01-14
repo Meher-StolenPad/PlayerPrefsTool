@@ -45,7 +45,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static readonly string EncryptionSettingsFileName = "EncryptionSettings.asset";
 
         private static string numberPattern = " ({0})";
-        private static EncryptionSettings EncryptionSettings;
+        private static EncryptionSettings EncryptionSettings = null;
+        private static bool isInitialzed;
+
 #if UNITY_EDITOR
         internal static bool SelectSettings(bool select = true)
         {
@@ -76,13 +78,27 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EncryptionSettings = en;
         }
 #endif
+        private static void Init()
+        {
+            if (isInitialzed) return;
+
+            if (!EncryptionSettings)
+            {
+                if (TryLoadSettings())
+                {
+                    EncryptionSettings.CheckKey();
+                }
+            }
+            isInitialzed = true;
+        }
         private static bool TryLoadSettings()
         {
             if (EncryptionSettings == null)
             {
                 EncryptionSettings = Resources.Load<EncryptionSettings>(EncryptionSettingsResourcesPath);
-                if(EncryptionSettings == null)
+                if (EncryptionSettings == null)
                 {
+                    Debug.LogWarning("No encryption settings Founded !,Check the Advanced Player Prefs Setup Panel");
                     return false;
                 }
                 else
@@ -240,6 +256,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Serialzer<int> serialzer = new Serialzer<int>();
                 serialzer.type = PlayerPrefsType.Int;
                 serialzer.value = value;
+                serialzer.isEncrypted = useEncryption;
                 string jsonString = JsonUtility.ToJson(serialzer);
 
                 string encryptedString = Encryption(jsonString);
@@ -260,6 +277,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 Serialzer<float> serialzer = new Serialzer<float>();
                 serialzer.type = PlayerPrefsType.Float;
+                serialzer.isEncrypted = useEncryption;
+
                 serialzer.value = value;
                 string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -279,6 +298,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Serialzer<float> serialzer = new Serialzer<float>();
                 serialzer.type = PlayerPrefsType.Float;
                 serialzer.value = floatValue;
+                serialzer.isEncrypted = useEncryption;
+
                 string jsonString = JsonUtility.ToJson(serialzer);
 
                 string encryptedString = Encryption(jsonString);
@@ -300,6 +321,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Serialzer<string> serialzer = new Serialzer<string>();
                 serialzer.type = PlayerPrefsType.String;
                 serialzer.value = value;
+                serialzer.isEncrypted = useEncryption;
+
                 string jsonString = JsonUtility.ToJson(serialzer);
 
                 string encryptedString = Encryption(jsonString);
@@ -315,6 +338,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<Vector3> serialzer = new Serialzer<Vector3>();
             serialzer.type = PlayerPrefsType.Vector3;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -358,6 +382,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<Vector3Int> serialzer = new Serialzer<Vector3Int>();
             serialzer.type = PlayerPrefsType.Vector3Int;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -402,6 +427,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<byte> serialzer = new Serialzer<byte>();
             serialzer.type = PlayerPrefsType.Byte;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
@@ -423,6 +449,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<double> serialzer = new Serialzer<double>();
             serialzer.type = PlayerPrefsType.Double;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
@@ -444,6 +471,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<bool> serialzer = new Serialzer<bool>();
             serialzer.type = PlayerPrefsType.Bool;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -472,6 +500,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<Vector2> serialzer = new Serialzer<Vector2>();
             serialzer.type = PlayerPrefsType.Vector2;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -517,6 +546,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<Vector2Int> serialzer = new Serialzer<Vector2Int>();
             serialzer.type = PlayerPrefsType.Vector2Int;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
 
             string jsonString = JsonUtility.ToJson(serialzer);
@@ -561,6 +591,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Serialzer<Vector4> serialzer = new Serialzer<Vector4>();
             serialzer.type = PlayerPrefsType.Vector4;
             serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
@@ -599,6 +630,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static void SetColor(string key, Color _value, bool hdr, bool useEncryption = false)
         {
             Serialzer<Color> serialzer = new Serialzer<Color>();
+            serialzer.isEncrypted = useEncryption;
 
             if (hdr)
             {
@@ -683,7 +715,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             serialzer.type = PlayerPrefsType.DateTime;
 
             serialzer.value = _value;
-            //JsonConvert.SerializeObject(DateTime.Now)
+            serialzer.isEncrypted = useEncryption;
             string jsonString = JsonConvert.SerializeObject(serialzer);
             if (useEncryption)
             {
@@ -705,13 +737,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 return null;
             }
-        }
-        internal static void CopyToClipboard(this string s)
-        {
-            TextEditor te = new TextEditor();
-            te.text = s;
-            te.SelectAll();
-            te.Copy();
         }
         internal static string NextAvailableFilename(string path)
         {
@@ -754,19 +779,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             return string.Format(pattern, max);
         }
-        private static bool ValidateJSON(this string s)
-        {
-            try
-            {
-                JToken.Parse(s);
-                return true;
-            }
-            catch (JsonReaderException ex)
-            {
-                Trace.WriteLine(ex);
-                return false;
-            }
-        }
         private static bool TryParseJson<T>(this string @this, out T result)
         {
             bool success = true;
@@ -779,29 +791,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             result = JsonConvert.DeserializeObject<T>(@this, settings);
             return success;
         }
-        internal static bool IsValidJson(this string src)
-        {
-            try
-            {
-                var asToken = JToken.Parse(src);
-                JArray array = JArray.Parse(src);
-                foreach (JObject content in array.Children<JObject>())
-                {
-                    foreach (JProperty prop in content.Properties())
-                    {
-                        Debug.Log(prop.Name);
-                    }
-                }
-                return asToken.Type == JTokenType.Object || asToken.Type == JTokenType.Array;
-            }
-            catch (Exception)  // Typically a JsonReaderException exception if you want to specify.
-            {
-                return false;
-            }
-        }
         internal static string Encryption(string inputData)
         {
-            TryLoadSettings();
+            Init();
 
             if (EncryptionSettings == null)
             {
@@ -825,8 +817,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal static string Decryption(string inputData)
         {
+            Init();
             string returnstring = inputData;
-            TryLoadSettings();
             if (EncryptionSettings == null)
             {
                 return returnstring;
@@ -862,13 +854,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return returnstring;
         }
 
-
+        internal static void SetAPPsCSDK(string APPsCSDK)
+        {
+            SetString(AdvancedPlayerPrefsGlobalVariables.CryptoSaveKey, APPsCSDK);
+        }
+        internal static bool HasAPPsCSDK()
+        {
+            return HasKey(AdvancedPlayerPrefsGlobalVariables.CryptoSaveKey);
+        }
+        internal static string GetAPPsCSDK()
+        {
+            return GetString(AdvancedPlayerPrefsGlobalVariables.CryptoSaveKey, string.Empty);
+        }
     }
     [Serializable]
     internal class Serialzer<T>
     {
         public bool isEncrypted;
-        public PlayerPrefsType TypeBeforeEncryption;
         public PlayerPrefsType type;
         [SerializeField]
         public T value;
@@ -876,6 +878,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     [Serializable]
     internal class ExportSerialzer
     {
+        public bool isEncrypted;
         public string key;
         public PlayerPrefsType type;
         public string value;

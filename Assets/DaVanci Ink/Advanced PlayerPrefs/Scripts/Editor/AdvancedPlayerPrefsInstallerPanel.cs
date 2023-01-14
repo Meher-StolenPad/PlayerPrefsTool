@@ -32,8 +32,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Davanci_Banner.png", typeof(Texture));
             developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/button_test.png", typeof(Texture));
             isAlreadyInstalled = AdvancedPlayerPrefs.SelectSettings(false);
-            ShowButtonNormal = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor);
-            ShowButtonHover = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.SetupButtonTextColor);
+            ShowButtonNormal = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor);
+            ShowButtonHover = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
         }
         private void OnGUI()
         {
@@ -64,11 +64,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
 
-            GUI.backgroundColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-            style2.normal.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
+            GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
 
-            style2.hover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-            style2.hover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
+            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+            style2.hover.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
             //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             //style2.onHover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
             //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
@@ -78,13 +78,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefsWindow.ShowWindow();
             }
 
-            GUI.backgroundColor = PlayerPrefsGlobalVariables.SetupButtonColor;
+            GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
 
-            style2.normal.textColor = PlayerPrefsGlobalVariables.SetupButtonTextColor;
-            style2.normal.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.SetupButtonTextColor);
+            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
+            style2.normal.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
 
-            style2.hover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.SetupButtonColor);
-            style2.hover.textColor = PlayerPrefsGlobalVariables.SetupButtonTextColor;
+            style2.hover.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonColor);
+            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
             // style2.normal.textColor = Color.cyan;
             GUILayout.Space(5);
 

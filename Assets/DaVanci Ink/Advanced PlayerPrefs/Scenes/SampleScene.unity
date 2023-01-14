@@ -238,7 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   testEncription: 
-  CriptedEncription: B+dtn1LLLAQu7ocpSb246cNILDc5e4gO/8P1QEcHygEb8w0pyDpZQisOcdo5UyfzYk6M9bvWX+FClebtyW1rO2BJoUwBrNG0bie08dW1/Ss=
+  CriptedEncription: owxla6BvRlzPEmz32Wh6TctM8lyc6PagTeiyXzYseM6yNdtH
   key: A60A5770FE5E7AB200BA9CFC94E4E8B0
   iv: 1234567887654321
 --- !u!4 &1470230929
@@ -267,4 +267,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9398f791bbb8ce46afb9620b97cace2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: 0
+  test: owxla6BvRlzPEmz32Wh6TctM8lyc6PagTeiyXzYseM6yNdtH
