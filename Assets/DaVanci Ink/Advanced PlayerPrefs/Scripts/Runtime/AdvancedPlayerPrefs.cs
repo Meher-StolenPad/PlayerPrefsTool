@@ -186,11 +186,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string d = Decryption(savedValue);
             Serialzer<T> serialzer = null;
 
-            if (String.Equals(d, savedValue))
-            {
-                //decryption failed
-                serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
-            }
+            serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
+
 
             if (serialzer != null)
             {
