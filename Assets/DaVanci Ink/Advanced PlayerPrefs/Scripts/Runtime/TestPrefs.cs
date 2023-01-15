@@ -4,7 +4,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     internal class TestPrefs : MonoBehaviour
     {
-        [ColorUsage(true,true)]
         public Color m_Color;
         public string testEncription; 
         public string CriptedEncription;

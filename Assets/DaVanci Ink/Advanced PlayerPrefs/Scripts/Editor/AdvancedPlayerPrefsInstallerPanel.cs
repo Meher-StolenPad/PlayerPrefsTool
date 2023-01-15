@@ -55,7 +55,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.fontStyle = FontStyle.Bold;
             style2.alignment = TextAnchor.MiddleCenter;
             style2.normal.textColor = Color.white;
-            style2.normal.background = Texture2D.whiteTexture;
+           // style2.normal.background = Texture2D.whiteTexture;
 
             GUIStyle style3 = new GUIStyle(EditorStyles.objectFieldThumb);
 
@@ -81,11 +81,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
 
-            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
-            style2.normal.background = ShowButtonNormal;
+            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
+            //style2.normal.background = ShowButtonNormal;
 
-            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-            style2.hover.background = ShowButtonHover;
+            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+           // style2.hover.background = ShowButtonHover;
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(150), GUILayout.Height(40)))
             {
@@ -93,11 +93,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
 
 
-            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
-            style2.normal.background = SelectButtonNormal;
+            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
+           // style2.normal.background = SelectButtonNormal;
 
-            style2.hover.background = SelectButtonHover;
-            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
+           // style2.hover.background = SelectButtonHover;
+            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
 
             GUILayout.Space(5);
 

@@ -55,8 +55,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);
 
-        internal static Color SetupButtonTextColor = new Color32(20, 180, 255, 255);
-        internal static Color SetupButtonColor = new Color32(20, 89, 255, 255);
+        internal static Color SetupButtonTextColor = new Color32(101, 217, 255, 255);
+        internal static Color SetupButtonColor = new Color32(0, 157, 255, 255);
 
 #if UNITY_EDITOR
         internal static string GetPlayerPrefsSpecificText()

@@ -67,7 +67,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #region Private Variables
         private static string numberPattern = " ({0})";
         private static EncryptionSettings EncryptionSettings = null;
-        private static bool isInitialzed;
+        private static bool isInitialzed = false;
         #endregion
 
         #region Editor Region
@@ -568,19 +568,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             object returnvalue = default;
 
             string savedValue = PlayerPrefs.GetString(key);
+
             string d = Decryption(savedValue);
+
             Serialzer<T> serialzer = null;
 
-            serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
 
 
-            if (serialzer != null)
+
+            if (d.TryParseJson(out Serialzer<T> t))
             {
+                Debug.Log("Key : "+key + "  "+ d);
+                serialzer = t;
                 returnvalue = serialzer.value;
             }
             else
             {
                 returnvalue = defaultValue;
+
             }
             return (T)returnvalue;
         }
@@ -633,6 +638,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private static bool TryParseJson<T>(this string @this, out T result)
         {
+            result = default;
+
+            if (string.IsNullOrEmpty(@this)) return false;
             bool success = true;
             var settings = new JsonSerializerSettings
             {
