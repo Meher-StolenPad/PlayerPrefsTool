@@ -232,11 +232,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private bool settingsFounded;
 
-        [MenuItem("DavanciCode/PlayerPrefs Manager Tool %e", priority = 2)]
+        [MenuItem("DavanciCode/Advanced Player Prefs Tool %e", priority = 2)]
         public static void ShowWindow()
         {
             PlayerPrefsWindow PlayerPrefsWindow = (PlayerPrefsWindow)GetWindow(typeof(PlayerPrefsWindow));
-            PlayerPrefsWindow.titleContent = new GUIContent("Player Prefs Manager");
+            PlayerPrefsWindow.titleContent = new GUIContent("Advanced Player Prefs Tool");
             PlayerPrefsWindow.Show();
             Vector2 minSize = PlayerPrefsWindow.minSize;
             minSize.x = 600;

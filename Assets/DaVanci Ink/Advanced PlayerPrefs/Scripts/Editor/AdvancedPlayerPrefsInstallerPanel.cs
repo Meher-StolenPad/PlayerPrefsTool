@@ -25,16 +25,30 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private readonly string SetupButtonText = "Setup Encryption";
         private readonly string SelectButtonText = "Select Settings";
         private Texture2D ShowButtonNormal;
-        private Texture2D ShowButtonHover;    
+        private Texture2D ShowButtonHover;
+
+        private Texture2D SelectButtonNormal;
+        private Texture2D SelectButtonHover;
+        void OnInspectorUpdate()
+        {
+            // Call Repaint on OnInspectorUpdate as it repaints the windows
+            // less times as if it was OnGUI/Update
+            Repaint();
+        }
         private void OnEnable()
         {
             Logo = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Logo.png", typeof(Texture));
-            cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Davanci_Banner.png", typeof(Texture));
-            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/button_test.png", typeof(Texture));
+            cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsCover.png", typeof(Texture));
+            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/DavanciButton.png", typeof(Texture));
             isAlreadyInstalled = AdvancedPlayerPrefs.SelectSettings(false);
+
             ShowButtonNormal = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor);
-            ShowButtonHover = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
+            ShowButtonHover = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
+
+            SelectButtonNormal = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonColor);
+            SelectButtonHover = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
         }
+        
         private void OnGUI()
         {
             var oldBackgroundColor = GUI.backgroundColor;
@@ -45,47 +59,49 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.normal.textColor = Color.white;
             style2.normal.background = Texture2D.whiteTexture;
 
+            GUIStyle style3 = new GUIStyle(EditorStyles.objectFieldThumb);
+
+            style3.fontSize = 12;
+            style3.fontStyle = FontStyle.BoldAndItalic;
+            style3.alignment = TextAnchor.UpperLeft;
+            style3.normal.textColor = Color.white;
+
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10);
             GUILayout.BeginArea(new Rect(0, 0, 825 / 2 - 10, 240 / 2), cover);
 
             GUILayout.EndArea();
             GUILayout.Space(110);
-            //  DrawHorizontalLine(Color.gray);
 
             GUILayout.BeginVertical();
-            GUILayout.Label("Version 1.0.0" + ColorString("[Release version]", Color.gray), EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
+            GUILayout.Label("Version 1.0.0" + " [Release version]", EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
             GUILayout.Label("Advanced player prefs Installed.Setup required to use encryption!", EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
             GUILayout.EndVertical();
 
             DrawHorizontalLine(Color.gray);
-            // GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 150;
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
 
-            GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+           // GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
+            style2.normal.background = ShowButtonNormal;
 
             style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-            style2.hover.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
-            //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-            //style2.onHover.background = MakeBackgroundTexture(10, 10, PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor);
-            //style2.onHover.textColor = PlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+            style2.hover.background = ShowButtonHover;
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(150), GUILayout.Height(40)))
             {
                 PlayerPrefsWindow.ShowWindow();
             }
 
-            GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
-            style2.normal.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
+            style2.normal.background = SelectButtonNormal;
 
-            style2.hover.background = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonColor);
-            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
-            // style2.normal.textColor = Color.cyan;
+            style2.hover.background = SelectButtonHover;
+            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
+
             GUILayout.Space(5);
 
             if (GUILayout.Button(isAlreadyInstalled ? SelectButtonText : SetupButtonText, style2, GUILayout.Width(150), GUILayout.Height(40)))
@@ -106,61 +122,64 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.normal.textColor = Color.white;
 
             GUILayout.EndHorizontal();
+            GUILayout.Space(5);
+
             DrawHorizontalLine(Color.gray);
+            GUILayout.Space(5);
+
             GUILayout.BeginVertical();
 
-            GUILayout.Label("Advanced player prefs Installed.Setup required to use encryption!\n" +
-                "To Use encryption,you need to create an encryption settings file,\nwhere you can change and set your current encryption key.\n" +
-                "Encrypction based on AES encryption (32 and 16 bytes)\n" +
-                "You can export/import your current key in/from file and use it\n where ever you want.", EditorStyles.boldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(90));
-            //  GUILayout.FlexibleSpace();
+            GUILayout.Label(
+                "NOTE : To Use encryption,you need an encryption settings file,\n  where you could setup your encryption settings.\n\n" +
+                "- Encryption based on AES encryption (2 keys : 32 and 16 bytes)\n" +
+                "- You can export/import your current keys in/from file and use it\n where ever you want.\n\n" +
+                "*Use the setup button to create an Encryption settings file ! \n"
+                , style3, GUILayout.Width(buttonWidth), GUILayout.Height(125));
+
 
             DrawHorizontalLine(Color.gray);
             DrawBottomButtons();
-            // DrawHorizontalLine(Color.gray);
-
-
         }
         private void DrawBottomButtons()
         {
 
             EditorGUILayout.BeginHorizontal();
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
-            // Delete all PlayerPrefs
             if (GUILayout.Button("Website", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.WebsiteLink);
             }
 
             GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Get Started", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
-                // DeleteAll();
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.GetStartedLink);
             }
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
 
-            // Delete all PlayerPrefs
             if (GUILayout.Button("Changelogs", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.ChangeLogsLink);
             }
 
             GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Documentation", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
-                // DeleteAll();
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.DocumentationLink);
             }
             EditorGUILayout.EndHorizontal();
+            GUILayout.Space(3);
 
             EditorGUILayout.BeginHorizontal();
-
             GUILayout.Space(Screen.width / 2 - buttonWidth / 2);
 
             if (GUILayout.Button(developedBy, GUILayout.Width(buttonWidth), GUILayout.Height(50)))
             {
-                //you code here
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.DavanciInkLink);
             }
             EditorGUILayout.EndHorizontal();
         }

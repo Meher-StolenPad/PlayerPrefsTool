@@ -98,7 +98,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EncryptionSettings = Resources.Load<EncryptionSettings>(EncryptionSettingsResourcesPath);
                 if (EncryptionSettings == null)
                 {
-                    Debug.LogWarning("No encryption settings Founded !,Check the Advanced Player Prefs Setup Panel");
+                    Debug.LogWarning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
                     return false;
                 }
                 else
@@ -127,7 +127,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return PlayerPrefs.GetInt(key, defaultValue);
         }
-        public static float GetFloat(string key, float defaultValue = 0.0f)
+        public static float GetFloat(string key, float defaultValue = float.MinValue)
         {
             float returnFloat = PlayerPrefs.GetFloat(key, defaultValue);
 
@@ -186,7 +186,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string d = Decryption(savedValue);
             Serialzer<T> serialzer = null;
 
-            if (!String.Equals(d, savedValue))
+            if (String.Equals(d, savedValue))
             {
                 //decryption failed
                 serialzer = JsonUtility.FromJson<Serialzer<T>>(d);
@@ -259,8 +259,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 serialzer.isEncrypted = useEncryption;
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if(TryEncryption(jsonString,out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetInt(key, value);
+                }
             }
             else
             {
@@ -282,8 +289,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 serialzer.value = value;
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetFloat(key, value);
+                }
             }
             else
             {
@@ -302,8 +316,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetFloat(key, floatValue);
+                }
             }
             else
             {
@@ -325,8 +346,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, value);
+                }
             }
             else
             {
@@ -344,8 +372,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -388,8 +423,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -432,8 +474,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -454,8 +503,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -477,8 +533,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -506,8 +569,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -552,8 +622,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -597,8 +674,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -648,8 +732,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -719,8 +810,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonConvert.SerializeObject(serialzer);
             if (useEncryption)
             {
-                string encryptedString = Encryption(jsonString);
-                PlayerPrefs.SetString(key, encryptedString);
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
             }
             else
             {
@@ -791,13 +890,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             result = JsonConvert.DeserializeObject<T>(@this, settings);
             return success;
         }
-        internal static string Encryption(string inputData)
+        internal static bool TryEncryption(string inputData,out string _result)
         {
             Init();
 
             if (EncryptionSettings == null)
             {
-                return inputData;
+                _result = inputData;
+                return false;
             }
 
             AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
@@ -812,7 +912,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             ICryptoTransform trnsfrm = AEScryptoProvider.CreateEncryptor(AEScryptoProvider.Key, AEScryptoProvider.IV);
 
             byte[] result = trnsfrm.TransformFinalBlock(txtByteData, 0, txtByteData.Length);
-            return Convert.ToBase64String(result);
+            _result = Convert.ToBase64String(result);
+            return true;
         }
 
         internal static string Decryption(string inputData)
