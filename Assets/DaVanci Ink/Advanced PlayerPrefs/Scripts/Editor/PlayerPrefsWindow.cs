@@ -897,7 +897,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 if (SavePathType != oldSavePathType && SavePathType != SavePathType.Absolute)
                 {
-                    tempExportPath = AdvancedPlayerPrefsExportManager.GetPathWithType(SavePathType);
+                    tempExportPath = AdvancedPlayerPrefsExportManager.GetPathByType(SavePathType);
                     oldSavePathType = SavePathType;
                 }
                 if (SavePathType != oldSavePathType && SavePathType == SavePathType.Absolute)

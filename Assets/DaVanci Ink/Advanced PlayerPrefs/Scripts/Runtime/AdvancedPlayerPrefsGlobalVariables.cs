@@ -30,6 +30,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string NoEncryptionSettingsWarning = "No encryption settings Founded in the project ! Prefs will be saved without encryption." +
             "Check the Advanced Player Prefs Setup Panel.";
 
+        internal const  string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
+        internal const  string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/EncryptionSettings";
+        internal const  string EncryptionSettingsFileName = "EncryptionSettings.asset";
 
         internal static Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);

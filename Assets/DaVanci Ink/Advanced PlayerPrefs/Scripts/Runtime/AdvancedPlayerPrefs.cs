@@ -40,10 +40,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     }
     public static class AdvancedPlayerPrefs
     {
-        private static readonly string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
-        private static readonly string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/EncryptionSettings";
-        private static readonly string EncryptionSettingsFileName = "EncryptionSettings.asset";
-
         private static string numberPattern = " ({0})";
         private static EncryptionSettings EncryptionSettings = null;
         private static bool isInitialzed;
@@ -70,11 +66,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             EncryptionSettings en = ScriptableObject.CreateInstance<EncryptionSettings>();
 
-            if (!Directory.Exists(EncryptionSettingsPath))
+            if (!Directory.Exists(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath))
             {
-                Directory.CreateDirectory(EncryptionSettingsPath);
+                Directory.CreateDirectory(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath);
             }
-            AssetDatabase.CreateAsset(en, EncryptionSettingsPath + EncryptionSettingsFileName);
+            AssetDatabase.CreateAsset(en, AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath + AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsFileName);
             EncryptionSettings = en;
         }
 #endif
@@ -95,7 +91,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             if (EncryptionSettings == null)
             {
-                EncryptionSettings = Resources.Load<EncryptionSettings>(EncryptionSettingsResourcesPath);
+                EncryptionSettings = Resources.Load<EncryptionSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
                 if (EncryptionSettings == null)
                 {
                     Debug.LogWarning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
@@ -856,7 +852,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!File.Exists(tmp))
                 return tmp; // short-circuit if no matches
 
-            int min = 1, max = 2; // min is inclusive, max is exclusive/untested
+            int min = 1, max = 2; 
 
             while (File.Exists(string.Format(pattern, max)))
             {

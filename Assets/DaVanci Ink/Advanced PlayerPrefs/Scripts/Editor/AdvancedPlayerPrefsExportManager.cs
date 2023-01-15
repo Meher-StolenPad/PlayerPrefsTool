@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using static DaVanciInk.AdvancedPlayerPrefs.PlayerPrefsWindow;
@@ -17,11 +18,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Temporary =3,
         Absolute =4
     }
-    public static class AdvancedPlayerPrefsExportManager
+    internal static class AdvancedPlayerPrefsExportManager
     {
         internal static SavePathType m_savePathType;
         internal static string m_exportPath;
-        internal static string GetPathWithType(SavePathType m_savePathType = SavePathType.Project)
+        private static string numberPattern = " ({0})";
+
+        internal static string GetPathByType(SavePathType m_savePathType = SavePathType.Project)
         {
             string path = string.Empty;
             switch (m_savePathType)
@@ -49,7 +52,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             m_exportPath = _exportPath;
             if (_savePathType != SavePathType.Absolute)
-                m_exportPath = GetPathWithType(_savePathType);
+                m_exportPath = GetPathByType(_savePathType);
 
             var backupstring = CreateBackup(PlayerPrefHolderList);
             string newBackupString = AdvancedPlayerPrefsGlobalVariables.BackupCreatedText;
@@ -66,13 +69,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             else
             {
-                ExportPathFile = AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
+                ExportPathFile =AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
                 File.WriteAllText(ExportPathFile, newBackupString);
             }
             Debug.Log(ExportPathFile);
         }
 
-        internal static string CreateBackup(List<PlayerPrefHolder> PlayerPrefHolderList)
+        private static string CreateBackup(List<PlayerPrefHolder> PlayerPrefHolderList)
         {
             ExportSerialzerHolder exportSerialzerHolder = new ExportSerialzerHolder();
 
