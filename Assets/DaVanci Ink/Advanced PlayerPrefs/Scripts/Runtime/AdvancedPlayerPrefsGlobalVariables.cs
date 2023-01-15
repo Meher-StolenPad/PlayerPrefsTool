@@ -16,10 +16,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string KeyOpenPanelTitle = "Backup Keys path";
 
         internal const string CharsKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        internal const string InitialKey = "A60A5770FE5E7AB200BA9CFC94E4E8B0";
-        internal const string InittialIv = "1234567887654321";
-        internal const string InittialSavedKey = "A610A2573704FE55E67A7B28008BA79C6FC5944E43E82B01";
-        internal const string CryptoSaveKey = "APPsCSDK";
+        internal const string InitialKey = "J5ddq99RUNJawf2QTGfQhtOjaSZ87h5g";
+        internal const string InitialIv = "t9lWGXbFwmuqsxm1";
+        internal const string InitialSavedKey = "J5Ztddo9q9jl9RgWUNwGJaTXwfsb2QoFTGPwfQAmhtCuOjmqaShsZ8Mx7hHm5gM1";
+        internal const string APPsCSDK = "APPsCSDK";
 
         internal const string GetStartedLink = "www.google.com";
         internal const string WebsiteLink = "www.google.com";
@@ -34,11 +34,30 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const  string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/EncryptionSettings";
         internal const  string EncryptionSettingsFileName = "EncryptionSettings.asset";
 
+
+        internal const  string AdvancedPlayerPrefsToolMenuName = "DavanciCode/Advanced Player Prefs Tool %e";
+        internal const  string AdvancedPlayerPrefsToolTitle = "Advanced Player Prefs Tool";
+
+        internal const  string RefreshButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/refresh_Icon.png";
+        internal const  string SaveButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/save_Icon.png";
+        internal const  string RevertButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/reset_Icon.png";
+        internal const  string DeleteButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/delete_Icon.png";
+        internal const  string ApplyAllButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/apply_Icon.png";
+        internal const  string ExportButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/d_popout_icon.png";
+
+        internal const  string ToolbarSeachTextField = "ToolbarSeachTextField";
+        internal const  string ToolbarSearchCancelButton = "ToolbarSeachCancelButton";
+
+        internal static string[] OpenFolderFilters = new string[] { "text files", "txt", "All files", "*" };
+
+
+
         internal static Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);
 
         internal static Color SetupButtonTextColor = new Color32(20, 180, 255, 255);
         internal static Color SetupButtonColor = new Color32(20, 89, 255, 255);
+
 #if UNITY_EDITOR
         internal static string GetPlayerPrefsSpecificText()
         {

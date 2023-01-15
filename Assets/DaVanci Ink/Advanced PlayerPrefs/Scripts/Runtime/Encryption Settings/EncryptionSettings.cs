@@ -32,8 +32,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;
-        public string Iv = AdvancedPlayerPrefsGlobalVariables.InittialIv;
-        public string SavedKey = AdvancedPlayerPrefsGlobalVariables.InittialSavedKey;
+        public string Iv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
+        public string SavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
         [HideInInspector] public bool useDeviceKey;
         internal string GetKey()
@@ -148,8 +148,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             try
             {
-                string[] filters = new string[] { "text files", "txt", "All files", "*" };
-                string path = EditorUtility.OpenFilePanelWithFilters("Load keys backup file", "", filters);
+                string path = EditorUtility.OpenFilePanelWithFilters("Load keys backup file", "", AdvancedPlayerPrefsGlobalVariables.OpenFolderFilters);
 
                 if (string.IsNullOrEmpty(path)) return string.Empty;
 

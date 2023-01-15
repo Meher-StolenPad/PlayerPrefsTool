@@ -31,8 +31,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private Texture2D SelectButtonHover;
         void OnInspectorUpdate()
         {
-            // Call Repaint on OnInspectorUpdate as it repaints the windows
-            // less times as if it was OnGUI/Update
             Repaint();
         }
         private void OnEnable()
@@ -83,7 +81,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
 
-           // GUI.backgroundColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
             style2.normal.background = ShowButtonNormal;
 

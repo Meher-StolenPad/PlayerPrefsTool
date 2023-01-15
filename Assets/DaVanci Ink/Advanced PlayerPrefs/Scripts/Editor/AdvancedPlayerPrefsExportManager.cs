@@ -22,7 +22,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         internal static SavePathType m_savePathType;
         internal static string m_exportPath;
-        private static string numberPattern = " ({0})";
 
         internal static string GetPathByType(SavePathType m_savePathType = SavePathType.Project)
         {
@@ -74,7 +73,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             Debug.Log(ExportPathFile);
         }
-
         private static string CreateBackup(List<PlayerPrefHolder> PlayerPrefHolderList)
         {
             ExportSerialzerHolder exportSerialzerHolder = new ExportSerialzerHolder();
