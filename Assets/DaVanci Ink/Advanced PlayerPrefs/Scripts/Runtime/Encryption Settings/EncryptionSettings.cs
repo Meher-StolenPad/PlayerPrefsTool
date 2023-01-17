@@ -35,6 +35,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public string Iv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
         public string SavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
+        private string OldKey = AdvancedPlayerPrefsGlobalVariables.InitialKey;
+        private string OldIv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
+        private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
+
         [HideInInspector] public bool useDeviceKey;
         internal string GetKey()
         {
@@ -117,6 +121,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
 
 #if UNITY_EDITOR
+        public void SaveOldKeys()
+        {
+            OldKey = Key;
+            OldIv = Iv;
+            OldSavedKey = SavedKey;
+        }
+        public void GetOldKeys()
+        {
+            Key = OldKey;
+            Iv = OldIv;
+            SavedKey = OldSavedKey;
+        }
+
         internal void ExportKeys()
         {
             Export();

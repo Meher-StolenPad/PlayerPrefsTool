@@ -100,6 +100,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AssetDatabase.CreateAsset(en, AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath + AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsFileName);
             EncryptionSettings = en;
         }
+        internal static bool TryGetEncryptionSettings(out EncryptionSettings encryptionSettings)
+        {
+            bool returnValue = false;
+
+            returnValue=TryLoadSettings();
+            encryptionSettings = EncryptionSettings;
+            return returnValue;
+        }
 #endif
         #endregion
 
@@ -127,15 +135,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Debug.LogWarning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
                     return false;
                 }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
                 return true;
             }
+            return true;
         }
         #endregion
 
