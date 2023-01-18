@@ -16,7 +16,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     internal class PlayerPrefsWindow : EditorWindow
     {
         #region Player Pref Holder Class
-        internal class PlayerPrefHolder
+        internal class PlayerPrefHolder : ScriptableObject
         {
             public string Key;
             public string TempKey;
@@ -31,8 +31,26 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             public bool isKeyFounded = false;
             public bool isValueFounded = false;
             public bool isEncrypted = false;
+
+            public SerializedProperty ValueProperty;
+            private SerializedObject so;
+
+            public int[] array;
+            public void Init()
+            {
+                array = AdvancedPlayerPrefs.StringToArrayInt(Value.ToString());
+
+                ScriptableObject t = this;
+
+                so = new SerializedObject(t);
+
+                ValueProperty = so.FindProperty("array");
+                Debug.Log("array count : " + array.Length);
+            }
             public void SaveKey()
             {
+
+
                 if (Key != TempKey)
                 {
                     PlayerPrefs.DeleteKey(Key);
@@ -92,6 +110,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         break;
                     case PlayerPrefsType.Vector3Int:
                         AdvancedPlayerPrefs.SetVector3Int(Key, AdvancedPlayerPrefs.StringToVector3Int(Value.ToString()), isEncrypted);
+                        break;
+                    case PlayerPrefsType.Array:
+                        AdvancedPlayerPrefs.SetArray(Key,array, isEncrypted);
                         break;
                     default:
                         break;
@@ -195,6 +216,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         var v3it = AdvancedPlayerPrefs.StringToVector3Int(TempValue.ToString());
                         returnValue = v3ic == v3it;
                         break;
+                    case PlayerPrefsType.Array:
+                        returnValue = true;
+                        //var ttt = AdvancedPlayerPrefs.StringToArrayInt(array.ToString());
+                        //var tttt = AdvancedPlayerPrefs.StringToArrayInt(array.ToString());
+                        //returnValue = ttt == tttt;
+                        break;
                     default:
                         break;
                 }
@@ -284,6 +311,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         #endregion
 
+        TestScriptable testScriptable;
         #region Unity editor Tool 
         [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 2)]
         public static void ShowWindow()
@@ -295,6 +323,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             minSize.x = 600;
             PlayerPrefsWindow.minSize = minSize;
         }
+
         private void OnEnable()
         {
             CompanyName = PlayerSettings.companyName;
@@ -308,10 +337,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DeleteButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.DeleteButtonIconTexturePath, typeof(Texture));
             ApplyAllButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ApplyAllButtonIconTexturePath, typeof(Texture));
             ExportButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ExportButtonIconTexturePath, typeof(Texture));
+            testScriptable = Resources.Load<TestScriptable>("AdvancedPlayerPrefs/test");
 
             GetAllPlayerPrefs();
             FiltredPlayerPrefHolderList.Clear();
             EncryptionSettingsFounded = AdvancedPlayerPrefs.SelectSettings(false);
+
+            ScriptableObject target = testScriptable;
+
             //tempExportPath = ExportPath;
         }
         #endregion
@@ -338,6 +371,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawHorizontalLine(Color.grey);
             DrawExportFields();
             EditorGUILayout.Space(5);
+
+
+            //so.ApplyModifiedProperties(); // Remember to apply modified properties
+
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
         }
@@ -356,7 +393,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             float buttonWidth = (EditorGUIUtility.currentViewWidth) / 3f;
 
-            SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSeachTextField), GUILayout.Width(buttonWidth+15));
+            SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSeachTextField), GUILayout.Width(buttonWidth + 15));
             if (GUILayout.Button("", GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSearchCancelButton)))
             {
                 SearchText = "";
@@ -377,7 +414,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
             FullbuttonWidth = (FullbuttonWidth / 7) * 4;
-            ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth+4));
+            ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth + 4));
             if (EditorPrefsAvailable != ShowEditorPrefs)
             {
                 Refresh();
@@ -389,7 +426,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 5f;
             FullbuttonWidth = (FullbuttonWidth / 7) * 4;
 
-            if(GUILayout.Button("Delete All", GUILayout.Width(FullbuttonWidth + 4)))
+            if (GUILayout.Button("Delete All", GUILayout.Width(FullbuttonWidth + 4)))
             {
                 DeleteAll();
             }
@@ -600,6 +637,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         break;
                     case PlayerPrefsType.Vector3Int:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3IntField("", AdvancedPlayerPrefs.StringToVector3Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.Array:
+                        //if (_playerPrefsHolderList[i].ValueProperty != null)
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        //   // True means show c$$anonymous$$ldren
                         break;
                     default:
                         break;
@@ -884,17 +926,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.Space(10);
 
                 EditorGUILayout.BeginHorizontal();
-                float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) /2f;
-                GUILayout.Space(buttonWidth/3 +50);
+                float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
+                GUILayout.Space(buttonWidth / 3 + 50);
 
-                if (GUILayout.Button(new GUIContent("Export"), GUILayout.Width(buttonWidth/2)))
+                if (GUILayout.Button(new GUIContent("Export"), GUILayout.Width(buttonWidth / 2)))
                 {
                     Export();
                 }
                 GUILayout.Space(5);
 
 
-                if (GUILayout.Button("Import from file", GUILayout.Width(buttonWidth/2)))
+                if (GUILayout.Button("Import from file", GUILayout.Width(buttonWidth / 2)))
                 {
                     GetBackupFromFile(tempExportPath);
                 }
@@ -907,13 +949,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 GUILayout.BeginHorizontal();
 
-                GUILayout.Label("Company Name", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth *4));
-              
+                GUILayout.Label("Company Name", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 4));
+
                 GUILayout.Space(5);
 
                 ImportCompanyName = GUILayout.TextField(ImportCompanyName, style3, GUILayout.Width(FullWindowWidth * 10f));
 
-                if(string.IsNullOrEmpty(ImportCompanyName) || string.IsNullOrEmpty(ImportProductName))
+                if (string.IsNullOrEmpty(ImportCompanyName) || string.IsNullOrEmpty(ImportProductName))
                 {
                     GUI.enabled = false;
                 }
@@ -968,7 +1010,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         key = key.Remove(index, key.Length - index);
 
                         object savedValue = RegistryKey.GetValue(valueName);
-                        PlayerPrefHolder pair = new PlayerPrefHolder();
+                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
 
                         if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
                         {
@@ -993,6 +1035,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                             pair.type = returnValues.PlayerPrefsType;
                             pair.isEncrypted = returnValues.IsEncrypted;
+                           
 
                         }
 
@@ -1001,7 +1044,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.BackupValues = savedValue;
                         pair.Key = key;
                         pair.TempKey = key;
-
+                        if (pair.type == PlayerPrefsType.Array)
+                        {
+                            pair.Init();
+                        }
                         tempPlayerPrefs[i] = pair;
 
                         i++;

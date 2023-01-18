@@ -30,7 +30,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Vector4,
         Color,
         HDRColor,
-        DateTime
+        DateTime,
+        Array
     }
 
     #region Internal Classes Region
@@ -66,7 +67,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         #region Private Variables
         private static string numberPattern = " ({0})";
-        private static EncryptionSettings EncryptionSettings = null;
+        internal static EncryptionSettings EncryptionSettings = null;
         private static bool isInitialzed = false;
         #endregion
 
@@ -211,6 +212,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static Vector3Int GetVector3Int(string key, Vector3Int defaultValue)
         {
             return GetCosutomTypeValue<Vector3Int>(key, defaultValue);
+        }
+        public static int[] GetArray(string key, int[] defaultValue)
+        {
+            return GetCosutomTypeValue<int[]>(key, defaultValue);
         }
         #endregion
 
@@ -562,6 +567,29 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
+        public static void SetArray(string key, int[] _value, bool useEncryption = false)
+        {
+            Serialzer<int[]> serialzer = new Serialzer<int[]>();
+            serialzer.type = PlayerPrefsType.Array;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : "+output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
         #endregion
 
         #region Json Data Region / Internal data 
@@ -574,9 +602,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string d = Decryption(savedValue);
 
             Serialzer<T> serialzer = null;
-
-
-
 
             if (d.TryParseJson(out Serialzer<T> t))
             {
@@ -893,6 +918,29 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return null;
             }
         }
+        internal static int[] StringToArrayInt(string s)
+        {
+            Debug.Log("Array from string : " + s);
+
+            int[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var splitString = s.Split(","[0]);
+            List<int> returnlist = new List<int>();
+            foreach (var item in splitString)
+            {
+                int t = int.Parse(item);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            Debug.Log("Array from string return count : " + outVector3.Length);
+
+            return outVector3;
+        }
+
+
         #endregion
 
         #region File Exporter 

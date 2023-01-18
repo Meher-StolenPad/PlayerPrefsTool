@@ -35,7 +35,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!string.IsNullOrEmpty(inPackages))
             {
                 //Show Advanced PlayerPrefs Package Installer
-                AdvancedPlayerPrefsInstallerPanel.ShowWindow();
+               // AdvancedPlayerPrefsInstallerPanel.ShowWindow();
 
             }
         }

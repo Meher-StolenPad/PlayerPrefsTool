@@ -26,6 +26,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetDoube("TestDouble", 54.444484, true);
             AdvancedPlayerPrefs.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
             AdvancedPlayerPrefs.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
+            //AdvancedPlayerPrefs.SetArray("TestArray", new int[4] {1,2,3,4}, true);
+
             Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgain", 1f));
             Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgaidddn", 1f));
             Debug.Log("Vector 2 " + AdvancedPlayerPrefs.GetVector2("TestVector2", Vector2.zero));
@@ -37,11 +39,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Debug.Log("double " + AdvancedPlayerPrefs.GetDouble("TestDouble", 15));
             Debug.Log("Vector2Int " + AdvancedPlayerPrefs.GetVector2Int("TestVector2Int", Vector2Int.zero));
             Debug.Log("Vector3Int " + AdvancedPlayerPrefs.GetVector3Int("TestVector3Int", Vector3Int.zero));
+            var t = AdvancedPlayerPrefs.GetArray("TestArray", new int[0]);
+            foreach (var item in t)
+            {
+                Debug.Log("array  item : " + item);
 
+            }
             //m_Color = AdvancedPlayerPrefs.GetColor("TestColor", Color.white,false);
         }
         public void Update()
         {
+
             //if (Input.GetKeyDown(KeyCode.E))
             //{
             //    CriptedEncription = AdvancedPlayerPrefs.TryEncryption(testEncription);
