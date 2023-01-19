@@ -102,7 +102,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal void CheckKey()
         {
-            Debug.Log("CheckKey");
             if (useDeviceKey)
             {
                 if (AdvancedPlayerPrefs.HasAPPsCSDK())

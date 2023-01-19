@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -26,9 +27,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetDoube("TestDouble", 54.444484, true);
             AdvancedPlayerPrefs.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
             AdvancedPlayerPrefs.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
-            //AdvancedPlayerPrefs.SetArray("TestArray", new int[4] {1,2,3,4}, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayInt", new int[4] {1,2,3,4}, true);
+            AdvancedPlayerPrefs.SetArray("TestArraybyte", new byte[2] {1,2}, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayDouble", new double[2] {1,2}, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayVector3", new Vector3[2] {Vector3.zero,Vector3.up}, true);
+            //AdvancedPlayerPrefs.SetArray("TestArrayVector3Int", new Vector3Int[2] { Vector3Int.zero, Vector3Int.up}, true);
 
-            Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgain", 1f));
+            //    AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
+
+            //AdvancedPlayerPrefs.SetArray("TestArrayFloat", new float[4] {1.1f,2.2f,3.3f,4.4f}, true);
+
+            Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgain"));
             Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgaidddn", 1f));
             Debug.Log("Vector 2 " + AdvancedPlayerPrefs.GetVector2("TestVector2", Vector2.zero));
             Debug.Log("Vector 3 " + AdvancedPlayerPrefs.GetVector3("TestVector3", Vector3.zero));
@@ -39,22 +48,33 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Debug.Log("double " + AdvancedPlayerPrefs.GetDouble("TestDouble", 15));
             Debug.Log("Vector2Int " + AdvancedPlayerPrefs.GetVector2Int("TestVector2Int", Vector2Int.zero));
             Debug.Log("Vector3Int " + AdvancedPlayerPrefs.GetVector3Int("TestVector3Int", Vector3Int.zero));
-            var t = AdvancedPlayerPrefs.GetArray("TestArray", new int[0]);
+
+            List<Vector3Int> t = AdvancedPlayerPrefs.GetList("TestArrayVector3Int", new List<Vector3Int>());
+
             foreach (var item in t)
             {
                 Debug.Log("array  item : " + item);
 
             }
+            var tt = AdvancedPlayerPrefs.GetList("TestArrayBool", new List<bool>());
+
+            foreach (var item in tt)
+            {
+                Debug.Log("array  bool item : " + item);
+
+            }
+            AdvancedPlayerPrefs.SetArray("TestArrayInt", t, true);
+
             //m_Color = AdvancedPlayerPrefs.GetColor("TestColor", Color.white,false);
         }
         public void Update()
         {
 
-            //if (Input.GetKeyDown(KeyCode.E))
-            //{
-            //    CriptedEncription = AdvancedPlayerPrefs.TryEncryption(testEncription);
-            //    Debug.Log(CriptedEncription);
-            //}
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+               // outVector3 = JsonUtility.FromJson<Vector3[]>(" "+"{"x":0.0,"y":0.0,"z":0.0},{"x":0.0,"y":1.0,"z":0.0}");
+                Debug.Log(CriptedEncription);
+            }
             //if (Input.GetKeyDown(KeyCode.D))
             //{
             //    Debug.Log(AdvancedPlayerPrefs.Decryption(CriptedEncription));

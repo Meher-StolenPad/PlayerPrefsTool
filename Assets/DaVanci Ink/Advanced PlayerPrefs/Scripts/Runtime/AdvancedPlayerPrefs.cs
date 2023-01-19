@@ -9,6 +9,8 @@ using System.Text;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using System.Runtime.CompilerServices;
+using System.Linq;
+using System.Text.RegularExpressions;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -31,7 +33,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Color,
         HDRColor,
         DateTime,
-        Array
+
+        ArrayInt,
+        ArrayFloat,
+        ArrayDouble,
+        ArrayBool,
+        ArrayByte,
+        ArrayVector3,
+        ArrayVector3Int
     }
 
     #region Internal Classes Region
@@ -158,9 +167,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Get Variable Region
-        public static int GetInt(string key, int defaultValue = 0)
+        public static int GetInt(string key, int defaultValue = int.MinValue)
         {
-            return PlayerPrefs.GetInt(key, defaultValue);
+            int returnInt = PlayerPrefs.GetInt(key, defaultValue);
+                
+            if (returnInt == defaultValue)
+            {
+                returnInt = GetCosutomTypeValue<int>(key, defaultValue);
+            }
+
+            return returnInt;
         }
         public static float GetFloat(string key, float defaultValue = float.MinValue)
         {
@@ -175,7 +191,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static string GetString(string key, string defaultValue = "")
         {
-            return PlayerPrefs.GetString(key, defaultValue);
+            return Decryption(PlayerPrefs.GetString(key, defaultValue));
         }
         public static Vector2 GetVector2(string key, Vector2 defaultValue)
         {
@@ -193,15 +209,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return GetCosutomTypeValue<Color>(key, defaultValue);
         }
-        public static bool GetBool(string key, bool defaultValue)
+        public static bool GetBool(string key, bool defaultValue = false)
         {
             return GetCosutomTypeValue<bool>(key, defaultValue);
         }
-        public static byte GetByte(string key, byte defaultValue)
+        public static byte GetByte(string key, byte defaultValue = byte.MinValue)
         {
             return GetCosutomTypeValue<byte>(key, defaultValue);
         }
-        public static double GetDouble(string key, double defaultValue)
+        public static double GetDouble(string key, double defaultValue = double.MinValue)
         {
             return GetCosutomTypeValue<double>(key, defaultValue);
         }
@@ -213,9 +229,69 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return GetCosutomTypeValue<Vector3Int>(key, defaultValue);
         }
-        public static int[] GetArray(string key, int[] defaultValue)
+        public static int[] GetArray(string key, int[] defaultValue = null)
         {
-            return GetCosutomTypeValue<int[]>(key, defaultValue);
+            var effectiveEnd = defaultValue ?? new int[0];
+            return GetCosutomTypeValue<int[]>(key, effectiveEnd);
+        }
+        public static List<int> GetList(string key, List<int> defaultValue)
+        {
+            var t = GetCosutomTypeValue<int[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static float[] GetArray(string key, float[] defaultValue)
+        {
+            return GetCosutomTypeValue<float[]>(key, defaultValue);
+        }
+        public static List<float> GetList(string key, List<float> defaultValue)
+        {
+            var t = GetCosutomTypeValue<float[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static bool[] GetArray(string key, bool[] defaultValue)
+        {
+            return GetCosutomTypeValue<bool[]>(key, defaultValue);
+        }
+        public static List<bool> GetList(string key, List<bool> defaultValue)
+        {
+            var t = GetCosutomTypeValue<bool[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static double[] GetArray(string key, double[] defaultValue)
+        {
+            return GetCosutomTypeValue<double[]>(key, defaultValue);
+        }
+        public static List<double> GetList(string key, List<double> defaultValue)
+        {
+            var t = GetCosutomTypeValue<double[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static byte[] GetArray(string key, byte[] defaultValue)
+        {
+            return GetCosutomTypeValue<byte[]>(key, defaultValue);
+        }
+        public static List<byte> GetList(string key, List<byte> defaultValue)
+        {
+            var t = GetCosutomTypeValue<byte[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static Vector3[] GetArray(string key, Vector3[] defaultValue)
+        {
+            return GetCosutomTypeValue<Vector3[]>(key, defaultValue);
+        }
+        public static List<Vector3> GetList(string key, List<Vector3> defaultValue)
+        {
+            var t = GetCosutomTypeValue<Vector3[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static Vector3Int[] GetArray(string key, Vector3Int[] defaultValue)
+        {
+            return GetCosutomTypeValue<Vector3Int[]>(key, defaultValue);
+        }
+        public static List<Vector3Int> GetList(string key, List<Vector3Int> defaultValue)
+        {
+            var t = GetCosutomTypeValue<Vector3Int[]>(key, defaultValue.ToArray());
+            return t.ToList();
         }
         #endregion
 
@@ -570,7 +646,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static void SetArray(string key, int[] _value, bool useEncryption = false)
         {
             Serialzer<int[]> serialzer = new Serialzer<int[]>();
-            serialzer.type = PlayerPrefsType.Array;
+            serialzer.type = PlayerPrefsType.ArrayInt;
             serialzer.value = _value;
             serialzer.isEncrypted = useEncryption;
 
@@ -590,10 +666,295 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             PlayerPrefs.SetString(key, jsonString);
         }
+        public static void SetArray(string key, List<int> _value, bool useEncryption = false)
+        {
+            Serialzer<int[]> serialzer = new Serialzer<int[]>();
+            serialzer.type = PlayerPrefsType.ArrayInt;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, float[] _value, bool useEncryption = false)
+        {
+            Serialzer<float[]> serialzer = new Serialzer<float[]>();
+            serialzer.type = PlayerPrefsType.ArrayFloat;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<float> _value, bool useEncryption = false)
+        {
+            Serialzer<float[]> serialzer = new Serialzer<float[]>();
+            serialzer.type = PlayerPrefsType.ArrayFloat;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, bool[] _value, bool useEncryption = false)
+        {
+            Serialzer<bool[]> serialzer = new Serialzer<bool[]>();
+            serialzer.type = PlayerPrefsType.ArrayBool;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<bool> _value, bool useEncryption = false)
+        {
+            Serialzer<bool[]> serialzer = new Serialzer<bool[]>();
+            serialzer.type = PlayerPrefsType.ArrayBool;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, byte[] _value, bool useEncryption = false)
+        {
+            Serialzer<byte[]> serialzer = new Serialzer<byte[]>();
+            serialzer.type = PlayerPrefsType.ArrayByte;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<byte> _value, bool useEncryption = false)
+        {
+            Serialzer<byte[]> serialzer = new Serialzer<byte[]>();
+            serialzer.type = PlayerPrefsType.ArrayByte;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, double[] _value, bool useEncryption = false)
+        {
+            Serialzer<double[]> serialzer = new Serialzer<double[]>();
+            serialzer.type = PlayerPrefsType.ArrayDouble;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<double> _value, bool useEncryption = false)
+        {
+            Serialzer<double[]> serialzer = new Serialzer<double[]>();
+            serialzer.type = PlayerPrefsType.ArrayDouble;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            Debug.Log("Array : " + jsonString);
+
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
+        {
+            Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector3;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<Vector3> _value, bool useEncryption = false)
+        {
+            Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector3;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    Debug.Log("Array : " + output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
+        {
+            Serialzer<Vector3Int[]> serialzer = new Serialzer<Vector3Int[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector3Int;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, List<Vector3Int> _value, bool useEncryption = false)
+        {
+            Serialzer<Vector3Int[]> serialzer = new Serialzer<Vector3Int[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector3Int;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
         #endregion
 
         #region Json Data Region / Internal data 
-        private static T GetCosutomTypeValue<T>(string key, T defaultValue)
+        private static T GetCosutomTypeValue<T>(string key, T defaultValue = default)
         {
             object returnvalue = default;
 
@@ -776,12 +1137,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static bool StringToBool(string s)
         {
-            bool outBool = false;
-
-            if (s == "True")
-            {
-                outBool = true;
-            }
+            bool outBool = bool.Parse(s);
             return outBool;
         }
         internal static Vector2 StringToVector2(string s)
@@ -920,8 +1276,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static int[] StringToArrayInt(string s)
         {
-            Debug.Log("Array from string : " + s);
-
             int[] outVector3 = null;
 
             s = s.Replace("[", "");
@@ -935,12 +1289,116 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 returnlist.Add(t);
             }
             outVector3 = returnlist.ToArray();
-            Debug.Log("Array from string return count : " + outVector3.Length);
+            return outVector3;
+        }
+        internal static float[] StringToArrayFloat(string s)
+        {   
+            float[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var splitString = s.Split(","[0]);
+            List<float> returnlist = new List<float>();
+            foreach (var item in splitString)
+            {
+                float t = float.Parse(item);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
+        internal static bool[] StringToArrayBool(string s)
+        {
+            bool[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", ""); 
+
+            var splitString = s.Split(","[0]);
+            List<bool> returnlist = new List<bool>();
+            foreach (var item in splitString)
+            {
+                bool t = bool.Parse(item);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
+        internal static byte[] StringToArrayByte(string s)
+        {
+            byte[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var splitString = s.Split(","[0]);  
+            List<byte> returnlist = new List<byte>();
+            foreach (var item in splitString)
+            {
+                byte t = byte.Parse(item);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
+        internal static double[] StringToArrayDouble(string s)
+        {
+            double[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var splitString = s.Split(","[0]);
+            List<double> returnlist = new List<double>();
+            foreach (var item in splitString)
+            {
+                double t = double.Parse(item);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
+        internal static Vector3[] StringToArrayVector3(string s)
+        {
+            Vector3[] outVector3 = null;
+
+            var regex = new Regex("(?<={)[^}]*(?=})");
+            var matches = regex.Matches(s);
+            List<Vector3> vectors = new List<Vector3>();
+
+            foreach (var item in matches)
+            {
+                string t = "{" + item.ToString() + "}";
+                t = t.Replace('\n', ' ');
+                t = t.Replace(" ", "");
+                Vector3 tt = JsonUtility.FromJson<Vector3>(t);
+                vectors.Add(tt);
+            }
+            outVector3 = vectors.ToArray();
 
             return outVector3;
         }
+        internal static Vector3Int[] StringToArrayVector3Int(string s)
+        {
+            Vector3Int[] outVector3 = null;
+                
+            var regex = new Regex("(?<={)[^}]*(?=})");
+            var matches = regex.Matches(s);
+            List<Vector3Int> vectors = new List<Vector3Int>();
 
+            foreach (var item in matches)
+            {
+                string t = "{" + item.ToString() + "}";
+                t = t.Replace('\n', ' ');
+                t = t.Replace(" ", "");
+                Vector3Int tt = Vector3Int.FloorToInt(JsonUtility.FromJson<Vector3>(t));
+                vectors.Add(tt);
+            }
+            outVector3 = vectors.ToArray();
 
+            return outVector3;
+        }
         #endregion
 
         #region File Exporter 

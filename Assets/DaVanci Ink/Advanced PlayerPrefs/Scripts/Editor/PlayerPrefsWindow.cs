@@ -33,19 +33,63 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             public bool isEncrypted = false;
 
             public SerializedProperty ValueProperty;
-            private SerializedObject so;
+            public SerializedObject so;
 
-            public int[] array;
+            public object[] ArrayHolder;
+
+            public int[] arrayInt;
+            public float[] arrayFloat;
+            public bool[] arrayBool;
+            public byte[] arrayByte;
+            public double[] arrayDouble;
+            public Vector3[] arrayVector3;
+            public Vector3Int[] arrayVector3Int;
+
+            public void RefreshField()      
+            {
+                Init();
+            }
             public void Init()
             {
-                array = AdvancedPlayerPrefs.StringToArrayInt(Value.ToString());
+                switch (type)
+                {
+                    case PlayerPrefsType.ArrayInt:
+                        arrayInt = AdvancedPlayerPrefs.StringToArrayInt(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayInt");
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayFloat");
+                        break;
+                    case PlayerPrefsType.ArrayBool:
+                        arrayBool = AdvancedPlayerPrefs.StringToArrayBool(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayBool");
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        arrayByte = AdvancedPlayerPrefs.StringToArrayByte(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayByte");
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        arrayDouble = AdvancedPlayerPrefs.StringToArrayDouble(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayDouble");
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                        arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayVector3");
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(Value.ToString());
+                        so = new SerializedObject(this);
+                        ValueProperty = so.FindProperty("arrayVector3Int");
+                        break;
+                }
 
-                ScriptableObject t = this;
-
-                so = new SerializedObject(t);
-
-                ValueProperty = so.FindProperty("array");
-                Debug.Log("array count : " + array.Length);
             }
             public void SaveKey()
             {
@@ -111,8 +155,26 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.Vector3Int:
                         AdvancedPlayerPrefs.SetVector3Int(Key, AdvancedPlayerPrefs.StringToVector3Int(Value.ToString()), isEncrypted);
                         break;
-                    case PlayerPrefsType.Array:
-                        AdvancedPlayerPrefs.SetArray(Key,array, isEncrypted);
+                    case PlayerPrefsType.ArrayInt:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayInt, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayFloat, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayBool:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayBool, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayByte, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayDouble, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayVector3, isEncrypted);
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        AdvancedPlayerPrefs.SetArray(Key, arrayVector3Int, isEncrypted);
                         break;
                     default:
                         break;
@@ -216,11 +278,26 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         var v3it = AdvancedPlayerPrefs.StringToVector3Int(TempValue.ToString());
                         returnValue = v3ic == v3it;
                         break;
-                    case PlayerPrefsType.Array:
+                    case PlayerPrefsType.ArrayInt:
                         returnValue = true;
-                        //var ttt = AdvancedPlayerPrefs.StringToArrayInt(array.ToString());
-                        //var tttt = AdvancedPlayerPrefs.StringToArrayInt(array.ToString());
-                        //returnValue = ttt == tttt;
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        returnValue = true;
+                        break;
+                    case PlayerPrefsType.ArrayBool:
+                        returnValue = true;
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        returnValue = true;
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        returnValue = true;
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                        returnValue = true;
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        returnValue = true;
                         break;
                     default:
                         break;
@@ -348,6 +425,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             //tempExportPath = ExportPath;
         }
         #endregion
+
 
         #region GUI Region
         private void OnGUI()
@@ -638,10 +716,48 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.Vector3Int:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3IntField("", AdvancedPlayerPrefs.StringToVector3Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
                         break;
-                    case PlayerPrefsType.Array:
-                        //if (_playerPrefsHolderList[i].ValueProperty != null)
+                    case PlayerPrefsType.ArrayInt:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
                             _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        //   // True means show c$$anonymous$$ldren
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+
+                    case PlayerPrefsType.ArrayBool:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
                         break;
                     default:
                         break;
@@ -1035,7 +1151,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                             pair.type = returnValues.PlayerPrefsType;
                             pair.isEncrypted = returnValues.IsEncrypted;
-                           
+
 
                         }
 
@@ -1044,10 +1160,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.BackupValues = savedValue;
                         pair.Key = key;
                         pair.TempKey = key;
-                        if (pair.type == PlayerPrefsType.Array)
-                        {
-                            pair.Init();
-                        }
+
+                        pair.Init();
+
                         tempPlayerPrefs[i] = pair;
 
                         i++;
