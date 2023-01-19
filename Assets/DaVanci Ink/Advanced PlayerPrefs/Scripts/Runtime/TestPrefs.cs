@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -11,9 +12,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public string key = "A60A5770FE5E7AB200BA9CFC94E4E8B0"; //set any string of 32 chars
         public string iv = "1234567887654321"; //set any string of 16 chars
 
+        [PrefsSerialzable("test")]
+        public int testiNT;
       
         private void Start()
         {
+
+
             AdvancedPlayerPrefs.SetFloat("TestAgain", 10.2247745f,true);
             AdvancedPlayerPrefs.SetVector3("TestVector3", new Vector3(0.5f, 55, 10), true);
             AdvancedPlayerPrefs.SetVector2("TestVector2", new Vector2(0.4f, 0.3f), true);
@@ -26,7 +31,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetDoube("TestDouble", 54.444484, true);
             AdvancedPlayerPrefs.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
             AdvancedPlayerPrefs.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
-            //AdvancedPlayerPrefs.SetArray("TestArray", new int[4] {1,2,3,4}, true);
+            AdvancedPlayerPrefs.SetArray("TestArray", new int[4] {1,2,3,4}, true);
 
             Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgain", 1f));
             Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgaidddn", 1f));
@@ -50,15 +55,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public void Update()
         {
 
-            //if (Input.GetKeyDown(KeyCode.E))
-            //{
-            //    CriptedEncription = AdvancedPlayerPrefs.TryEncryption(testEncription);
-            //    Debug.Log(CriptedEncription);
-            //}
-            //if (Input.GetKeyDown(KeyCode.D))
-            //{
-            //    Debug.Log(AdvancedPlayerPrefs.Decryption(CriptedEncription));
-            //}
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                //CriptedEncription = AdvancedPlayerPrefs.TryEncryption(testEncription);
+                //Debug.Log(CriptedEncription);
+                testiNT.Save();
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Debug.Log(testiNT.Load());
+                //Debug.Log(AdvancedPlayerPrefs.Decryption(CriptedEncription));
+            }
         }
       
     }
