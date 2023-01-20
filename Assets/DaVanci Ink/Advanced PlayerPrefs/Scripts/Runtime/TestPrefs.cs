@@ -31,7 +31,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetArray("TestArraybyte", new byte[2] {1,2}, true);
             AdvancedPlayerPrefs.SetArray("TestArrayDouble", new double[2] {1,2}, true);
             AdvancedPlayerPrefs.SetArray("TestArrayVector3", new Vector3[2] {Vector3.zero,Vector3.up}, true);
-            //AdvancedPlayerPrefs.SetArray("TestArrayVector3Int", new Vector3Int[2] { Vector3Int.zero, Vector3Int.up}, true);
+            AdvancedPlayerPrefs.SetArray("testintint", new int[2] {0, 55}, true);
 
             //    AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
 
