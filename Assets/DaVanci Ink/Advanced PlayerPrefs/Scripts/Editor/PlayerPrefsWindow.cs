@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     }
     internal class PlayerPrefsWindow : EditorWindow
     {
-       
+
         #region Private Variables
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
 
@@ -817,9 +818,91 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void GetAllPlayerPrefs()
         {
+            PlayerPrefHolderList.Clear();
+#if UNITY_EDITOR_OSX
+
+            string playerPrefsPath;
+
+            string plistFilename = $"unity.{CompanyName}.{ProductName}.plist";
+            // Now construct the fully qualified path
+            playerPrefsPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library/Preferences"), plistFilename);
+
+
+            // Parse the PlayerPrefs file if it exists
+            if (File.Exists(playerPrefsPath))
+            {
+                // Parse the plist then cast it to a Dictionary
+                object plist = Plist.readPlist(playerPrefsPath);
+
+                Dictionary<string, object> parsed = plist as Dictionary<string, object>;
+
+                // Convert the dictionary data into an array of PlayerPrefPairs
+                List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>(parsed.Count);
+
+                foreach (KeyValuePair<string, object> pair in parsed)
+                {
+                    PlayerPrefHolder playerPrefHolder = new PlayerPrefHolder();
+
+                    playerPrefHolder.Key = pair.Key;
+                    playerPrefHolder.Value = pair.Value;
+                    var savedValue = pair.Value;
+                    if (pair.Value.GetType() == typeof(double))
+                    {
+                        playerPrefHolder.type = PlayerPrefsType.Float;
+                        playerPrefHolder.Value = (float)(double)pair.Value;
+
+                        // Some float values may come back as double, so convert them back to floats
+                       // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
+                    }
+                    else if (pair.Value.GetType() == typeof(bool))
+                    {
+                        // Unity PlayerPrefs API doesn't allow bools, so ignore them
+                    }
+                    else if (pair.Value.GetType() == typeof(int) || pair.Value.GetType() == typeof(long))
+                    {
+                        if (AdvancedPlayerPrefs.GetInt(pair.Key, -1) == -1 && AdvancedPlayerPrefs.GetInt(pair.Key, 0) == 0)
+                        {
+                            string savedStringValue = pair.Value.ToString();
+                            savedValue = AdvancedPlayerPrefs.GetFloat(pair.Key);
+                            playerPrefHolder.type = PlayerPrefsType.Float;
+                        }
+                        else
+                        {
+                            playerPrefHolder.type = PlayerPrefsType.Int;
+                        }
+                    }
+                    else
+                    {
+                        ReturnType returnValues = null;
+
+                        savedValue = AdvancedPlayerPrefs.TryGetCostumeType(pair.Key, out returnValues, savedValue.ToString());
+
+                        playerPrefHolder.type = returnValues.PlayerPrefsType;
+                        playerPrefHolder.isEncrypted = returnValues.IsEncrypted;
+                        //tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = pair.Value });
+                    }
+
+                    playerPrefHolder.Value = savedValue;
+                    playerPrefHolder.TempValue = savedValue;
+                    playerPrefHolder.BackupValues = savedValue;
+                    playerPrefHolder.Key = pair.Key;
+                    playerPrefHolder.TempKey = pair.Key;
+                    playerPrefHolder.Init();
+                    tempPlayerPrefs.Add(playerPrefHolder);
+
+                }
+
+                // Return the results
+                PlayerPrefHolderList = tempPlayerPrefs.ToList();
+            }
+            else
+            {
+                // No existing PlayerPrefs saved (which is valid), so just return an empty array
+                PlayerPrefHolderList = new List<PlayerPrefHolder>();
+            }
+#elif UNITY_EDITOR_WIN
             if (RegistryKey == null) return;
 
-            PlayerPrefHolderList.Clear();
             foreach (string item in RegistryKey.GetValueNames())
             {
                 if (RegistryKey != null)
@@ -877,16 +960,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         i++;
                     }
                     PlayerPrefHolderList = tempPlayerPrefs.ToList();
-                    switch (PlayerPrefsSortType)
-                    {
-                        case SortType.Name:
-                            PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
-                            break;
-                        case SortType.Type:
-                            PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
-                            break;
-                    }
+                   
                 }
+            }
+#else
+     throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
+#endif
+
+            switch (PlayerPrefsSortType)
+            {
+                case SortType.Name:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
+                    break;
+                case SortType.Type:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
+                    break;
             }
         }
         private void UpdateSearch()
