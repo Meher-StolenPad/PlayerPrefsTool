@@ -649,21 +649,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             serialzer.type = PlayerPrefsType.ArrayInt;
             serialzer.value = _value;
             serialzer.isEncrypted = useEncryption;
-
             string jsonString = JsonUtility.ToJson(serialzer);
-
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : "+output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, List<int> _value, bool useEncryption = false)
@@ -681,12 +676,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
@@ -704,12 +696,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, List<float> _value, bool useEncryption = false)
@@ -727,12 +716,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
@@ -754,8 +740,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, List<bool> _value, bool useEncryption = false)
@@ -773,12 +757,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
@@ -796,12 +777,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, List<byte> _value, bool useEncryption = false)
@@ -819,12 +797,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
@@ -845,8 +820,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, List<double> _value, bool useEncryption = false)
@@ -864,12 +837,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
-            Debug.Log("Array : " + jsonString);
-
             PlayerPrefs.SetString(key, jsonString);
         }
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
@@ -906,7 +876,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }

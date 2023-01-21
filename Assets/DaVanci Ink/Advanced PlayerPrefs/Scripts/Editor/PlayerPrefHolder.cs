@@ -9,8 +9,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     internal class PlayerPrefHolder : ScriptableObject
     {
-        private PlayerPrefHolder instance;
-
         public string Key;
         public string TempKey;
 
@@ -38,25 +36,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public Vector3[] arrayVector3;
         public Vector3Int[] arrayVector3Int;
 
-        public PlayerPrefHolder()
-        {
-            this.instance = this;
-        }
-
         public void RefreshField()
         {
             Init();
         }
         public void Init()
         {
+            this.hideFlags = HideFlags.DontSave;
+
             switch (type)
             {
                 case PlayerPrefsType.ArrayInt:
-
                     arrayInt = AdvancedPlayerPrefs.StringToArrayInt(Value.ToString());
                     so = new SerializedObject(this);
-                    //ValueProperty = new SerializedObject(this).FindProperty(nameof(PlayerPrefHolder)).FindPropertyRelative(nameof(this.arrayInt));
-
                     ValueProperty = so.FindProperty("arrayInt");
                     break;
                 case PlayerPrefsType.ArrayFloat:

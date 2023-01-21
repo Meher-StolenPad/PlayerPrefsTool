@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -16,7 +15,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     }
     internal class PlayerPrefsWindow : EditorWindow
     {
-
         #region Private Variables
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
 
@@ -86,7 +84,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private Color valuetempHDRColor;
         private bool valuetempBool;
         private DateTime valueDateTime;
+        public int[] valueArrayInt = new int[2];
         private string oldKey;
+
+        public SerializedProperty ValueProperty;
+        public SerializedObject so;
 
         private bool UseEncryption;
         private bool DisplayAddPlayerPrefs;
@@ -525,6 +527,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void DrawValueField()
         {
+            so = new SerializedObject(this);
+
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
             GUIStyle style3 = EditorStyles.textField;
             GUIStyle style4 = EditorStyles.popup;
@@ -615,6 +619,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         value = DateTime.MinValue;
                         GUILayout.TextArea(valueDateTime.ToString(), EditorStyles.toolbarTextField, GUILayout.Width(FullWindowWidth * 4f));
                         break;
+                    case PlayerPrefsType.ArrayInt:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("valueArrayInt");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+
+                        break;
+
                 }
                 EditorGUILayout.Space(3);
                 GUILayout.EndVertical();
@@ -918,7 +930,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         key = key.Remove(index, key.Length - index);
 
                         object savedValue = RegistryKey.GetValue(valueName);
-                        PlayerPrefHolder pair = new PlayerPrefHolder();
+                        PlayerPrefHolder pair = ScriptableObject.CreateInstance< PlayerPrefHolder>();
 
                         if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
                         {
@@ -960,7 +972,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         i++;
                     }
                     PlayerPrefHolderList = tempPlayerPrefs.ToList();
-                   
+
                 }
             }
 #else
@@ -1068,6 +1080,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.Vector3Int:
                     AdvancedPlayerPrefs.SetVector3Int(key, (Vector3Int)value, useEncryption);
+                    break;//valueArrayInt
+                case PlayerPrefsType.ArrayInt:
+
+                    AdvancedPlayerPrefs.SetArray(key, valueArrayInt, useEncryption);
                     break;
                 default:
                     break;

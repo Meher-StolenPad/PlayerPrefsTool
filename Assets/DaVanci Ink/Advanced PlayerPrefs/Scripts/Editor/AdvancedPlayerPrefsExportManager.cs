@@ -115,7 +115,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var item in exportSerialzerHolder.exportlist)
             {
-                PlayerPrefHolder ppp = new PlayerPrefHolder();
+                PlayerPrefHolder ppp =ScriptableObject.CreateInstance <PlayerPrefHolder>();
                 ppp.Key = item.key;
                 ppp.TempKey = item.key;
                 ppp.type = item.type;
