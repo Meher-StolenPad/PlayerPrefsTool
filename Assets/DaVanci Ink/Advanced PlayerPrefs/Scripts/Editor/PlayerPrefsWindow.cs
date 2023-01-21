@@ -84,8 +84,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private Color valuetempHDRColor;
         private bool valuetempBool;
         private DateTime valueDateTime;
-        public int[] valueArrayInt = new int[2];
-        private string oldKey;
+
+        public int[] arrayInt;
+        public float[] arrayFloat;
+        public bool[] arrayBool;
+        public byte[] arrayByte;
+        public double[] arrayDouble;
+        public Vector3[] arrayVector3;
+        public Vector3Int[] arrayVector3Int;
 
         public SerializedProperty ValueProperty;
         public SerializedObject so;
@@ -530,11 +536,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             so = new SerializedObject(this);
 
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
-            GUIStyle style3 = EditorStyles.textField;
-            GUIStyle style4 = EditorStyles.popup;
+            GUIStyle style3 = new GUIStyle(EditorStyles.textField);
+            GUIStyle style4 = new GUIStyle(EditorStyles.popup);
             style4.alignment = TextAnchor.MiddleCenter;
 
-            DisplayAddPlayerPrefs = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayAddPlayerPrefs, "Add Player Prefs");
+            GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth*2));
+            DisplayAddPlayerPrefs = true; //EditorGUILayout.BeginFoldoutHeaderGroup(DisplayAddPlayerPrefs, "Add Player Prefs");
 
             if (DisplayAddPlayerPrefs)
             {
@@ -621,10 +628,49 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         break;
                     case PlayerPrefsType.ArrayInt:
                         //value = DateTime.MinValue;
-                        ValueProperty = so.FindProperty("valueArrayInt");
+                        ValueProperty = so.FindProperty("arrayInt");
                         if (ValueProperty != null)
                             EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
 
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayFloat");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+
+                        break;
+                    case PlayerPrefsType.ArrayBool:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayBool");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayDouble");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayByte");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayVector3");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayVector3Int");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         break;
 
                 }
@@ -698,7 +744,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.EndHorizontal();
 
             }
-            EditorGUILayout.EndFoldoutHeaderGroup();
+            //EditorGUILayout.EndFoldoutHeaderGroup();
         }
         private void DrawExportFields()
         {
@@ -1083,7 +1129,27 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;//valueArrayInt
                 case PlayerPrefsType.ArrayInt:
 
-                    AdvancedPlayerPrefs.SetArray(key, valueArrayInt, useEncryption);
+                    AdvancedPlayerPrefs.SetArray(key, arrayInt, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayFloat:
+
+                    AdvancedPlayerPrefs.SetArray(key, arrayFloat, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayBool:
+
+                    AdvancedPlayerPrefs.SetArray(key, arrayBool, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayDouble:
+                    AdvancedPlayerPrefs.SetArray(key, arrayBool, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayByte:
+                    AdvancedPlayerPrefs.SetArray(key, arrayByte, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayVector3:
+                    AdvancedPlayerPrefs.SetArray(key, arrayVector3, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayVector3Int:
+                    AdvancedPlayerPrefs.SetArray(key, arrayVector3Int, useEncryption);
                     break;
                 default:
                     break;
