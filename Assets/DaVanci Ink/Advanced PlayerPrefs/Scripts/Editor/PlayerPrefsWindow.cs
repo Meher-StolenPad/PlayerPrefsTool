@@ -74,6 +74,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private float valuetempfloat;
         private string valuetempString;
         private double valuetempDouble;
+        private long valuetempLong;
         private byte valuetempByte;
         private Vector2 valuetempVector2;
         private Vector2Int valuetempVector2Int;
@@ -87,9 +88,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         public int[] arrayInt;
         public float[] arrayFloat;
+        public string[] arrayString;
         public bool[] arrayBool;
         public byte[] arrayByte;
-        public double[] arrayDouble;
+        public double[] arrayDouble;    
+        public long[] arrayLong;
         public Vector3[] arrayVector3;
         public Vector3Int[] arrayVector3Int;
 
@@ -98,7 +101,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private bool UseEncryption;
         private bool DisplayAddPlayerPrefs;
-        private bool DisplayExportPlayerPrefs = true;
+        private bool DisplayExportPlayerPrefs;
         private string tempExportPath;
         private string ImportCompanyName;
         private string ImportProductName;
@@ -165,6 +168,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawValueField();
             EditorGUILayout.Space(5);
             DrawHorizontalLine(Color.grey);
+            EditorGUI.BeginChangeCheck();
+
             DrawExportFields();
             EditorGUILayout.Space(5);
 
@@ -428,6 +433,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.Double:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.DoubleField(AdvancedPlayerPrefs.StringToDouble(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
                         break;
+                    case PlayerPrefsType.Long:
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.LongField(AdvancedPlayerPrefs.StringToLong(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        break;
                     case PlayerPrefsType.Vector2Int:
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2IntField("", AdvancedPlayerPrefs.StringToVector2Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
                         break;
@@ -472,6 +480,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3Int:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayString:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayLong:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
@@ -564,7 +584,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 EditorGUILayout.Space(3);
 
-                type = (PlayerPrefsType)EditorGUILayout.EnumPopup(type, style4, GUILayout.Width(FullWindowWidth * 4f));
+                type = (PlayerPrefsType)EditorGUILayout.Popup((int)type,AdvancedPlayerPrefsGlobalVariables.EnumList, GUILayout.Width(FullWindowWidth * 4f));
 
                 EditorGUILayout.Space(3);
 
@@ -609,6 +629,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.Double:
                         valuetempDouble = EditorGUILayout.DoubleField(valuetempDouble, GUILayout.Width(FullWindowWidth * 4f));
                         value = valuetempDouble;
+                        break;
+                    case PlayerPrefsType.Long:
+                        valuetempLong = EditorGUILayout.LongField(valuetempLong, GUILayout.Width(FullWindowWidth * 4f));
+                        value = valuetempLong;
                         break;
                     case PlayerPrefsType.Vector2Int:
                         valuetempVector2Int = EditorGUILayout.Vector2IntField("", valuetempVector2Int, GUILayout.Width(FullWindowWidth * 4f));
@@ -669,6 +693,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.ArrayVector3Int:
                         //value = DateTime.MinValue;
                         ValueProperty = so.FindProperty("arrayVector3Int");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayString:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayString");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayLong:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayLong");   
                         if (ValueProperty != null)
                             EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         break;
@@ -1121,6 +1157,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.Double:
                     AdvancedPlayerPrefs.SetDoube(key, (double)value, useEncryption);
                     break;
+                case PlayerPrefsType.Long:
+                    AdvancedPlayerPrefs.SetLong(key, (long)value, useEncryption);
+                    break;
                 case PlayerPrefsType.Vector2Int:
                     AdvancedPlayerPrefs.SetVector2Int(key, (Vector2Int)value, useEncryption);
                     break;
@@ -1150,6 +1189,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
                     AdvancedPlayerPrefs.SetArray(key, arrayVector3Int, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    AdvancedPlayerPrefs.SetArray(key, arrayString, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayLong:
+                    AdvancedPlayerPrefs.SetArray(key, arrayLong, useEncryption);
                     break;
                 default:
                     break;

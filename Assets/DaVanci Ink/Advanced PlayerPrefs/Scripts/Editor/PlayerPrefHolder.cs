@@ -30,12 +30,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         public int[] arrayInt;
         public float[] arrayFloat;
+        public string[] arrayString;
         public bool[] arrayBool;
         public byte[] arrayByte;
         public double[] arrayDouble;
+        public long[] arrayLong;    
         public Vector3[] arrayVector3;
         public Vector3Int[] arrayVector3Int;
-
+            
         public void RefreshField()
         {
             Init();
@@ -80,6 +82,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(Value.ToString());
                     so = new SerializedObject(this);
                     ValueProperty = so.FindProperty("arrayVector3Int");
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    arrayString = AdvancedPlayerPrefs.StringToArrayString(Value.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayString");
+                    break;
+                case PlayerPrefsType.ArrayLong:
+                    arrayLong = AdvancedPlayerPrefs.StringToArrayLong(Value.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayLong");
                     break;
             }
 
@@ -142,6 +154,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.Double:
                     AdvancedPlayerPrefs.SetDoube(Key, AdvancedPlayerPrefs.StringToDouble(Value.ToString()), isEncrypted);
                     break;
+                case PlayerPrefsType.Long:
+                    AdvancedPlayerPrefs.SetLong(Key, AdvancedPlayerPrefs.StringToLong(Value.ToString()), isEncrypted);
+                    break;
                 case PlayerPrefsType.Vector2Int:
                     AdvancedPlayerPrefs.SetVector2Int(Key, AdvancedPlayerPrefs.StringToVector2Int(Value.ToString()), isEncrypted);
                     break;
@@ -168,6 +183,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector3Int, isEncrypted);
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    AdvancedPlayerPrefs.SetArray(Key, arrayString, isEncrypted);
+                    break;
+                case PlayerPrefsType.ArrayLong:
+                    AdvancedPlayerPrefs.SetArray(Key, arrayLong, isEncrypted);
                     break;
                 default:
                     break;
@@ -261,6 +282,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     var dt = AdvancedPlayerPrefs.StringToDouble(TempValue.ToString());
                     returnValue = dc == dt;
                     break;
+                case PlayerPrefsType.Long:
+                    var lc = AdvancedPlayerPrefs.StringToLong(Value.ToString());
+                    var lt = AdvancedPlayerPrefs.StringToLong(TempValue.ToString());
+                    returnValue = lc == lt;
+                    break;
                 case PlayerPrefsType.Vector2Int:
                     var v2ic = AdvancedPlayerPrefs.StringToVector2Int(Value.ToString());
                     var v2it = AdvancedPlayerPrefs.StringToVector2Int(TempValue.ToString());
@@ -290,6 +316,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     returnValue = true;
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
+                    returnValue = true;
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    returnValue = true;
+                    break;
+                case PlayerPrefsType.ArrayLong:
                     returnValue = true;
                     break;
                 default:

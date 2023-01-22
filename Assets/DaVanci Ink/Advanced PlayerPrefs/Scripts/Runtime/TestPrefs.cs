@@ -32,6 +32,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetArray("TestArrayDouble", new double[2] {1,2}, true);
             AdvancedPlayerPrefs.SetArray("TestArrayVector3", new Vector3[2] {Vector3.zero,Vector3.up}, true);
             AdvancedPlayerPrefs.SetArray("testintint", new int[2] {0, 55}, true);
+            AdvancedPlayerPrefs.SetArray("testStringArray", new string[2] {"test","Test2"}, true);
+            AdvancedPlayerPrefs.SetLong("testLong", 55, true);
 
             //    AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
 
@@ -43,11 +45,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Debug.Log("Vector 3 " + AdvancedPlayerPrefs.GetVector3("TestVector3", Vector3.zero));
             Debug.Log("Vector 4 " + AdvancedPlayerPrefs.GetVector4("TestVector4", Vector4.zero));
             Debug.Log("Color " + AdvancedPlayerPrefs.GetColor("TestColor", Color.white,false));;
-            Debug.Log("bool " + AdvancedPlayerPrefs.GetBool("TestBool", false));
+            Debug.Log("bool " + AdvancedPlayerPrefs.GetBool("TestBool", false));    
             Debug.Log("byte " + AdvancedPlayerPrefs.GetByte("TestByte", 15));
             Debug.Log("double " + AdvancedPlayerPrefs.GetDouble("TestDouble", 15));
             Debug.Log("Vector2Int " + AdvancedPlayerPrefs.GetVector2Int("TestVector2Int", Vector2Int.zero));
             Debug.Log("Vector3Int " + AdvancedPlayerPrefs.GetVector3Int("TestVector3Int", Vector3Int.zero));
+            Debug.Log("testLong " + AdvancedPlayerPrefs.Getlong("testLong"));
 
             List<Vector3Int> t = AdvancedPlayerPrefs.GetList("TestArrayVector3Int", new List<Vector3Int>());
 
@@ -63,7 +66,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Debug.Log("array  bool item : " + item);
 
             }
-            AdvancedPlayerPrefs.SetArray("TestArrayInt", t, true);
+            AdvancedPlayerPrefs.SetList("TestArrayInt", t, true);
 
             //m_Color = AdvancedPlayerPrefs.GetColor("TestColor", Color.white,false);
         }

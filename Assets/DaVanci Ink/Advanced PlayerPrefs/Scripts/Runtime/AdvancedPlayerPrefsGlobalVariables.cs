@@ -50,6 +50,38 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal static string[] OpenFolderFilters = new string[] { "text files", "txt", "All files", "*" };
 
+        internal static string[] EnumList = new string[] 
+        {
+            "Legacy/Int",
+            "Legacy/Float",
+            "Legacy/String",
+
+            "Primitive/Byte",
+            "Primitive/Bool",
+            "Primitive/Double",
+            "Primitive/Long",
+
+            "Vectors/Vector 2",
+            "Vectors/Vector 2 Int",
+            "Vectors/Vector 3",
+            "Vectors/Vector 3 Int",
+            "Vectors/Vector 4",
+
+            "Colors/Color",
+            "Colors/HDRColor",
+            "DateTime",
+
+            "Collections/Int",
+            "Collections/Float",
+            "Collections/String",
+            "Collections/Double",
+            "Collections/Long",
+            "Collections/Bool",
+            "Collections/Byte",
+            "Collections/Vector3",
+            "Collections/Vector3 Int"
+        };
+
 
 
         internal static Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
