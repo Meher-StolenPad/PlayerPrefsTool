@@ -34,7 +34,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefs.SetArray("testintint", new int[2] {0, 55}, true);
             AdvancedPlayerPrefs.SetArray("testStringArray", new string[2] {"test","Test2"}, true);
             AdvancedPlayerPrefs.SetLong("testLong", 55, true);
-
+            AdvancedPlayerPrefs.SetArray("test Vector2 Array", new Vector2[2] { Vector2.down, Vector2.left}, true);
+            AdvancedPlayerPrefs.SetArray("test Vector2Int Array", new Vector2Int[2] { Vector2Int.down, Vector2Int.left }, true);
+            AdvancedPlayerPrefs.SetArray("test Vector4Int Array", new Vector4[2] { Vector4.one, Vector4.zero }, true);
+            //AdvancedPlayerPrefs.SetLong("testLong", 55, true);
             //    AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
 
             //AdvancedPlayerPrefs.SetArray("TestArrayFloat", new float[4] {1.1f,2.2f,3.3f,4.4f}, true);

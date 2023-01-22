@@ -44,7 +44,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         ArrayBool,
         ArrayByte,
         ArrayVector3,
-        ArrayVector3Int
+        ArrayVector3Int,
+        ArrayVector2,
+        ArrayVector2Int,
+        ArrayVector4
     }
 
     #region Internal Classes Region
@@ -317,6 +320,33 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static List<Vector3Int> GetList(string key, List<Vector3Int> defaultValue)
         {
             var t = GetCosutomTypeValue<Vector3Int[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static Vector2[] GetArray(string key, Vector2[] defaultValue)
+        {
+            return GetCosutomTypeValue<Vector2[]>(key, defaultValue);
+        }
+        public static List<Vector2> GetList(string key, List<Vector2> defaultValue)
+        {
+            var t = GetCosutomTypeValue<Vector2[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static Vector2Int[] GetArray(string key, Vector2Int[] defaultValue)
+        {
+            return GetCosutomTypeValue<Vector2Int[]>(key, defaultValue);
+        }
+        public static List<Vector2Int> GetList(string key, List<Vector2Int> defaultValue)
+        {
+            var t = GetCosutomTypeValue<Vector2Int[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static Vector4[] GetArray(string key, Vector4[] defaultValue)
+        {
+            return GetCosutomTypeValue<Vector4[]>(key, defaultValue);
+        }
+        public static List<Vector4> GetList(string key, List<Vector4> defaultValue)
+        {
+            var t = GetCosutomTypeValue<Vector4[]>(key, defaultValue.ToArray());
             return t.ToList();
         }
         #endregion
@@ -1050,6 +1080,123 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
+        public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
+        {
+            Serialzer<Vector2[]> serialzer = new Serialzer<Vector2[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector2;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
+        {
+            Serialzer<Vector2[]> serialzer = new Serialzer<Vector2[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector2;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
+        {
+            Serialzer<Vector2Int[]> serialzer = new Serialzer<Vector2Int[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector2Int;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
+        {
+            Serialzer<Vector2Int[]> serialzer = new Serialzer<Vector2Int[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector2Int;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
+        {
+            Serialzer<Vector4[]> serialzer = new Serialzer<Vector4[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector4;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
+        {
+            Serialzer<Vector4[]> serialzer = new Serialzer<Vector4[]>();
+            serialzer.type = PlayerPrefsType.ArrayVector4;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
         #endregion
 
         #region Json Data Region / Internal data 
@@ -1544,6 +1691,66 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 t = t.Replace('\n', ' ');
                 t = t.Replace(" ", "");
                 Vector3Int tt = Vector3Int.FloorToInt(JsonUtility.FromJson<Vector3>(t));
+                vectors.Add(tt);
+            }
+            outVector3 = vectors.ToArray();
+
+            return outVector3;
+        }
+        internal static Vector2[] StringToArrayVector2(string s)
+        {
+            Vector2[] outVector3 = null;
+
+            var regex = new Regex("(?<={)[^}]*(?=})");
+            var matches = regex.Matches(s);
+            List<Vector2> vectors = new List<Vector2>();
+
+            foreach (var item in matches)
+            {
+                string t = "{" + item.ToString() + "}";
+                t = t.Replace('\n', ' ');
+                t = t.Replace(" ", "");
+                Vector2 tt = JsonUtility.FromJson<Vector2>(t);
+                vectors.Add(tt);
+            }
+            outVector3 = vectors.ToArray();
+
+            return outVector3;
+        }
+        internal static Vector2Int[] StringToArrayVector2Int(string s)
+        {
+            Vector2Int[] outVector3 = null;
+
+            var regex = new Regex("(?<={)[^}]*(?=})");
+            var matches = regex.Matches(s);
+            List<Vector2Int> vectors = new List<Vector2Int>();
+
+            foreach (var item in matches)
+            {
+                string t = "{" + item.ToString() + "}";
+                t = t.Replace('\n', ' ');
+                t = t.Replace(" ", "");
+                Vector2Int tt = Vector2Int.FloorToInt(JsonUtility.FromJson<Vector2>(t));
+                vectors.Add(tt);
+            }
+            outVector3 = vectors.ToArray();
+
+            return outVector3;
+        }
+        internal static Vector4[] StringToArrayVector4(string s)
+        {
+            Vector4[] outVector3 = null;
+
+            var regex = new Regex("(?<={)[^}]*(?=})");
+            var matches = regex.Matches(s);
+            List<Vector4> vectors = new List<Vector4>();
+
+            foreach (var item in matches)
+            {
+                string t = "{" + item.ToString() + "}";
+                t = t.Replace('\n', ' ');
+                t = t.Replace(" ", "");
+                Vector4 tt = JsonUtility.FromJson<Vector4>(t);
                 vectors.Add(tt);
             }
             outVector3 = vectors.ToArray();

@@ -48,9 +48,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const  string ToolbarSeachTextField = "ToolbarSeachTextField";
         internal const  string ToolbarSearchCancelButton = "ToolbarSeachCancelButton";
 
-        internal static string[] OpenFolderFilters = new string[] { "text files", "txt", "All files", "*" };
+        internal static readonly string[] OpenFolderFilters = new string[] { "text files", "txt", "All files", "*" };
 
-        internal static string[] EnumList = new string[] 
+        internal static readonly string[] EnumList = new string[]
         {
             "Legacy/Int",
             "Legacy/Float",
@@ -71,24 +71,27 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Colors/HDRColor",
             "DateTime",
 
-            "Collections/Int",
-            "Collections/Float",
-            "Collections/String",
-            "Collections/Double",
-            "Collections/Long",
-            "Collections/Bool",
-            "Collections/Byte",
-            "Collections/Vector3",
-            "Collections/Vector3 Int"
+            "Collections/Primitives/Int",
+            "Collections/Primitives/Float",
+            "Collections/Primitives/String",
+            "Collections/Primitives/Double",
+            "Collections/Primitives/Long",
+            "Collections/Primitives/Bool",
+            "Collections/Primitives/Byte",
+            "Collections/Vectors/Vector3",
+            "Collections/Vectors/Vector3 Int",
+            "Collections/Vectors/Vector2",
+            "Collections/Vectors/Vector2 Int",
+            "Collections/Vectors/Vector4"
         };
 
 
 
-        internal static Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
-        internal static Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);
+        internal static readonly Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
+        internal static readonly Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);
 
-        internal static Color SetupButtonTextColor = new Color32(101, 217, 255, 255);
-        internal static Color SetupButtonColor = new Color32(0, 157, 255, 255);
+        internal static readonly Color SetupButtonTextColor = new Color32(101, 217, 255, 255);
+        internal static readonly Color SetupButtonColor = new Color32(0, 157, 255, 255);
 
 #if UNITY_EDITOR
         internal static string GetPlayerPrefsSpecificText()

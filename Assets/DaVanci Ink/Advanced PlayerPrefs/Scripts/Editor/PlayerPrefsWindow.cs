@@ -95,6 +95,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public long[] arrayLong;
         public Vector3[] arrayVector3;
         public Vector3Int[] arrayVector3Int;
+        public Vector2[] arrayVector2;
+        public Vector2Int[] arrayVector2Int;
+        public Vector4[] arrayVector4;  
+
 
         public SerializedProperty ValueProperty;
         public SerializedObject so;
@@ -497,6 +501,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                             _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
+                    case PlayerPrefsType.ArrayVector2:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayVector2Int:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
+                    case PlayerPrefsType.ArrayVector4:
+                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
+                        {
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -705,6 +727,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.ArrayLong:
                         //value = DateTime.MinValue;
                         ValueProperty = so.FindProperty("arrayLong");   
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayVector2:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayVector2");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayVector2Int:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayVector2Int");
+                        if (ValueProperty != null)
+                            EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                        break;
+                    case PlayerPrefsType.ArrayVector4:
+                        //value = DateTime.MinValue;
+                        ValueProperty = so.FindProperty("arrayVector4");
                         if (ValueProperty != null)
                             EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         break;
@@ -1195,6 +1235,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.ArrayLong:
                     AdvancedPlayerPrefs.SetArray(key, arrayLong, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayVector2:
+                    AdvancedPlayerPrefs.SetArray(key, arrayVector2, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayVector2Int:
+                    AdvancedPlayerPrefs.SetArray(key, arrayVector2Int, useEncryption);
+                    break;
+                case PlayerPrefsType.ArrayVector4:
+                    AdvancedPlayerPrefs.SetArray(key, arrayVector4, useEncryption);
                     break;
                 default:
                     break;
