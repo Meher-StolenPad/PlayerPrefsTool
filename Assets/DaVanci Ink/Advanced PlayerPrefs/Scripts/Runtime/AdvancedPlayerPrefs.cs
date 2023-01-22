@@ -1,8 +1,6 @@
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -25,18 +23,24 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Byte,
         Bool,
         Double,
+        Long,
+
         Vector2,
         Vector2Int,
         Vector3,
         Vector3Int,
         Vector4,
+
         Color,
         HDRColor,
+
         DateTime,
 
         ArrayInt,
         ArrayFloat,
+        ArrayString,
         ArrayDouble,
+        ArrayLong,  
         ArrayBool,
         ArrayByte,
         ArrayVector3,
@@ -114,7 +118,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             bool returnValue = false;
 
-            returnValue=TryLoadSettings();
+            returnValue = TryLoadSettings();
             encryptionSettings = EncryptionSettings;
             return returnValue;
         }
@@ -170,7 +174,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static int GetInt(string key, int defaultValue = int.MinValue)
         {
             int returnInt = PlayerPrefs.GetInt(key, defaultValue);
-                
+
             if (returnInt == defaultValue)
             {
                 returnInt = GetCosutomTypeValue<int>(key, defaultValue);
@@ -221,6 +225,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return GetCosutomTypeValue<double>(key, defaultValue);
         }
+        public static long Getlong(string key, long defaultValue = long.MinValue)
+        {   
+            return GetCosutomTypeValue<long>(key, defaultValue);
+        }
         public static Vector2Int GetVector2Int(string key, Vector2Int defaultValue)
         {
             return GetCosutomTypeValue<Vector2Int>(key, defaultValue);
@@ -248,6 +256,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             var t = GetCosutomTypeValue<float[]>(key, defaultValue.ToArray());
             return t.ToList();
         }
+        public static string[] GetArray(string key, string[] defaultValue)
+        {
+            return GetCosutomTypeValue<string[]>(key, defaultValue);
+        }
+        public static List<string> GetList(string key, List<string> defaultValue)
+        {
+            var t = GetCosutomTypeValue<string[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
         public static bool[] GetArray(string key, bool[] defaultValue)
         {
             return GetCosutomTypeValue<bool[]>(key, defaultValue);
@@ -264,6 +281,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static List<double> GetList(string key, List<double> defaultValue)
         {
             var t = GetCosutomTypeValue<double[]>(key, defaultValue.ToArray());
+            return t.ToList();
+        }
+        public static long[] GetArray(string key, long[] defaultValue)
+        {
+            return GetCosutomTypeValue<long[]>(key, defaultValue);
+        }
+        public static List<long> GetList(string key, List<long> defaultValue)
+        {
+            var t = GetCosutomTypeValue<long[]>(key, defaultValue.ToArray());
             return t.ToList();
         }
         public static byte[] GetArray(string key, byte[] defaultValue)
@@ -475,6 +501,31 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, jsonString);
             }
         }
+        public static void SetLong(string key, long _value, bool useEncryption = false)
+        {   
+            Serialzer<long> serialzer = new Serialzer<long>();
+            serialzer.type = PlayerPrefsType.Long;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                }
+                else
+                {
+                    PlayerPrefs.SetString(key, jsonString);
+                }
+            }
+            else
+            {
+                PlayerPrefs.SetString(key, jsonString);
+            }
+        }
         public static void SetBool(string key, bool _value, bool useEncryption = false)
         {
             Serialzer<bool> serialzer = new Serialzer<bool>();
@@ -661,7 +712,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<int> _value, bool useEncryption = false)
+        public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
             Serialzer<int[]> serialzer = new Serialzer<int[]>();
             serialzer.type = PlayerPrefsType.ArrayInt;
@@ -701,10 +752,49 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<float> _value, bool useEncryption = false)
+        public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
             Serialzer<float[]> serialzer = new Serialzer<float[]>();
             serialzer.type = PlayerPrefsType.ArrayFloat;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, string[] _value, bool useEncryption = false)
+        {
+            Serialzer<string[]> serialzer = new Serialzer<string[]>();
+            serialzer.type = PlayerPrefsType.ArrayString;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetList(string key, List<string> _value, bool useEncryption = false)
+        {
+            Serialzer<string[]> serialzer = new Serialzer<string[]>();
+            serialzer.type = PlayerPrefsType.ArrayString;
             serialzer.value = _value.ToArray();
             serialzer.isEncrypted = useEncryption;
 
@@ -742,7 +832,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<bool> _value, bool useEncryption = false)
+        public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
             Serialzer<bool[]> serialzer = new Serialzer<bool[]>();
             serialzer.type = PlayerPrefsType.ArrayBool;
@@ -782,7 +872,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<byte> _value, bool useEncryption = false)
+        public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
             Serialzer<byte[]> serialzer = new Serialzer<byte[]>();
             serialzer.type = PlayerPrefsType.ArrayByte;
@@ -822,10 +912,50 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<double> _value, bool useEncryption = false)
+        public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
             Serialzer<double[]> serialzer = new Serialzer<double[]>();
             serialzer.type = PlayerPrefsType.ArrayDouble;
+            serialzer.value = _value.ToArray();
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetArray(string key, long[] _value, bool useEncryption = false)
+        {
+            Serialzer<long[]> serialzer = new Serialzer<long[]>();
+            serialzer.type = PlayerPrefsType.ArrayLong;
+            serialzer.value = _value;
+            serialzer.isEncrypted = useEncryption;
+
+            string jsonString = JsonUtility.ToJson(serialzer);
+
+            if (useEncryption)
+            {
+                if (TryEncryption(jsonString, out string output))
+                {
+                    serialzer.isEncrypted = false;
+                    PlayerPrefs.SetString(key, output);
+                    return;
+                }
+            }
+            PlayerPrefs.SetString(key, jsonString);
+        }
+        public static void SetList(string key, List<long> _value, bool useEncryption = false)
+        {
+            Serialzer<long[]> serialzer = new Serialzer<long[]>();
+            serialzer.type = PlayerPrefsType.ArrayLong;
             serialzer.value = _value.ToArray();
             serialzer.isEncrypted = useEncryption;
 
@@ -860,8 +990,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-        }
-        public static void SetArray(string key, List<Vector3> _value, bool useEncryption = false)
+        }   
+        public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
             Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>();
             serialzer.type = PlayerPrefsType.ArrayVector3;
@@ -900,7 +1030,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
         }
-        public static void SetArray(string key, List<Vector3Int> _value, bool useEncryption = false)
+        public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
             Serialzer<Vector3Int[]> serialzer = new Serialzer<Vector3Int[]>();
             serialzer.type = PlayerPrefsType.ArrayVector3Int;
@@ -935,7 +1065,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (d.TryParseJson(out Serialzer<T> t))
             {
-                Debug.Log("Key : "+key + "  "+ d);
                 serialzer = t;
                 returnvalue = serialzer.value;
             }
@@ -1104,6 +1233,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return double.Parse(s);
         }
+        internal static long StringToLong(string s)
+        {
+            return long.Parse(s); 
+        }
         internal static bool StringToBool(string s)
         {
             bool outBool = bool.Parse(s);
@@ -1254,14 +1387,39 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<int> returnlist = new List<int>();
             foreach (var item in splitString)
             {
-                int t = int.Parse(item);
-                returnlist.Add(t);
+                if (!string.IsNullOrEmpty(item))
+                {
+                    int t = int.Parse(item);
+                    returnlist.Add(t);
+                }
+
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
+        internal static long[] StringToArrayLong(string s)
+        {
+            long[] outVector3 = null;
+
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var splitString = s.Split(","[0]);
+            List<long> returnlist = new List<long>();
+            foreach (var item in splitString)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    long t = long.Parse(item);
+                    returnlist.Add(t);
+                }
+
             }
             outVector3 = returnlist.ToArray();
             return outVector3;
         }
         internal static float[] StringToArrayFloat(string s)
-        {   
+        {
             float[] outVector3 = null;
 
             s = s.Replace("[", "");
@@ -1277,12 +1435,36 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             outVector3 = returnlist.ToArray();
             return outVector3;
         }
+        internal static string[] StringToArrayString(string s)
+        {
+            string[] outVector3 = new string[0];
+            //[
+            //  "test",
+            //  "Test2"
+            //]
+            s = s.Replace("[", "");
+            s = s.Replace("]", "");
+
+            var regex = new Regex("\".*?\"");
+            var matches = regex.Matches(s);
+
+            List<string> returnlist = new List<string>();
+            foreach (var item in matches)
+            {
+                string t = item.ToString();
+                t = t.Remove(0,1);
+                t = t.Remove(t.Length-1,1);
+                returnlist.Add(t);
+            }
+            outVector3 = returnlist.ToArray();
+            return outVector3;
+        }
         internal static bool[] StringToArrayBool(string s)
         {
             bool[] outVector3 = null;
 
             s = s.Replace("[", "");
-            s = s.Replace("]", ""); 
+            s = s.Replace("]", "");
 
             var splitString = s.Split(","[0]);
             List<bool> returnlist = new List<bool>();
@@ -1301,7 +1483,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             s = s.Replace("[", "");
             s = s.Replace("]", "");
 
-            var splitString = s.Split(","[0]);  
+            var splitString = s.Split(","[0]);
             List<byte> returnlist = new List<byte>();
             foreach (var item in splitString)
             {
@@ -1351,7 +1533,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static Vector3Int[] StringToArrayVector3Int(string s)
         {
             Vector3Int[] outVector3 = null;
-                
+
             var regex = new Regex("(?<={)[^}]*(?=})");
             var matches = regex.Matches(s);
             List<Vector3Int> vectors = new List<Vector3Int>();
@@ -1393,7 +1575,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!File.Exists(tmp))
                 return tmp; // short-circuit if no matches
 
-            int min = 1, max = 2; 
+            int min = 1, max = 2;
 
             while (File.Exists(string.Format(pattern, max)))
             {
@@ -1416,7 +1598,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Encryption Region
-        internal static bool TryEncryption(string inputData,out string _result)
+        internal static bool TryEncryption(string inputData, out string _result)
         {
             Init();
 
