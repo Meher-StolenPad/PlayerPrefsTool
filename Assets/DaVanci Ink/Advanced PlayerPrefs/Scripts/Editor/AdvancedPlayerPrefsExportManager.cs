@@ -91,12 +91,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static List<PlayerPrefHolder>  ReadBackupFile(string tempPath)
         {
-            string[] filters = new string[] { "text files", "txt", "All files", "*" };
+            string[] filters = AdvancedPlayerPrefsGlobalVariables.OpenFolderFilters;
+
             string path = EditorUtility.OpenFilePanelWithFilters("Load backup file", tempPath, filters);
 
             if (string.IsNullOrEmpty(path)) return null;
-
-
 
             var stringArray = File.ReadLines(path).Where(line => !line.StartsWith("//")).ToArray();
             var newString = string.Empty;
@@ -193,6 +192,83 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         ppp.BackupValues = ppp.Value;
                         ppp.TempValue = ppp.Value;
                         break;
+                    case PlayerPrefsType.Long:
+                        ppp.Value = AdvancedPlayerPrefs.StringToLong(item.value);
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayInt:
+                        ppp.arrayInt = AdvancedPlayerPrefs.StringToArrayInt(item.value);
+                        ppp.Value = ppp.arrayInt;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayFloat:
+                        ppp.arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(item.value);
+                        ppp.Value = ppp.arrayFloat;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayString:
+                        ppp.arrayString = AdvancedPlayerPrefs.StringToArrayString(item.value);
+                        ppp.Value = ppp.arrayString;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayDouble:
+                        ppp.arrayDouble = AdvancedPlayerPrefs.StringToArrayDouble(item.value);
+                        ppp.Value = ppp.arrayDouble;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayLong:
+                        ppp.arrayLong = AdvancedPlayerPrefs.StringToArrayLong(item.value);
+                        ppp.Value = ppp.arrayLong;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayBool:
+                        ppp.arrayBool = AdvancedPlayerPrefs.StringToArrayBool(item.value);
+                        ppp.Value = ppp.arrayBool;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayByte:
+                        ppp.arrayByte = AdvancedPlayerPrefs.StringToArrayByte(item.value);
+                        ppp.Value = ppp.arrayByte;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayVector3:
+                         ppp.arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3 (item.value);
+                        ppp.Value = ppp.arrayVector3;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayVector3Int:
+                        ppp.arrayVector3Int= AdvancedPlayerPrefs.StringToArrayVector3Int(item.value);
+                        ppp.Value = ppp.arrayVector3Int;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayVector2:
+                        ppp.arrayVector2 = AdvancedPlayerPrefs.StringToArrayVector2(item.value);
+                        ppp.Value = ppp.arrayVector2;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayVector2Int:
+                        ppp.arrayVector2Int = AdvancedPlayerPrefs.StringToArrayVector2Int(item.value);
+                        ppp.Value = ppp.arrayVector2Int;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
+                    case PlayerPrefsType.ArrayVector4:
+                        ppp.arrayVector4 = AdvancedPlayerPrefs.StringToArrayVector4(item.value);
+                        ppp.Value = ppp.arrayVector4;
+                        ppp.BackupValues = ppp.Value;
+                        ppp.TempValue = ppp.Value;
+                        break;
                     default:
                         break;
                 }
@@ -200,7 +276,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 pairs.Add(ppp);
             }
             return pairs;
-          //  Refresh();
+            //  Refresh();
         }
     }
 }

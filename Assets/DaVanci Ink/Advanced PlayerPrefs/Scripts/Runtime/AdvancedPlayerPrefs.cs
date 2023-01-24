@@ -1634,8 +1634,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<byte> returnlist = new List<byte>();
             foreach (var item in splitString)
             {
-                byte t = byte.Parse(item);
-                returnlist.Add(t);
+                if (!string.IsNullOrEmpty(item))
+                {
+                    byte t = byte.Parse(item);
+                    returnlist.Add(t);
+                }
+               
             }
             outVector3 = returnlist.ToArray();
             return outVector3;
@@ -1651,8 +1655,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<double> returnlist = new List<double>();
             foreach (var item in splitString)
             {
-                double t = double.Parse(item);
-                returnlist.Add(t);
+                if (!string.IsNullOrEmpty(item))
+                {
+                    double t = double.Parse(item);
+                    returnlist.Add(t);
+
+                }
             }
             outVector3 = returnlist.ToArray();
             return outVector3;
@@ -1740,11 +1748,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static Vector4[] StringToArrayVector4(string s)
         {
             Vector4[] outVector3 = null;
-
+            //
             var regex = new Regex("(?<={)[^}]*(?=})");
-            var matches = regex.Matches(s);
-            List<Vector4> vectors = new List<Vector4>();
 
+            var matches = regex.Matches(s);
+
+            List<Vector4> vectors = new List<Vector4>();
             foreach (var item in matches)
             {
                 string t = "{" + item.ToString() + "}";
@@ -1754,7 +1763,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 vectors.Add(tt);
             }
             outVector3 = vectors.ToArray();
-
             return outVector3;
         }
         #endregion

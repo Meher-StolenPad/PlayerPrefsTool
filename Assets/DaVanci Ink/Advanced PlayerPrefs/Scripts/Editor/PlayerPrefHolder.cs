@@ -39,7 +39,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public Vector3Int[] arrayVector3Int;
         public Vector2Int[] arrayVector2Int;
         public Vector2[] arrayVector2;
-        public Vector4[] arrayVector4;
+        public Vector4[] arrayVector4 = null;
 
         public void RefreshField()
         {
@@ -110,9 +110,52 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     arrayVector4 = AdvancedPlayerPrefs.StringToArrayVector4(Value.ToString());
                     so = new SerializedObject(this);
                     ValueProperty = so.FindProperty("arrayVector4");
+
                     break;
             }
 
+        }
+        public void SetValue()
+        {
+            switch (type)
+            {
+                case PlayerPrefsType.ArrayInt:
+                    Value = arrayInt;
+                    break;
+                case PlayerPrefsType.ArrayFloat:
+                    Value = arrayFloat;
+                    break;
+                case PlayerPrefsType.ArrayBool:
+                    Value = arrayBool;
+                    break;
+                case PlayerPrefsType.ArrayByte:
+                    Value = arrayByte; 
+                    break;
+                case PlayerPrefsType.ArrayDouble:
+                    Value = arrayDouble;
+                    break;
+                case PlayerPrefsType.ArrayVector3:
+                    Value = arrayVector3;
+                    break;
+                case PlayerPrefsType.ArrayVector3Int:
+                    Value = arrayVector3Int;
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    Value = arrayString;
+                    break;
+                case PlayerPrefsType.ArrayLong:
+                    Value = arrayLong;
+                    break;
+                case PlayerPrefsType.ArrayVector2:
+                    Value = arrayVector2;
+                    break;
+                case PlayerPrefsType.ArrayVector2Int:
+                    Value = arrayVector2Int;
+                    break;
+                case PlayerPrefsType.ArrayVector4:
+                    Value = arrayVector4;
+                    break;
+            }
         }
         public void SaveKey()
         {
