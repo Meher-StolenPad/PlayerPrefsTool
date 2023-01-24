@@ -1,9 +1,6 @@
 using System.Linq;
-using System.Text;
-using System.Threading;
-using UnityEngine;
 using UnityEditor;
-using UnityEditor.PackageManager;
+using UnityEngine;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -21,6 +18,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 //Show Advanced PlayerPrefs Package Installer
                 AdvancedPlayerPrefsInstallerPanel.ShowWindow();
+                DavanciDebug.Log("Advanced PlayerPrefs imported successfully !",Color.green);
             }
         }
 #else
@@ -29,13 +27,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             var inPackages = string.Empty;
 
-             inPackages =
-                 importedAssets.FirstOrDefault(path => path.Contains("Advanced PlayerPrefs"));
+            inPackages =
+                importedAssets.FirstOrDefault(path => path.Contains("Advanced PlayerPrefs"));
 
             if (!string.IsNullOrEmpty(inPackages))
             {
                 //Show Advanced PlayerPrefs Package Installer
-               // AdvancedPlayerPrefsInstallerPanel.ShowWindow();
+                // AdvancedPlayerPrefsInstallerPanel.ShowWindow();
+                DavanciDebug.Log("Advanced PlayerPrefs imported successfully !", Color.green);
 
             }
         }

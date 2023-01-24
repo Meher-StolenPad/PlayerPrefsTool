@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.ShaderData;
 using Debug = UnityEngine.Debug;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -249,6 +251,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 foreach (var item in PlayerPrefHolderList)
                 {
                     item.Save();
+                    DavanciDebug.Log("All Changes are saved !", Color.green);
+
                 }
             }
         }
@@ -262,6 +266,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 foreach (var item in PlayerPrefHolderList)
                 {
                     item.BackUp();
+                    DavanciDebug.Log("Revert all Changes !", Color.cyan);
                 }
             }
         }
@@ -538,22 +543,27 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
                 {
                     _playerPrefsHolderList[i].SaveKey();
+                    DavanciDebug.Log("Save " + _playerPrefsHolderList[i].Key, Color.green);
                 }
 
                 GUI.backgroundColor = Color.yellow;
                 if (GUILayout.Button(new GUIContent(RevertButtonIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
                 {
+                    DavanciDebug.Log("Reset " + _playerPrefsHolderList[i].Key, Color.cyan);
                     _playerPrefsHolderList[i].BackUp();
                 }
 
                 GUI.backgroundColor = Color.red;
                 if (GUILayout.Button(new GUIContent(DeleteButtonIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
                 {
+
                     _playerPrefsHolderList[i].Delete();
                     OnDeleteElement += Refresh;
 
                     if (FiltredPlayerPrefHolderList.Contains(_playerPrefsHolderList[i]))
                         FiltredPlayerPrefHolderList.Remove(_playerPrefsHolderList[i]);
+                    DavanciDebug.Log(_playerPrefsHolderList[i].Key +" is Deleted!", Color.red);
+
                 }
                 GUI.backgroundColor = oldBackgroundColor;
                 GUILayout.EndHorizontal();
@@ -815,7 +825,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         case 2: //Cancel process (Basically do nothing for now.)
                             break;
                         default:
-                            Debug.LogWarning("Something went wrong when creating settings keys");
+                            DavanciDebug.Warning("Something went wrong when creating settings keys");
                             break;
                     }
                 }
@@ -829,9 +839,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 GUI.enabled = false;
             }
-            // Delete all PlayerPrefs
             if (GUILayout.Button("Add <" + Key + "> Prefs", GUILayout.Width(buttonWidth)))
             {
+                DavanciDebug.Log("a " + AdvancedPlayerPrefsGlobalVariables.EnumList[(int)type] + " with key <" + Key + "> added !", Color.green);
+
                 AddPlayerPref(Key, type, value, UseEncryption);
             }
             GUI.enabled = true;
@@ -840,6 +851,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (GUILayout.Button("Clear", GUILayout.Width(buttonWidth)))
             {
+                DavanciDebug.Log("All Fields are clear !", Color.cyan);
 
                 InitValuesData();
 
@@ -1217,6 +1229,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             UpdateRegistry();
             GetAllPlayerPrefs();
+            DavanciDebug.Log("Refreshing Prefs!", Color.cyan);
         }
         #endregion
 
@@ -1323,17 +1336,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case 0: //Create backup
                     Export();
                     PlayerPrefs.DeleteAll();
+                    DavanciDebug.Log("All prefs are deleted !", Color.red);
                     Refresh();
 
                     break;
                 case 1: //Don't create a backup
                     PlayerPrefs.DeleteAll();
+                    DavanciDebug.Log("All prefs are deleted !", Color.red);
                     Refresh();
                     break;
                 case 2: //Cancel process (Basically do nothing for now.)
                     break;
                 default:
-                    Debug.LogWarning("Something went wrong when clearing player prefs");
+                    DavanciDebug.Warning("Something went wrong when clearing player prefs");
                     break;
             }
         }
@@ -1351,14 +1366,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + importCompanyName + "\\" + importProductName);
 
             GetAllPlayerPrefs();
+            int t = PlayerPrefHolderList.Count;
 
             PlayerSettings.productName = currentProductName;
             PlayerSettings.companyName = currentCompanyName;
 
-            Debug.Log("import");
             foreach (var pref in PlayerPrefHolderList)
             {
                 pref.Save();
+            }
+            Refresh();
+            if (t > 0)
+            {
+                DavanciDebug.Log(t + " Prefs Imported from < " + importProductName + "/" + importCompanyName + ">", Color.green);
+            }
+            else
+            {
+                DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
         }
 

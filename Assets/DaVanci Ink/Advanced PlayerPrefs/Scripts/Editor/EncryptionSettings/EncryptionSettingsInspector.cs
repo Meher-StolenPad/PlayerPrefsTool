@@ -35,7 +35,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private bool ShowErrorText => Key.Length == 32;
         private GUIStyle Textstyle;
         private GUIStyle Intstyle;  
-        private string LogError = "Key must be in 32 byte and Iv must be in 16 byte";
+        private string LogError = "Key must be in 32 bits and Iv must be in 16 bits";
         private bool ShowKeys;
 
         private void OnEnable()

@@ -80,6 +80,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Key = CreateKey(32);
             Iv = CreateKey(16);
             SetSavedKeyFromKeys();
+            DavanciDebug.Log("Keys Refreshed !", Color.cyan);
         }
         internal void SetKeys(string _key)
         {
@@ -107,11 +108,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (AdvancedPlayerPrefs.HasAPPsCSDK())
                 {
                     //load old saved key
+                    DavanciDebug.Log("Load Device Key!", Color.grey);
                     SavedKey = AdvancedPlayerPrefs.GetAPPsCSDK();
                     GetKeysFromSavedKey();
                 }
                 else
                 {
+                    DavanciDebug.Log("Device Key Created !", Color.grey);
                     // create new key and save it
                     RefreshKeys();
                     SaveKey();
@@ -153,7 +156,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 path = AdvancedPlayerPrefs.NextAvailableFilename(path);
                 File.WriteAllText(path, backupstring);
             }
-            Debug.Log(path);
+            DavanciDebug.Log("Keys Exported : " + path, Color.green);
         }
         private string CreateBackup()
         {
@@ -178,11 +181,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
                 KeysExporter KeysExporter = JsonUtility.FromJson<KeysExporter>(newString);
+                DavanciDebug.Log("Keys Imported from < " +Path.GetFileName(path)+" >", Color.green);
                 return KeysExporter.Key;
             }
             catch (Exception e)
             {
                 string ex = e.ToString();
+                DavanciDebug.Error(ex.ToString());
                 return  string.Empty;
             }
 

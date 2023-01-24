@@ -149,7 +149,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EncryptionSettings = Resources.Load<EncryptionSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
                 if (EncryptionSettings == null)
                 {
-                    Debug.LogWarning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
+                    DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
                     return false;
                 }
                 return true;

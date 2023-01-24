@@ -71,7 +71,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 ExportPathFile =AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
                 File.WriteAllText(ExportPathFile, newBackupString);
             }
-            Debug.Log(ExportPathFile);
+            DavanciDebug.Log("File Exported : " + ExportPathFile, Color.green);
         }
         private static string CreateBackup(List<PlayerPrefHolder> PlayerPrefHolderList)
         {
@@ -275,6 +275,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 ppp.Save();
                 pairs.Add(ppp);
             }
+            DavanciDebug.Log(pairs.Count+" Prefs Imported from < " + Path.GetFileName(path)+">", Color.green);
             return pairs;
             //  Refresh();
         }
