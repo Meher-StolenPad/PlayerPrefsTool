@@ -31,8 +31,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Check the Advanced Player Prefs Setup Panel.";
 
         internal const  string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
-        internal const  string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/AdvancedPlayerPrefsSettings";
-        internal const  string EncryptionSettingsFileName = "AdvancedPlayerPrefsSettings.asset";
+        internal const  string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/Advanced Player Prefs Settings";
+        internal const  string EncryptionSettingsFileName = "Advanced Player Prefs Settings.asset";
 
 
         internal const  string AdvancedPlayerPrefsToolMenuName = "DavanciCode/Advanced Player Prefs Tool %e";
