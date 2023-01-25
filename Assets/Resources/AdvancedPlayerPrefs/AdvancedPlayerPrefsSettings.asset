@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dd43ad784555004093e2e51165c1481, type: 3}
-  m_Name: EncryptionSettings
+  m_Name: AdvancedPlayerPrefsSettings
   m_EditorClassIdentifier: 
-  Key: J83bHd94O4I0vC20nrvkcfLZQgNTM1xA
-  Iv: IOrBSBPPjtunq2nf
-  SavedKey: J8FI3bPOHd5r94WBO45SI06BvCiP207PnrFjvketcfUuLZhnQgjqNTe2M1PnxAuf
+  Key: J5ddq99RUNJawf2QTGfQhtOjaSZ87h5g
+  Iv: t9lWGXbFwmuqsxm1
+  SavedKey: J5Ztddo9q9jl9RgWUNwGJaTXwfsb2QoFTGPwfQAmhtCuOjmqaShsZ8Mx7hHm5gM1
   useDeviceKey: 0
+  debugMode: 1

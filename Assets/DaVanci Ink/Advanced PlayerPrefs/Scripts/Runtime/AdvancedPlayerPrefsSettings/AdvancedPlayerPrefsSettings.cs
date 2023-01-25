@@ -10,6 +10,13 @@ using UnityEditor;
 #endif
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
+    internal enum DebugMode
+    {
+        SilentMode,
+        EditorOnly,
+        Actif
+    }
+
     [Serializable]
     internal class KeysExporter
     {
@@ -27,7 +34,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
     }
 
-    internal class EncryptionSettings : ScriptableObject
+    internal class AdvancedPlayerPrefsSettings : ScriptableObject
     {
         private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
@@ -40,6 +47,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
         [HideInInspector] public bool useDeviceKey;
+        [HideInInspector] public DebugMode debugMode;
+
         internal string GetKey()
         {
             return Key;

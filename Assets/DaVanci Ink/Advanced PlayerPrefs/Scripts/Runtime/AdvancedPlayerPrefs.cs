@@ -81,9 +81,29 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     public static class AdvancedPlayerPrefs
     {
+        static AdvancedPlayerPrefs()
+        {
+            TryLoadSettings();
+        }
         #region Private Variables
         private static string numberPattern = " ({0})";
-        internal static EncryptionSettings EncryptionSettings = null;
+        private static AdvancedPlayerPrefsSettings _APPsSettings;
+
+        internal static AdvancedPlayerPrefsSettings APPsSettings
+        {
+            get
+            {
+                if (_APPsSettings == null && !isInitialzed)
+                {
+                   return TryGetSettings();
+                }
+                return _APPsSettings;
+            }
+            set
+            {
+                _APPsSettings = value;
+            }
+        }
         private static bool isInitialzed = false;
         #endregion
 
@@ -93,7 +113,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             TryLoadSettings();
 
-            string path = AssetDatabase.GetAssetPath(EncryptionSettings);
+            string path = AssetDatabase.GetAssetPath(APPsSettings);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -102,27 +122,27 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             else
             {
                 if (select)
-                    Selection.objects = new UnityEngine.Object[] { EncryptionSettings };
+                    Selection.objects = new UnityEngine.Object[] { APPsSettings };
                 return true;
             }
         }
         internal static void CreateSettings()
         {
-            EncryptionSettings en = ScriptableObject.CreateInstance<EncryptionSettings>();
+            AdvancedPlayerPrefsSettings en = ScriptableObject.CreateInstance<AdvancedPlayerPrefsSettings>();
 
             if (!Directory.Exists(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath))
             {
                 Directory.CreateDirectory(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath);
             }
             AssetDatabase.CreateAsset(en, AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath + AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsFileName);
-            EncryptionSettings = en;
+            APPsSettings = en;
         }
-        internal static bool TryGetEncryptionSettings(out EncryptionSettings encryptionSettings)
+        internal static bool TryGetEncryptionSettings(out AdvancedPlayerPrefsSettings encryptionSettings)
         {
             bool returnValue = false;
 
             returnValue = TryLoadSettings();
-            encryptionSettings = EncryptionSettings;
+            encryptionSettings = APPsSettings;
             return returnValue;
         }
 #endif
@@ -133,21 +153,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             if (isInitialzed) return;
 
-            if (!EncryptionSettings)
+            if (!APPsSettings)
             {
                 if (TryLoadSettings())
                 {
-                    EncryptionSettings.CheckKey();
+                    APPsSettings.CheckKey();
                 }
             }
             isInitialzed = true;
         }
         private static bool TryLoadSettings()
         {
-            if (EncryptionSettings == null)
+            if (APPsSettings == null)
             {
-                EncryptionSettings = Resources.Load<EncryptionSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
-                if (EncryptionSettings == null)
+                APPsSettings = Resources.Load<AdvancedPlayerPrefsSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
+                if (APPsSettings == null)
                 {
                     DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
                     return false;
@@ -155,6 +175,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return true;
             }
             return true;
+        }
+        private static AdvancedPlayerPrefsSettings TryGetSettings()
+        {
+            isInitialzed = true;
+
+            _APPsSettings = Resources.Load<AdvancedPlayerPrefsSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
+            if (_APPsSettings == null)
+            {
+                DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
+                return null;
+            }
+
+            return _APPsSettings;
         }
         #endregion
 
@@ -1817,7 +1850,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             Init();
 
-            if (EncryptionSettings == null)
+            if (APPsSettings == null)
             {
                 _result = inputData;
                 return false;
@@ -1826,8 +1859,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
             AEScryptoProvider.BlockSize = 128;
             AEScryptoProvider.KeySize = 256;
-            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.GetKey());
-            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Getiv());
+            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(APPsSettings.GetKey());
+            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(APPsSettings.Getiv());
             AEScryptoProvider.Mode = CipherMode.CBC;
             AEScryptoProvider.Padding = PaddingMode.PKCS7;
 
@@ -1842,7 +1875,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             Init();
             string returnstring = inputData;
-            if (EncryptionSettings == null)
+            if (APPsSettings == null)
             {
                 return returnstring;
             }
@@ -1851,8 +1884,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
                 AEScryptoProvider.BlockSize = 128;
                 AEScryptoProvider.KeySize = 256;
-                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.GetKey());
-                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(EncryptionSettings.Getiv());
+                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(APPsSettings.GetKey());
+                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(APPsSettings.Getiv());
                 AEScryptoProvider.Mode = CipherMode.CBC;
                 AEScryptoProvider.Padding = PaddingMode.PKCS7;
 

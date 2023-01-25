@@ -115,7 +115,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         #endregion
 
-        TestScriptable testScriptable;
         #region Unity editor Tool 
         [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 2)]
         public static void ShowWindow()
@@ -141,8 +140,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DeleteButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.DeleteButtonIconTexturePath, typeof(Texture));
             ApplyAllButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ApplyAllButtonIconTexturePath, typeof(Texture));
             ExportButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ExportButtonIconTexturePath, typeof(Texture));
-            testScriptable = Resources.Load<TestScriptable>("AdvancedPlayerPrefs/test");
-
             GetAllPlayerPrefs();
             FiltredPlayerPrefHolderList.Clear();
             EncryptionSettingsFounded = AdvancedPlayerPrefs.SelectSettings(false);

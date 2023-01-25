@@ -1,24 +1,62 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Graphs.Styles;
 using Color = UnityEngine.Color;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
-    public static class DavanciDebug    
-    {   
-        public static void Log(string message,Color color)
+    internal static class DavanciDebug
+    {
+        internal static DebugMode dm = DebugMode.EditorOnly;
+
+        internal static void Log(string message, Color color)
         {
-            Debug.Log("<color=#" + FromColor(color) + ">" + message + "</color>");
+            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
+                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
+
+            switch (dm)
+            {
+                case DebugMode.EditorOnly:
+#if UNITY_EDITOR
+                    Debug.Log("<color=#" + FromColor(color) + ">" + message + "</color>");
+#endif
+                    break;
+                case DebugMode.Actif:
+                    Debug.Log("<color=#" + FromColor(color) + ">" + message + "</color>");
+                    break;
+            }
         }
         public static void Warning(string message)
         {
-            Debug.LogWarning("<color=#" + FromColor(Color.yellow) + ">" + message + "</color>");
+            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
+                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
+
+            switch (dm)
+            {
+                case DebugMode.EditorOnly:
+#if UNITY_EDITOR
+                    Debug.LogWarning("<color=#" + FromColor(Color.yellow) + ">" + message + "</color>");
+#endif
+                    break;
+                case DebugMode.Actif:
+                    Debug.LogWarning("<color=#" + FromColor(Color.yellow) + ">" + message + "</color>");
+                    break;
+            }
         }
         public static void Error(string message)
         {
-            Debug.LogError("<color=#" + FromColor(Color.red) + ">" + message + "</color>");
+            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
+                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
+
+            switch (dm)
+            {
+                case DebugMode.EditorOnly:
+#if UNITY_EDITOR
+                    Debug.LogError("<color=#" + FromColor(Color.red) + ">" + message + "</color>");
+#endif
+                    break;
+                case DebugMode.Actif:
+                    Debug.LogError("<color=#" + FromColor(Color.red) + ">" + message + "</color>");
+                    break;
+            }
         }
         public static string FromColor(Color color)
         {

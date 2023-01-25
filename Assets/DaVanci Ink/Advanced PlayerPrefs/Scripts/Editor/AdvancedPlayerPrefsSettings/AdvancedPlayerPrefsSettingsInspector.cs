@@ -5,31 +5,39 @@ using UnityEditor;
 using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
-    [CustomEditor(typeof(EncryptionSettings))]
+    [CustomEditor(typeof(AdvancedPlayerPrefsSettings))]
     [CanEditMultipleObjects]
-    internal class EncryptionSettingsInspector : Editor
+    internal class AdvancedPlayerPrefsSettingsInspector : Editor
     {
-        private EncryptionSettings encryptionSetting;
+        private AdvancedPlayerPrefsSettings APPSettings;
         private static bool DisplaySetKeys
         {
-            get => EditorPrefs.GetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplaySetKeys));
-            set => EditorPrefs.SetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplaySetKeys), value);
+            get => EditorPrefs.GetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplaySetKeys));
+            set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplaySetKeys), value);
         }
         private static bool DisplayRuntimeSettings
         {   
-            get => EditorPrefs.GetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
-            set => EditorPrefs.SetBool(nameof(EncryptionSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
+            get => EditorPrefs.GetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
+            set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
         }
         private bool UseDeviceKey
         {
-            get => encryptionSetting.useDeviceKey;
+            get => APPSettings.useDeviceKey;
             set
             {
-                encryptionSetting.useDeviceKey = value;
-                if (!EditorUtility.IsDirty(encryptionSetting)) EditorUtility.SetDirty(encryptionSetting);
+                APPSettings.useDeviceKey = value;
+                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
             }
         }
-
+        private DebugMode _DebugMode
+        {
+            get => APPSettings.debugMode;    
+            set
+            {
+                APPSettings.debugMode = value;
+                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
+            }
+        }
 
         private string Key = string.Empty;
         private bool ShowErrorText => Key.Length == 32;
@@ -40,8 +48,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private void OnEnable()
         {
-            encryptionSetting = (EncryptionSettings)target;
-            Key = encryptionSetting.GetKey();
+            APPSettings = (AdvancedPlayerPrefsSettings)target;
+            Key = APPSettings.GetKey();
         }
         public override void OnInspectorGUI()
         {
@@ -71,14 +79,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 switch (dialogResult)
                 {
                     case 0: //Create backup
-                        encryptionSetting.ExportKeys();
-                        encryptionSetting.RefreshKeys();
-                        EditorUtility.SetDirty(encryptionSetting);
+                        APPSettings.ExportKeys();
+                        APPSettings.RefreshKeys();
+                        EditorUtility.SetDirty(APPSettings);
                         AssetDatabase.SaveAssets();
                         break;
                     case 1: //Don't create a backup
-                        encryptionSetting.RefreshKeys();
-                        EditorUtility.SetDirty(encryptionSetting);
+                        APPSettings.RefreshKeys();
+                        EditorUtility.SetDirty(APPSettings);
                         AssetDatabase.SaveAssets();
                         break;
                     case 2: //Cancel process (Basically do nothing for now.)
@@ -93,13 +101,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (GUILayout.Button("Export Keys", GUILayout.Width(newbuttonWidth)))
             {
-                encryptionSetting.ExportKeys();
+                APPSettings.ExportKeys();
             }
             GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Generate Key", GUILayout.Width(newbuttonWidth)))
             {
-                encryptionSetting.SetSavedKeyFromKeys();
+                APPSettings.SetSavedKeyFromKeys();
             }
             EditorGUILayout.EndHorizontal();
 
@@ -145,14 +153,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         switch (dialogResult)
                         {
                             case 0: //Create backup
-                                encryptionSetting.ExportKeys();
-                                encryptionSetting.SetKeys(Key);
-                                EditorUtility.SetDirty(encryptionSetting);
+                                APPSettings.ExportKeys();
+                                APPSettings.SetKeys(Key);
+                                EditorUtility.SetDirty(APPSettings);
                                 AssetDatabase.SaveAssets();
                                 break;
                             case 1: //Don't create a backup
-                                encryptionSetting.SetKeys(Key);
-                                EditorUtility.SetDirty(encryptionSetting);
+                                APPSettings.SetKeys(Key);
+                                EditorUtility.SetDirty(APPSettings);
                                 AssetDatabase.SaveAssets();
                                 break;
                             case 2: //Cancel process (Basically do nothing for now.)
@@ -167,7 +175,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 if (GUILayout.Button("Import Keys", GUILayout.Width(buttonWidth)))
                 {
-                   Key= encryptionSetting.ReadBackupFile();
+                   Key= APPSettings.ReadBackupFile();
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -194,6 +202,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EditorGUILayout.HelpBox(howToUse, MessageType.Info);
 
             DrawHorizontalLine(Color.grey);
+            EditorGUILayout.Space(5);
+            _DebugMode = (DebugMode)EditorGUILayout.EnumPopup("Debug Mode",_DebugMode, GUILayout.Width(buttonWidth*1.5f));
+            EditorGUILayout.Space(5);
+
+            DrawHorizontalLine(Color.grey);
+
             DisplayRuntimeSettings = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayRuntimeSettings, "Runtime Settings");
 
             if (DisplayRuntimeSettings)

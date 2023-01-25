@@ -17,7 +17,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private static void ResetData(PlayModeStateChange state)
         {
-            EncryptionSettings m_EncryptionSettings;
+            AdvancedPlayerPrefsSettings m_EncryptionSettings;
             switch (state)
             {
                 case PlayModeStateChange.ExitingPlayMode:
