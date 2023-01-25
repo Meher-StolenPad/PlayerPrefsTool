@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
-    public abstract class DavanciInkSingleton<T> : ScriptableObject where T : ScriptableObject
+    internal abstract class DavanciInkSingleton<T> : ScriptableObject where T : ScriptableObject
     {
         static T instance;
         static bool Loaded = false;
 
-        public static T Instance
+        internal static T Instance
         {
             get
             {
@@ -24,14 +24,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 return instance;
             }
         }
-        public static T Reload()
+        internal static T Reload()
         {
             instance = Resources.Load<T>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
             if (instance != null)
                 (instance as DavanciInkSingleton<T>).OnInitialize();
             return instance;
         }
-        protected virtual void OnInitialize() { }
+        internal virtual void OnInitialize() { }
     }
 
 }

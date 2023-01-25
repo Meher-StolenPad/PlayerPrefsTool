@@ -5,7 +5,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     internal class TestPrefs : MonoBehaviour
     {
-        public Color m_Color;
+        public Color m_Color = Color.yellow;
         public string testEncription; 
         public string CriptedEncription;
 
@@ -15,6 +15,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
       
         private void Start()
         {
+            Debug.LogWarning("dpzk^pdkzpdpzd$^lz");
+            Debug.Log("poidpoid");
             AdvancedPlayerPrefs.SetFloat("TestAgain", 10.2247745f,true);
             AdvancedPlayerPrefs.SetVector3("TestVector3", new Vector3(0.5f, 55, 10), true);
             AdvancedPlayerPrefs.SetVector2("TestVector2", new Vector2(0.4f, 0.3f), true);

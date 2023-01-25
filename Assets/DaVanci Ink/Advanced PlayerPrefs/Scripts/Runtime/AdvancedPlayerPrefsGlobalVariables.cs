@@ -88,15 +88,38 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Collections/Vectors/Vector4"
         };
 
-
-
         internal static readonly Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static readonly Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);
+        internal static readonly Color ShowAdvancedPlayerPrefsTextColorNormal = new Color32(215, 66, 66, 255);
 
         internal static readonly Color SetupButtonTextColor = new Color32(101, 217, 255, 255);
         internal static readonly Color SetupButtonColor = new Color32(0, 157, 255, 255);
 
-#if UNITY_EDITOR
+        internal static readonly Color NormalEncryptedTextColor = new Color32(0, 90, 255, 255);
+        internal static readonly Color ProEncryptedTextColor = new Color32(101, 217, 255, 255);
+
+        internal static readonly Color NormalSearchTextColor = new Color32(245, 121, 47, 255);
+        internal static readonly Color ProSearchTextColor = new Color32(255, 216, 116, 255);
+
+        internal static readonly Color NormalChangedTextColor = new Color32(6, 140, 6, 255);
+        internal static readonly Color ProChangedTextColor = new Color32(0, 255, 0, 255);
+
+        internal static readonly Color GreenDebugColor = new Color32(67, 142,83, 255);
+        internal static readonly Color ProGreenDebugColor = new Color32(0, 255, 0, 255);
+
+        internal static readonly Color CyanDebugColor = new Color32(0, 33, 255, 255);
+        internal static readonly Color ProCyanDebugColor = new Color32(0, 255, 255, 255);
+
+        internal static readonly Color RedDebugColor = new Color32(255, 0, 0, 255);
+        internal static readonly Color ProRedDebugColor = new Color32(255, 0, 0, 255);
+
+        internal static readonly Color GreyDebugColor = new Color32(0, 255, 255, 255);
+        internal static readonly Color ProGreyDebugColor = new Color32(128, 128, 128, 255);
+
+        internal static readonly Color YellowebugColor = new Color32(150, 0, 112, 255);
+        internal static readonly Color ProYellowDebugColor = new Color32(255, 235, 4, 255);
+
+#if UNITY_EDITOR        
         internal static string GetPlayerPrefsSpecificText()
         {
            return BackupCreatedText+ "//Keys for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'

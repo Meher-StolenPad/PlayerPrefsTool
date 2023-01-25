@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
+    internal enum FoundInSearch
+    {
+        None,
+        Key,
+        Value
+    }
     internal class PlayerPrefHolder : ScriptableObject
     {
         public string Key;
@@ -19,8 +25,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         public PlayerPrefsType type;
 
-        public bool isKeyFounded = false;
-        public bool isValueFounded = false;
+        public FoundInSearch InSearch;
         public bool isEncrypted = false;
 
         public SerializedProperty ValueProperty;

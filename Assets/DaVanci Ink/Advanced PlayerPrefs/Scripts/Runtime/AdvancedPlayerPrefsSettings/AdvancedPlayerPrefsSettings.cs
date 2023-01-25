@@ -36,6 +36,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     internal class AdvancedPlayerPrefsSettings : DavanciInkSingleton<AdvancedPlayerPrefsSettings>
     {
+        internal override void OnInitialize()
+        {
+            CheckKey();
+        }
         private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;

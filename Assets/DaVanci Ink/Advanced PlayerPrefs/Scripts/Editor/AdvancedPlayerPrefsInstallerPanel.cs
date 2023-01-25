@@ -37,7 +37,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             Logo = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Logo.png", typeof(Texture));
             cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsCover.png", typeof(Texture));
-            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/DavanciButton.png", typeof(Texture));
+
+            string developedByName = EditorGUIUtility.isProSkin ? "DavanciButtonPro.png" : "DavanciButton.png";
+            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/"+ developedByName, typeof(Texture));
+
             isAlreadyInstalled = AdvancedPlayerPrefs.SelectSettings(false);
 
             ShowButtonNormal = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor);
@@ -81,7 +84,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
 
 
-            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor;
+            style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
             //style2.normal.background = ShowButtonNormal;
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;

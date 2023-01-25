@@ -7,8 +7,52 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         internal static DebugMode dm = DebugMode.EditorOnly;
 
+        private static bool isProMode = false;
+        private static bool isProSet = false;
+
+        static DavanciDebug()
+        {
+            bool t = IsProMode;
+        }
+        internal static bool IsProMode
+        {
+            get
+            {
+                if(isProMode == false && !isProSet)
+                {
+#if UNITY_EDITOR
+                    isProMode = UnityEditor.EditorGUIUtility.isProSkin;
+#endif
+                }
+                isProSet = true;
+
+                return isProMode;
+            }
+        }
+
+        private static void CheckNewSettings()
+        {
+            if (AdvancedPlayerPrefsSettings.Instance != null && dm != AdvancedPlayerPrefsSettings.Instance.debugMode)
+                dm = AdvancedPlayerPrefsSettings.Instance.debugMode;
+        }
         internal static void Log(string message, Color color)
         {
+            if (color.Equals(Color.green))
+            {
+                color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProGreenDebugColor : AdvancedPlayerPrefsGlobalVariables.GreenDebugColor;
+            }
+            else if (color.Equals(Color.cyan))
+            {
+                color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProCyanDebugColor : AdvancedPlayerPrefsGlobalVariables.CyanDebugColor;
+            }
+            else if (color.Equals(Color.red))
+            {
+                color =IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProRedDebugColor : AdvancedPlayerPrefsGlobalVariables.RedDebugColor;
+            }
+            else if (color.Equals(Color.grey))
+            {
+                color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProGreyDebugColor : AdvancedPlayerPrefsGlobalVariables.GreyDebugColor;
+            }
             CheckNewSettings();
 
             switch (dm)
@@ -23,13 +67,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
             }
         }
-
-        private static void CheckNewSettings()
-        {
-            if (AdvancedPlayerPrefsSettings.Instance != null && dm != AdvancedPlayerPrefsSettings.Instance.debugMode)
-                dm = AdvancedPlayerPrefsSettings.Instance.debugMode;
-        }
-
         public static void Warning(string message)
         {
             CheckNewSettings();
@@ -37,7 +74,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 case DebugMode.EditorOnly:
 #if UNITY_EDITOR
-                    Debug.LogWarning("<color=#" + FromColor(Color.yellow) + ">" + message + "</color>");
+                    Debug.LogWarning("<color=#" + FromColor(isProMode ? AdvancedPlayerPrefsGlobalVariables.ProYellowDebugColor : AdvancedPlayerPrefsGlobalVariables.YellowebugColor) + ">" + message + "</color>");
 #endif
                     break;
                 case DebugMode.Actif:

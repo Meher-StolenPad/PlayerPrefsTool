@@ -130,8 +130,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 else
                 {
-                    Intstyle.normal.textColor = Color.white;
-
+                    Intstyle.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
                 }
                 EditorGUILayout.IntField(Key.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
                 EditorGUILayout.EndHorizontal();

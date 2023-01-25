@@ -112,6 +112,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string ImportCompanyName;
         private string ImportProductName;
 
+        private bool isProSKin;
 
         #endregion
 
@@ -144,6 +145,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             FiltredPlayerPrefHolderList.Clear();
             EncryptionSettingsFounded = AdvancedPlayerPrefs.SelectSettings(false);
             so = new SerializedObject(this);
+
+            isProSKin = EditorGUIUtility.isProSkin;
+
             //tempExportPath = ExportPath;
         }
         private void OnDisable()
@@ -267,15 +271,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
         }
-        private void DrawTitles(out GUIStyle style, out Color oldBackgroundColor)
+        private void DrawTitles()
         {
-            style = EditorStyles.toolbar;
+            var  style = new GUIStyle( EditorStyles.toolbar);
             style.fontSize = 12;
             style.fontStyle = FontStyle.Bold;
             style.alignment = TextAnchor.MiddleCenter;
-            oldBackgroundColor = GUI.backgroundColor;
+            var oldBackgroundColor = GUI.backgroundColor;
 
-            GUIStyle styletoolbar = EditorStyles.toolbarDropDown;
+            GUIStyle styletoolbar = new GUIStyle( EditorStyles.toolbarDropDown);
             styletoolbar.fontSize = 12;
             styletoolbar.fontStyle = FontStyle.Bold;
             styletoolbar.alignment = TextAnchor.MiddleCenter;
@@ -312,12 +316,39 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.EndHorizontal();
         }
+        private void DecideFieldColor(PlayerPrefHolder playerPrefHolder,bool inSearch,GUIStyle style)
+        {
+            if (playerPrefHolder.isEncrypted)
+            {
+               style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProEncryptedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalEncryptedTextColor; //Color.magenta;
+            }
+            if (!playerPrefHolder.isEqual())
+            {
+                style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProChangedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalChangedTextColor;
+                style.fontStyle = FontStyle.Bold;
+            }
+
+            if (inSearch)
+            {
+                switch (playerPrefHolder.InSearch)
+                {   
+                    case FoundInSearch.Key:
+                        style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProSearchTextColor : AdvancedPlayerPrefsGlobalVariables.NormalSearchTextColor;  //Color.yellow;
+                        style.fontStyle = FontStyle.Normal;
+                        break;
+                    case FoundInSearch.Value:
+
+                        break;
+                }
+            }
+        }
         private void DrawPlayerPrefs(List<PlayerPrefHolder> _playerPrefsHolderList, bool isSearchDraw = false)
         {
-            GUIStyle style;
-            Color oldBackgroundColor;
+            DrawTitles();
 
-            DrawTitles(out style, out oldBackgroundColor);
+            Color oldBackgroundColor = GUI.backgroundColor;
+            GUIStyle style3 = EditorStyles.textField;
+
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
 
             ScrollViewPosition = GUILayout.BeginScrollView(ScrollViewPosition, GUIStyle.none, GUI.skin.verticalScrollbar, GUILayout.Width(EditorGUIUtility.currentViewWidth));
@@ -332,61 +363,37 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
                 GUILayout.BeginHorizontal();
-                GUIStyle style3 = EditorStyles.toolbar;
-                GUIStyle style4 = EditorStyles.toggle;
-                style3 = EditorStyles.textField;
-                Color oldstylecolor = style.normal.textColor;
 
-                style4.normal.textColor = Color.red;
-                if (!_playerPrefsHolderList[i].isEqual())
-                {
-                    style3.fontStyle = FontStyle.Bold;
-                    style3.normal.textColor = Color.green;
-                }
-                else
-                {
-                    style3.fontStyle = FontStyle.Normal;
-                    style.normal.textColor = Color.white;
-                }
+                Color oldstylecolor = style3.normal.textColor;
+
+                style3.fontStyle = FontStyle.Normal;
+                style3.normal.textColor = oldstylecolor;
+
+                DecideFieldColor(_playerPrefsHolderList[i],isSearchDraw,style3);
+
+                GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
 
                 if (isSearchDraw)
                 {
-                    if (_playerPrefsHolderList[i].isKeyFounded)
+                    switch (_playerPrefsHolderList[i].InSearch)
                     {
-                        style3.normal.textColor = Color.yellow;
-
-                        GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
-                        style3.normal.textColor = oldstylecolor;
-                    }
-                    else
-                    {
-                        GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
-                    }
-
-                    if (_playerPrefsHolderList[i].isValueFounded)
-                    {
-                        style3.normal.textColor = Color.yellow;
-                        style3.fontStyle = FontStyle.Bold;
-                    }
-                    else
-                    {
-                        style3.normal.textColor = Color.white;
-                        style3.fontStyle = FontStyle.Normal;
+                        case FoundInSearch.None:
+                            style3.normal.textColor = oldstylecolor;
+                            style3.fontStyle = FontStyle.Normal;
+                            break;
+                        case FoundInSearch.Key:
+                            style3.normal.textColor = oldstylecolor;
+                            style3.fontStyle = FontStyle.Normal;
+                            break;
+                        case FoundInSearch.Value:
+                            style3.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;  //Color.yellow;
+                            style3.fontStyle = FontStyle.Normal;
+                            break;
                     }
                 }
                 else
                 {
-                    if (_playerPrefsHolderList[i].isEncrypted)
-                    {
-                        style3.normal.textColor = Color.magenta;
-                    }
-                    else
-                    {
-                        style3.normal.textColor = Color.white;
-                    }
-                    GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
-
-                    style3.normal.textColor = Color.white;
+                    style3.normal.textColor = oldstylecolor;
                     style3.fontStyle = FontStyle.Normal;
                 }
 
@@ -434,7 +441,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         _playerPrefsHolderList[i].TempValue = EditorGUILayout.Toggle("", AdvancedPlayerPrefs.StringToBool(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
                         break;
                     case PlayerPrefsType.DateTime:
-                        GUILayout.TextArea(AdvancedPlayerPrefs.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), EditorStyles.toolbarTextField, GUILayout.Width(FullWindowWidth * 4));
+                        GUILayout.TextArea(AdvancedPlayerPrefs.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), GUILayout.Width(FullWindowWidth * 4));
                         break;
                     case PlayerPrefsType.Byte:
                         _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)AdvancedPlayerPrefs.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4)), 0, 255);
@@ -564,6 +571,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 GUI.backgroundColor = oldBackgroundColor;
                 GUILayout.EndHorizontal();
+                style3.normal.textColor = oldstylecolor;
             }
 
             EditorGUILayout.EndScrollView();
@@ -571,6 +579,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.EndVertical();
             OnDeleteElement?.Invoke();
             OnDeleteElement -= Refresh;
+
         }
         private void DrawHorizontalLine(Color color)
         {
@@ -586,9 +595,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void DrawValueField()
         {
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
-            GUIStyle style3 = new GUIStyle(EditorStyles.textField);
-            GUIStyle style4 = new GUIStyle(EditorStyles.popup);
-            style4.alignment = TextAnchor.MiddleCenter;
+          
 
             GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 2));
             GUILayout.BeginHorizontal();
@@ -606,7 +613,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.EndVertical();
             GUILayout.BeginVertical();
 
-            Key = GUILayout.TextField(Key, style3, GUILayout.Width(FullWindowWidth * 4f));
+            Key = GUILayout.TextField(Key, GUILayout.Width(FullWindowWidth * 4f));
 
             EditorGUILayout.Space(3);
 
@@ -1198,8 +1205,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             for (int i = 0; i < entryCount; i++)
             {
-                PlayerPrefHolderList[i].isKeyFounded = false;
-                PlayerPrefHolderList[i].isValueFounded = false;
+                PlayerPrefHolderList[i].InSearch = FoundInSearch.None;
 
                 string fullKey = PlayerPrefHolderList[i].Key;
                 string displayKey = fullKey;
@@ -1209,7 +1215,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (displayKey.ToLower().Contains(SearchText.ToLower()))
                 {
                     FiltredPlayerPrefHolderList.Add(PlayerPrefHolderList[i]);
-                    PlayerPrefHolderList[i].isKeyFounded = true;
+                    PlayerPrefHolderList[i].InSearch = FoundInSearch.Key;
                 }
                 if (fullvalue.ToLower().Contains(SearchText.ToLower()))
                 {
@@ -1217,7 +1223,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     {
                         FiltredPlayerPrefHolderList.Add(PlayerPrefHolderList[i]);
                     }
-                    PlayerPrefHolderList[i].isValueFounded = true;
+                    PlayerPrefHolderList[i].InSearch = FoundInSearch.Value;
                 }
             }
             OldSearchFilter = SearchText;
