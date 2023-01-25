@@ -34,7 +34,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
     }
 
-    internal class AdvancedPlayerPrefsSettings : ScriptableObject
+    internal class AdvancedPlayerPrefsSettings : DavanciInkSingleton<AdvancedPlayerPrefsSettings>
     {
         private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
@@ -47,7 +47,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
         [HideInInspector] public bool useDeviceKey;
-        [HideInInspector] public DebugMode debugMode;
+        [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
 
         internal string GetKey()
         {

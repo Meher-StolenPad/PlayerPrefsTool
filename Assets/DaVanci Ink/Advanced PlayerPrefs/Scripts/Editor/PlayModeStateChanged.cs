@@ -17,17 +17,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private static void ResetData(PlayModeStateChange state)
         {
-            AdvancedPlayerPrefsSettings m_EncryptionSettings;
             switch (state)
             {
                 case PlayModeStateChange.ExitingPlayMode:
 
-                    if (AdvancedPlayerPrefs.TryGetEncryptionSettings(out m_EncryptionSettings))
-                        m_EncryptionSettings.GetOldKeys();
+                    if (AdvancedPlayerPrefsSettings.Instance != null)
+                        AdvancedPlayerPrefsSettings.Instance.GetOldKeys();
                     break;
                 case PlayModeStateChange.ExitingEditMode:
-                    if (AdvancedPlayerPrefs.TryGetEncryptionSettings(out m_EncryptionSettings))
-                        m_EncryptionSettings.SaveOldKeys();
+                    if (AdvancedPlayerPrefsSettings.Instance != null)
+                        AdvancedPlayerPrefsSettings.Instance.SaveOldKeys();
                     break;
             }
         }

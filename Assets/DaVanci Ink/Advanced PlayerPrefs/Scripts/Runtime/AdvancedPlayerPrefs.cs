@@ -40,7 +40,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         ArrayFloat,
         ArrayString,
         ArrayDouble,
-        ArrayLong,  
+        ArrayLong,
         ArrayBool,
         ArrayByte,
         ArrayVector3,
@@ -81,30 +81,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     public static class AdvancedPlayerPrefs
     {
-        static AdvancedPlayerPrefs()
-        {
-            TryLoadSettings();
-        }
         #region Private Variables
         private static string numberPattern = " ({0})";
-        private static AdvancedPlayerPrefsSettings _APPsSettings;
-
-        internal static AdvancedPlayerPrefsSettings APPsSettings
-        {
-            get
-            {
-                if (_APPsSettings == null && !isInitialzed)
-                {
-                   return TryGetSettings();
-                }
-                return _APPsSettings;
-            }
-            set
-            {
-                _APPsSettings = value;
-            }
-        }
-        private static bool isInitialzed = false;
+            
         #endregion
 
         #region Editor Region
@@ -113,7 +92,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             TryLoadSettings();
 
-            string path = AssetDatabase.GetAssetPath(APPsSettings);
+            string path = AssetDatabase.GetAssetPath(AdvancedPlayerPrefsSettings.Instance);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -122,7 +101,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             else
             {
                 if (select)
-                    Selection.objects = new UnityEngine.Object[] { APPsSettings };
+                    Selection.objects = new UnityEngine.Object[] { AdvancedPlayerPrefsSettings.Instance };
                 return true;
             }
         }
@@ -135,59 +114,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Directory.CreateDirectory(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath);
             }
             AssetDatabase.CreateAsset(en, AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath + AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsFileName);
-            APPsSettings = en;
-        }
-        internal static bool TryGetEncryptionSettings(out AdvancedPlayerPrefsSettings encryptionSettings)
-        {
-            bool returnValue = false;
-
-            returnValue = TryLoadSettings();
-            encryptionSettings = APPsSettings;
-            return returnValue;
+            AdvancedPlayerPrefsSettings.Reload();
         }
 #endif
         #endregion
 
         #region Initialization Region
-        private static void Init()
-        {
-            if (isInitialzed) return;
-
-            if (!APPsSettings)
-            {
-                if (TryLoadSettings())
-                {
-                    APPsSettings.CheckKey();
-                }
-            }
-            isInitialzed = true;
-        }
+      
         private static bool TryLoadSettings()
         {
-            if (APPsSettings == null)
-            {
-                APPsSettings = Resources.Load<AdvancedPlayerPrefsSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
-                if (APPsSettings == null)
-                {
-                    DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
-                    return false;
-                }
-                return true;
-            }
+            if (AdvancedPlayerPrefsSettings.Instance == null) return false;
             return true;
-        }
-        private static AdvancedPlayerPrefsSettings TryGetSettings()
-        {
-            isInitialzed = true;
-
-            _APPsSettings = Resources.Load<AdvancedPlayerPrefsSettings>(AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsResourcesPath);
-            if (_APPsSettings == null)
-            {
-                DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
-                return null;
-            }
-
-            return _APPsSettings;
         }
         #endregion
 
@@ -262,7 +199,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return GetCosutomTypeValue<double>(key, defaultValue);
         }
         public static long Getlong(string key, long defaultValue = long.MinValue)
-        {   
+        {
             return GetCosutomTypeValue<long>(key, defaultValue);
         }
         public static Vector2Int GetVector2Int(string key, Vector2Int defaultValue)
@@ -409,6 +346,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetInt(key, value);
             }
+            DavanciDebug.Log("Set Int : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetFloat(string key, float value, bool useEncryption = false)
         {
@@ -435,6 +373,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetFloat(key, value);
             }
+            DavanciDebug.Log("Set Float : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetString(string key, string value, bool useEncryption = false)
         {
@@ -461,6 +400,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, value);
             }
+            DavanciDebug.Log("Set String : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector3(string key, Vector3 _value, bool useEncryption = false)
         {
@@ -487,6 +427,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Vector 3 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector3Int(string key, Vector3Int _value, bool useEncryption = false)
         {
@@ -513,6 +454,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Vector 3 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetByte(string key, byte _value, bool useEncryption = false)
         {
@@ -538,6 +480,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Byte : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
         }
         public static void SetDoube(string key, double _value, bool useEncryption = false)
         {
@@ -563,9 +507,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Double : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetLong(string key, long _value, bool useEncryption = false)
-        {   
+        {
             Serialzer<long> serialzer = new Serialzer<long>();
             serialzer.type = PlayerPrefsType.Long;
             serialzer.value = _value;
@@ -588,6 +533,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Long : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetBool(string key, bool _value, bool useEncryption = false)
         {
@@ -614,6 +560,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Bool : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector2(string key, Vector2 _value, bool useEncryption = false)
         {
@@ -640,7 +587,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
-
+            DavanciDebug.Log("Set Vector 2 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector2Int(string key, Vector2Int _value, bool useEncryption = false)
         {
@@ -667,6 +614,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Vector 2 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector4(string key, Vector4 _value, bool useEncryption = false)
         {
@@ -693,6 +641,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Vector 4: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetColor(string key, Color _value, bool hdr, bool useEncryption = false)
         {
@@ -729,6 +678,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set Color: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetDateTime(string key, DateTime _value, bool useEncryption = false)
         {
@@ -756,6 +706,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            DavanciDebug.Log("Set DateTime: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, int[] _value, bool useEncryption = false)
         {
@@ -774,6 +725,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set int Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
@@ -794,6 +746,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set int List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
         {
@@ -814,6 +767,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+
+            DavanciDebug.Log("Set float Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
@@ -834,6 +789,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set float list : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, string[] _value, bool useEncryption = false)
         {
@@ -853,6 +809,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set string Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<string> _value, bool useEncryption = false)
         {
@@ -873,6 +830,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set string List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
         {
@@ -894,6 +852,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Bool array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
@@ -914,6 +873,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Bool List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
         {
@@ -934,6 +894,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Byte Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
@@ -954,6 +915,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Byte List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
         {
@@ -974,6 +936,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Double Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
@@ -994,6 +957,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Double List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, long[] _value, bool useEncryption = false)
         {
@@ -1014,6 +978,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Long Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<long> _value, bool useEncryption = false)
         {
@@ -1034,6 +999,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Long List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
         {
@@ -1053,7 +1019,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-        }   
+            DavanciDebug.Log("Set Vector3 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+        }
         public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
             Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>();
@@ -1073,6 +1040,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector3 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
         {
@@ -1092,6 +1060,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector3 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
@@ -1112,6 +1081,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector3 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
         {
@@ -1131,6 +1101,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector2 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
         {
@@ -1151,6 +1122,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector2 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
         {
@@ -1170,6 +1142,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector2 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
         {
@@ -1190,6 +1163,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector2 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
         {
@@ -1209,6 +1183,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector4 Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
         {
@@ -1229,6 +1204,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            DavanciDebug.Log("Set Vector4 List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         #endregion
 
@@ -1415,7 +1391,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static long StringToLong(string s)
         {
-            return long.Parse(s); 
+            return long.Parse(s);
         }
         internal static bool StringToBool(string s)
         {
@@ -1632,8 +1608,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             foreach (var item in matches)
             {
                 string t = item.ToString();
-                t = t.Remove(0,1);
-                t = t.Remove(t.Length-1,1);
+                t = t.Remove(0, 1);
+                t = t.Remove(t.Length - 1, 1);
                 returnlist.Add(t);
             }
             outVector3 = returnlist.ToArray();
@@ -1672,7 +1648,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     byte t = byte.Parse(item);
                     returnlist.Add(t);
                 }
-               
+
             }
             outVector3 = returnlist.ToArray();
             return outVector3;
@@ -1848,9 +1824,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #region Encryption Region
         internal static bool TryEncryption(string inputData, out string _result)
         {
-            Init();
-
-            if (APPsSettings == null)
+            if (AdvancedPlayerPrefsSettings.Instance == null)
             {
                 _result = inputData;
                 return false;
@@ -1859,8 +1833,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
             AEScryptoProvider.BlockSize = 128;
             AEScryptoProvider.KeySize = 256;
-            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(APPsSettings.GetKey());
-            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(APPsSettings.Getiv());
+            AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(AdvancedPlayerPrefsSettings.Instance.GetKey());
+            AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(AdvancedPlayerPrefsSettings.Instance.Getiv());
             AEScryptoProvider.Mode = CipherMode.CBC;
             AEScryptoProvider.Padding = PaddingMode.PKCS7;
 
@@ -1873,9 +1847,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static string Decryption(string inputData)
         {
-            Init();
             string returnstring = inputData;
-            if (APPsSettings == null)
+            if (AdvancedPlayerPrefsSettings.Instance == null)
             {
                 return returnstring;
             }
@@ -1884,8 +1857,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 AesCryptoServiceProvider AEScryptoProvider = new AesCryptoServiceProvider();
                 AEScryptoProvider.BlockSize = 128;
                 AEScryptoProvider.KeySize = 256;
-                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(APPsSettings.GetKey());
-                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(APPsSettings.Getiv());
+                AEScryptoProvider.Key = ASCIIEncoding.ASCII.GetBytes(AdvancedPlayerPrefsSettings.Instance.GetKey());
+                AEScryptoProvider.IV = ASCIIEncoding.ASCII.GetBytes(AdvancedPlayerPrefsSettings.Instance.Getiv());
                 AEScryptoProvider.Mode = CipherMode.CBC;
                 AEScryptoProvider.Padding = PaddingMode.PKCS7;
 

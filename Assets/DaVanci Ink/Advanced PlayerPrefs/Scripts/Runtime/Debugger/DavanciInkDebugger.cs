@@ -9,8 +9,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal static void Log(string message, Color color)
         {
-            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
-                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
+            CheckNewSettings();
 
             switch (dm)
             {
@@ -24,11 +23,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
             }
         }
+
+        private static void CheckNewSettings()
+        {
+            if (AdvancedPlayerPrefsSettings.Instance != null && dm != AdvancedPlayerPrefsSettings.Instance.debugMode)
+                dm = AdvancedPlayerPrefsSettings.Instance.debugMode;
+        }
+
         public static void Warning(string message)
         {
-            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
-                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
-
+            CheckNewSettings();
             switch (dm)
             {
                 case DebugMode.EditorOnly:
@@ -43,9 +47,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void Error(string message)
         {
-            if (AdvancedPlayerPrefs.APPsSettings != null && dm != AdvancedPlayerPrefs.APPsSettings.debugMode)
-                dm = AdvancedPlayerPrefs.APPsSettings.debugMode;
-
+            CheckNewSettings();
             switch (dm)
             {
                 case DebugMode.EditorOnly:
