@@ -801,14 +801,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             EditorGUILayout.Space(1);
 
-            if (GUILayout.Button("Select Settings"))
+            if (GUILayout.Button(EncryptionSettingsFounded ? "Select Settings" : "Create Settings"))
             {
                 EncryptionSettingsFounded = AdvancedPlayerPrefs.SelectSettings();
                 if (!EncryptionSettingsFounded)
                 {
                     int dialogResult = EditorUtility.DisplayDialogComplex(
-            "No Encryption Settings founded !",
-            "Do you want to create an encryption settings file ?",
+            "No Davanced Playerprefs Settings founded !",
+            "Do you want to create a settings file ?",
             "Yes", "Don't Create", "Cancel");
 
                     switch (dialogResult)

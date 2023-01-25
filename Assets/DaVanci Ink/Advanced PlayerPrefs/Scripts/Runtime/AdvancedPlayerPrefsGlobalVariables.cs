@@ -27,9 +27,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string DocumentationLink = "www.google.com";
         internal const string DavanciInkLink = "www.google.com";
 
-        internal const string NoEncryptionSettingsWarning = "No encryption settings Founded in the project ! Prefs will be saved without encryption." +
+        internal const string NoSettingsWarning = "No Adavanced Player prefs settings Founded in the project ! Prefs will be saved and loaded without encryption." +
+           "Check the Advanced Player Prefs Setup Panel,or the Adavanced Player prefs tool to create settings file.";
+        internal const string NoEncryptionSettingsWarning = "No Adavanced Player prefs settings Founded in the project ! Prefs will be saved without encryption." +
             "Check the Advanced Player Prefs Setup Panel.";
-
+        internal const string NoDecryptionSettingsWarning = "No Adavanced Player prefs settings Founded in the project ! Prefs will be loaded without decryption." +
+            "Check the Advanced Player Prefs Setup Panel.";
         internal const  string EncryptionSettingsPath = "Assets/Resources/AdvancedPlayerPrefs/";
         internal const  string EncryptionSettingsResourcesPath = "AdvancedPlayerPrefs/Advanced Player Prefs Settings";
         internal const  string EncryptionSettingsFileName = "Advanced Player Prefs Settings.asset";

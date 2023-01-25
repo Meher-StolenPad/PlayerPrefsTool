@@ -83,9 +83,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         #region Private Variables
         private static string numberPattern = " ({0})";
-            
+        private static bool showEncryptionWarning;
+        private static bool showDecryptionWarning;
         #endregion
-
+        //DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
         #region Editor Region
 #if UNITY_EDITOR
         internal static bool SelectSettings(bool select = true)
@@ -96,6 +97,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (string.IsNullOrEmpty(path))
             {
+                if (!select)
+                    DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoSettingsWarning);
                 return false;
             }
             else
@@ -120,7 +123,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Initialization Region
-      
+
         private static bool TryLoadSettings()
         {
             if (AdvancedPlayerPrefsSettings.Instance == null) return false;
@@ -1826,6 +1829,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             if (AdvancedPlayerPrefsSettings.Instance == null)
             {
+                if (!showEncryptionWarning)
+                {
+                    DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
+                    showEncryptionWarning = true;
+                }
                 _result = inputData;
                 return false;
             }
@@ -1850,6 +1858,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string returnstring = inputData;
             if (AdvancedPlayerPrefsSettings.Instance == null)
             {
+                if (!showDecryptionWarning)
+                {
+                    DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoDecryptionSettingsWarning);
+                    showDecryptionWarning = true;
+                }
                 return returnstring;
             }
             try
