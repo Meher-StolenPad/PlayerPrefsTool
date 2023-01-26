@@ -13,10 +13,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     internal enum SavePathType : int
     {
         Project = 0,
-        Assets = 1,
-        Persistant =2,
-        Temporary =3,
-        Absolute =4
+        Absolute =1
     }
     internal static class AdvancedPlayerPrefsExportManager
     {
@@ -30,15 +27,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 case SavePathType.Project:
                     path= Application.dataPath.Replace("/Assets", "");
-                    break;
-                case SavePathType.Assets:
-                    path = Application.dataPath;
-                    break;
-                case SavePathType.Persistant:
-                    path = Application.persistentDataPath;
-                    break;
-                case SavePathType.Temporary:
-                    path = Application.temporaryCachePath;
                     break;
             }
             return path;
