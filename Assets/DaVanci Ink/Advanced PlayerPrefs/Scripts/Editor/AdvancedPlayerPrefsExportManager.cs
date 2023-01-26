@@ -79,11 +79,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var item in PlayerPrefHolderList)
             {
-                ExportSerialzer toExport = new ExportSerialzer();
-                toExport.type = item.type;
-                toExport.key = item.Key;
-                toExport.value = item.Value.ToString();
-                toExport.isEncrypted = item.isEncrypted;
+                ExportSerialzer toExport = new ExportSerialzer
+                {
+                    type = item.type,
+                    key = item.Key,
+                    value = item.Value.ToString(),
+                    isEncrypted = item.isEncrypted
+                };
                 exportSerialzerHolder.exportlist.Add(toExport);
             }
             string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);

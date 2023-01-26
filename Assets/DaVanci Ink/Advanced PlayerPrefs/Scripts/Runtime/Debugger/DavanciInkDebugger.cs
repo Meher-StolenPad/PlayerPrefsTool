@@ -12,7 +12,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         static DavanciDebug()
         {
-            bool t = IsProMode;
+            _ = IsProMode;
         }
         internal static bool IsProMode
         {

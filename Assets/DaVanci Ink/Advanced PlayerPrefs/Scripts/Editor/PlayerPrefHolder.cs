@@ -278,7 +278,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             PlayerPrefs.DeleteKey(Key);
         }
-        public bool isEqual()
+        public bool IsEqual()
         {
             bool returnValue = false;
 
@@ -301,11 +301,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     {
                         var ic = AdvancedPlayerPrefs.StringToFloat(Value.ToString());
                         var it = AdvancedPlayerPrefs.StringToFloat(TempValue.ToString());
-                        returnValue = ic == it;
+                        returnValue = Mathf.Approximately(ic,it);
                     }
                     else
                     {
-                        returnValue = (float)TempValue == (float)Value;
+                        returnValue = float.Parse((TempValue.ToString())) == float.Parse((Value.ToString()));
                     }
                     break;
                 case PlayerPrefsType.String:

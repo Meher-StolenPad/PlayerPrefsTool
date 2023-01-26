@@ -21,7 +21,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
 
         private List<PlayerPrefHolder> PlayerPrefHolderList = new List<PlayerPrefHolder>();
-        private List<PlayerPrefHolder> FiltredPlayerPrefHolderList = new List<PlayerPrefHolder>();
+        private readonly List<PlayerPrefHolder> FiltredPlayerPrefHolderList = new List<PlayerPrefHolder>();
 
         private SortType PlayerPrefsSortType;
 
@@ -106,7 +106,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public SerializedObject so;
 
         private bool UseEncryption;
-        private bool DisplayAddPlayerPrefs;
+        private readonly bool DisplayAddPlayerPrefs;
         private bool DisplayExportPlayerPrefs;
         private string tempExportPath;
         private string ImportCompanyName;
@@ -152,8 +152,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void OnDisable()
         {
-            if (so != null)
-                so.Dispose();
+            so?.Dispose();
         }
         #endregion
 
@@ -245,7 +244,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void DrawApplyAll()
         {
             float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
-            FullbuttonWidth = (FullbuttonWidth / 7);
+            FullbuttonWidth /= 7;
 
             if (GUILayout.Button(new GUIContent(ApplyAllButtonIcon, "Save all Changes"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
             {
@@ -260,7 +259,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void DrawRevertAll()
         {
             float FullbuttonWidth = (EditorGUIUtility.currentViewWidth) / 2f;
-            FullbuttonWidth = (FullbuttonWidth / 7);
+            FullbuttonWidth /= 7;
 
             if (GUILayout.Button(new GUIContent(RevertButtonIcon, "Revert all changes"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
             {
@@ -273,16 +272,20 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void DrawTitles()
         {
-            var  style = new GUIStyle( EditorStyles.toolbar);
-            style.fontSize = 12;
-            style.fontStyle = FontStyle.Bold;
-            style.alignment = TextAnchor.MiddleCenter;
+            var style = new GUIStyle(EditorStyles.toolbar)
+            {
+                fontSize = 12,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
             var oldBackgroundColor = GUI.backgroundColor;
 
-            GUIStyle styletoolbar = new GUIStyle( EditorStyles.toolbarDropDown);
-            styletoolbar.fontSize = 12;
-            styletoolbar.fontStyle = FontStyle.Bold;
-            styletoolbar.alignment = TextAnchor.MiddleCenter;
+            GUIStyle styletoolbar = new GUIStyle(EditorStyles.toolbarDropDown)
+            {
+                fontSize = 12,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
 
             GUI.backgroundColor = new Color(0.56f, 0.56f, 0.56f);
             GUILayout.BeginVertical();
@@ -322,7 +325,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProEncryptedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalEncryptedTextColor; //Color.magenta;
             }
-            if (!playerPrefHolder.isEqual())
+            if (!playerPrefHolder.IsEqual())
             {
                 style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProChangedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalChangedTextColor;
                 style.fontStyle = FontStyle.Bold;
@@ -541,7 +544,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 style2.fontStyle = FontStyle.Bold;
                 style2.alignment = TextAnchor.MiddleCenter;
 
-                GUILayout.Label(_playerPrefsHolderList[i].type.ToString(), style2, GUILayout.Width(FullWindowWidth * 1.5f));
+                GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[ (int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
 
                 GUI.backgroundColor = Color.green;
                 if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
@@ -1148,9 +1151,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
 
-                            ReturnType returnValues = null;
 
-                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out returnValues, savedValue.ToString());
+                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
 
                             pair.type = returnValues.PlayerPrefsType;
                             pair.isEncrypted = returnValues.IsEncrypted;

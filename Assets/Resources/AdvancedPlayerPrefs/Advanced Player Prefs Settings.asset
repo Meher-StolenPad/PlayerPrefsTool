@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd43ad784555004093e2e51165c1481, type: 3}
   m_Name: Advanced Player Prefs Settings
   m_EditorClassIdentifier: 
-  Key: J5ddq99RUNJawf2QTGfQhtOjaSZ87h5g
-  Iv: t9lWGXbFwmuqsxm1
-  SavedKey: J5Ztddo9q9jl9RgWUNwGJaTXwfsb2QoFTGPwfQAmhtCuOjmqaShsZ8Mx7hHm5gM1
+  Key: qSTNf17ckFhXZ7RCL730TA9pP9u3LoVP
+  Iv: L63Y7RBcJpC4MjHe
+  SavedKey: qSgLTNu6f1j37cLYkFH7hXnRZ72BRCucL7OJ30PpTA2C9pS4P9nMu3qjLocHVPze
   useDeviceKey: 1
   debugMode: 1

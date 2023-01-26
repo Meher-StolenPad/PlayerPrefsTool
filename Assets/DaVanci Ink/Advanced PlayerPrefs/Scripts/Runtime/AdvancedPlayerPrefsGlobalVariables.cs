@@ -87,6 +87,40 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Collections/Vectors/Vector2 Int",
             "Collections/Vectors/Vector4"
         };
+        internal static readonly string[] TypeList = new string[]
+       {    
+            "Int",
+            "Float",
+            "String",
+
+            "Byte",
+            "Bool",
+            "Double",
+            "Long",
+
+            "VVector 2",
+            "Vector 2 Int",
+            "Vector 3",
+            "Vector 3 Int",
+            "VVector 4",
+
+            "Color",
+            "HDR Color",
+            "DateTime",
+
+            "Int[]",
+            "Float[]",
+            "String[]",
+            "Double[]",
+            "Long[]",
+            "Bool[]",
+            "Byte[]",
+            "Vector3[]",
+            "Vector3Int[]",
+            "Vector2[]",
+            "Vector2Int[]",
+            "Vector4[]"
+       };
 
         internal static readonly Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static readonly Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);

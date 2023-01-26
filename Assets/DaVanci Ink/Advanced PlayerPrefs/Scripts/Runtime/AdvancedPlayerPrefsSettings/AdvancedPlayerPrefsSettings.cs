@@ -38,10 +38,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         internal override void OnInitialize()
         {
-            if (Application.isPlaying)
-                CheckKey();
+            CheckKey();
         }
-        private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
+        private readonly char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;
         public string Iv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
