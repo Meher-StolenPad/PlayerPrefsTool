@@ -18,8 +18,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string CharsKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         internal const string InitialKey = "J5ddq99RUNJawf2QTGfQhtOjaSZ87h5g";
         internal const string InitialIv = "t9lWGXbFwmuqsxm1";
-        internal const string InitialSavedKey = "J5Ztddo9q9jl9RgWUNwGJaTXwfsb2QoFTGPwfQAmhtCuOjmqaShsZ8Mx7hHm5gM1";
-        internal const string APPsCSDK = "APPsCSDK";
 
         internal const string GetStartedLink = "www.google.com";
         internal const string WebsiteLink = "www.google.com";
@@ -55,37 +53,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal static readonly string[] EnumList = new string[]
         {
-            "Legacy/Int",
-            "Legacy/Float",
-            "Legacy/String",
-
-            "Primitive/Byte",
-            "Primitive/Bool",
-            "Primitive/Double",
-            "Primitive/Long",
-
-            "Vectors/Vector 2",
-            "Vectors/Vector 2 Int",
-            "Vectors/Vector 3",
-            "Vectors/Vector 3 Int",
-            "Vectors/Vector 4",
-
-            "Colors/Color",
-            "Colors/HDRColor",
-            "DateTime",
-
-            "Collections/Primitives/Int",
-            "Collections/Primitives/Float",
-            "Collections/Primitives/String",
-            "Collections/Primitives/Double",
-            "Collections/Primitives/Long",
-            "Collections/Primitives/Bool",
-            "Collections/Primitives/Byte",
-            "Collections/Vectors/Vector3",
-            "Collections/Vectors/Vector3 Int",
-            "Collections/Vectors/Vector2",
-            "Collections/Vectors/Vector2 Int",
-            "Collections/Vectors/Vector4"
+            "Int",
+            "Float",
+            "String"
         };
 
         internal static readonly Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);

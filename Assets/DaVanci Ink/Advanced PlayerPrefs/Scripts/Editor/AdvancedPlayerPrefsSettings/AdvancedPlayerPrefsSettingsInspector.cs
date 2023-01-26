@@ -20,16 +20,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             get => EditorPrefs.GetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
             set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
         }
-        private bool UseDeviceKey
-        {
-            get => APPSettings.useDeviceKey;
-            set
-            {
-                APPSettings.useDeviceKey = value;
-                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
-            }
-        }
-        private DebugMode _DebugMode
+       
+        private DebugMode DebugMode
         {
             get => APPSettings.debugMode;    
             set
@@ -43,8 +35,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private bool ShowErrorText => Key.Length == 32;
         private GUIStyle Textstyle;
         private GUIStyle Intstyle;  
-        private string LogError = "Key must be in 32 bits and Iv must be in 16 bits";
-        private bool ShowKeys;
+        private readonly string LogError = "Key must be in 32 bits and Iv must be in 16 bits";
+        private readonly bool ShowKeys;
 
         private void OnEnable()
         {
@@ -57,7 +49,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Textstyle.normal.textColor = Color.red;
             Intstyle = new GUIStyle(EditorStyles.miniLabel);
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
-            float newbuttonWidth = (EditorGUIUtility.currentViewWidth - 40) / 3f;
+            float newbuttonWidth = (EditorGUIUtility.currentViewWidth - 40) / 2f;
 
             GUI.enabled = false;
             base.OnInspectorGUI();
@@ -104,11 +96,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 APPSettings.ExportKeys();
             }
             GUILayout.FlexibleSpace();
-
-            if (GUILayout.Button("Generate Key", GUILayout.Width(newbuttonWidth)))
-            {
-                APPSettings.SetSavedKeyFromKeys();
-            }
+          
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
@@ -202,18 +190,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             DrawHorizontalLine(Color.grey);
             EditorGUILayout.Space(5);
-            _DebugMode = (DebugMode)EditorGUILayout.EnumPopup("Debug Mode",_DebugMode, GUILayout.Width(buttonWidth*1.5f));
+            DebugMode = (DebugMode)EditorGUILayout.EnumPopup("Debug Mode",DebugMode, GUILayout.Width(buttonWidth*1.5f));
             EditorGUILayout.Space(5);
 
             DrawHorizontalLine(Color.grey);
-
-            DisplayRuntimeSettings = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayRuntimeSettings, "Runtime Settings");
-
-            if (DisplayRuntimeSettings)
-            {
-                UseDeviceKey = EditorGUILayout.ToggleLeft("Use Device Key", UseDeviceKey, GUILayout.Width(buttonWidth * 4f));
-               
-            }
         }
        
         private void DrawHorizontalLine(Color color)

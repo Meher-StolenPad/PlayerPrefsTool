@@ -36,22 +36,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     internal class AdvancedPlayerPrefsSettings : DavanciInkSingleton<AdvancedPlayerPrefsSettings>
     {
-        internal override void OnInitialize()
-        {
-            if (Application.isPlaying)
-                CheckKey();
-        }
-        private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
+        private readonly char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;
         public string Iv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
-        public string SavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
         private string OldKey = AdvancedPlayerPrefsGlobalVariables.InitialKey;
         private string OldIv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
-        private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
-        [HideInInspector] public bool useDeviceKey;
         [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
 
         internal string GetKey()
@@ -62,38 +54,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return Iv;
         }
-        internal void GetKeysFromSavedKey()
-        {
-            Key = String.Empty;
-            Iv = String.Empty;
-            for (int i = 0; i < SavedKey.Length; i += 4)
-            {
-                Key += SavedKey.Substring(i, 2);
-                Iv += SavedKey.Substring(i + 3, 1);
-            }
-        }
-        internal void SaveKey()
-        {
-            SetSavedKeyFromKeys();
-            AdvancedPlayerPrefs.SetAPPsCSDK(SavedKey);
-        }
-        internal void SetSavedKeyFromKeys()
-        {
-            SavedKey = string.Empty;
-            string cryptoText = CreateKey(16);
-
-            for (int i = 0; i < Iv.Length; i++)
-            {
-                SavedKey += Key.Substring(i * 2, 2);
-                SavedKey += cryptoText[i];
-                SavedKey += Iv[i];
-            }
-        }
+      
+       
         internal void RefreshKeys()
         {
             Key = CreateKey(32);
             Iv = CreateKey(16);
-            SetSavedKeyFromKeys();
             DavanciDebug.Log("Keys Refreshed !", Color.cyan);
         }
         internal void SetKeys(string _key)
@@ -114,40 +80,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return result.ToString();
         }
-
-        internal void CheckKey()
-        {
-            if (useDeviceKey)
-            {
-                if (AdvancedPlayerPrefs.HasAPPsCSDK())
-                {
-                    //load old saved key
-                    DavanciDebug.Log("Load Device Key!", Color.grey);
-                    SavedKey = AdvancedPlayerPrefs.GetAPPsCSDK();
-                    GetKeysFromSavedKey();
-                }
-                else
-                {
-                    DavanciDebug.Log("Device Key Created !", Color.grey);
-                    // create new key and save it
-                    RefreshKeys();
-                    SaveKey();
-                }
-            }
-        }
-
 #if UNITY_EDITOR
         public void SaveOldKeys()
         {
             OldKey = Key;
             OldIv = Iv;
-            OldSavedKey = SavedKey;
         }
         public void GetOldKeys()
         {
             Key = OldKey;
             Iv = OldIv;
-            SavedKey = OldSavedKey;
         }
 
         internal void ExportKeys()
