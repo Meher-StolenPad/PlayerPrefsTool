@@ -27,7 +27,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
         }
 
-        public KeysExporter(string key,string iv)
+        public KeysExporter(string key, string iv)
         {
             Key = key;
             Iv = iv;
@@ -38,7 +38,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         internal override void OnInitialize()
         {
-            CheckKey();
+            if (Application.isPlaying)
+                CheckKey();
         }
         private char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
@@ -79,7 +80,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal void SetSavedKeyFromKeys()
         {
             SavedKey = string.Empty;
-            string cryptoText=  CreateKey(16);
+            string cryptoText = CreateKey(16);
 
             for (int i = 0; i < Iv.Length; i++)
             {
@@ -155,10 +156,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void Export()
         {
-            var backupstring = AdvancedPlayerPrefsGlobalVariables.GetPlayerPrefsSpecificText()+  CreateBackup();
-           
+            var backupstring = AdvancedPlayerPrefsGlobalVariables.GetPlayerPrefsSpecificText() + CreateBackup();
+
             string path = EditorUtility.OpenFolderPanel(AdvancedPlayerPrefsGlobalVariables.KeyOpenPanelTitle, "", AdvancedPlayerPrefsGlobalVariables.KeyBackupFileName);
-            path += "/"+AdvancedPlayerPrefsGlobalVariables.KeyBackupFileName+".txt";
+            path += "/" + AdvancedPlayerPrefsGlobalVariables.KeyBackupFileName + ".txt";
 
             if (!File.Exists(path))
             {
@@ -173,7 +174,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private string CreateBackup()
         {
-            KeysExporter keysExporter = new KeysExporter(Key,Iv);
+            KeysExporter keysExporter = new KeysExporter(Key, Iv);
             string jsonString = JsonUtility.ToJson(keysExporter, true);
             return jsonString;
         }
@@ -194,17 +195,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
                 KeysExporter KeysExporter = JsonUtility.FromJson<KeysExporter>(newString);
-                DavanciDebug.Log("Keys Imported from < " +Path.GetFileName(path)+" >", Color.green);
+                DavanciDebug.Log("Keys Imported from < " + Path.GetFileName(path) + " >", Color.green);
                 return KeysExporter.Key;
             }
             catch (Exception e)
             {
                 string ex = e.ToString();
                 DavanciDebug.Error(ex.ToString());
-                return  string.Empty;
+                return string.Empty;
             }
 
-             
+
         }
 #endif
     }
