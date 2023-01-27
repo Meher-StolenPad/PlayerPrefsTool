@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/DaVanci Ink/Advanced PlayerPrefs/Scenes/Demo.unity
+    path: Assets/DaVanci Ink/Advanced PlayerPrefs/Example/Scenes/Demo.unity
     guid: 33833bbcf549b49449ab937a5a4a8062
   m_configObjects: {}

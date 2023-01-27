@@ -214,114 +214,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             return GetCosutomTypeValue<Vector3Int>(key, defaultValue);
         }
-        public static int[] GetArray(string key, int[] defaultValue = null)
-        {
-            var effectiveEnd = defaultValue ?? new int[0];
-            return GetCosutomTypeValue<int[]>(key, effectiveEnd);
+        public static T[] GetArray<T>(string key,T[] defaultValue = null)
+        {   
+            var effectiveEnd = defaultValue ?? new T[0];
+            return GetCosutomTypeValue<T[]>(key, effectiveEnd);   
         }
-        public static List<int> GetList(string key, List<int> defaultValue)
+        public static List<T> GetList<T>(string key, List<T> defaultValue = null)
         {
-            var t = GetCosutomTypeValue<int[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static float[] GetArray(string key, float[] defaultValue)
-        {
-            return GetCosutomTypeValue<float[]>(key, defaultValue);
-        }
-        public static List<float> GetList(string key, List<float> defaultValue)
-        {
-            var t = GetCosutomTypeValue<float[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static string[] GetArray(string key, string[] defaultValue)
-        {
-            return GetCosutomTypeValue<string[]>(key, defaultValue);
-        }
-        public static List<string> GetList(string key, List<string> defaultValue)
-        {
-            var t = GetCosutomTypeValue<string[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static bool[] GetArray(string key, bool[] defaultValue)
-        {
-            return GetCosutomTypeValue<bool[]>(key, defaultValue);
-        }
-        public static List<bool> GetList(string key, List<bool> defaultValue)
-        {
-            var t = GetCosutomTypeValue<bool[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static double[] GetArray(string key, double[] defaultValue)
-        {
-            return GetCosutomTypeValue<double[]>(key, defaultValue);
-        }
-        public static List<double> GetList(string key, List<double> defaultValue)
-        {
-            var t = GetCosutomTypeValue<double[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static long[] GetArray(string key, long[] defaultValue)
-        {
-            return GetCosutomTypeValue<long[]>(key, defaultValue);
-        }
-        public static List<long> GetList(string key, List<long> defaultValue)
-        {
-            var t = GetCosutomTypeValue<long[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static byte[] GetArray(string key, byte[] defaultValue)
-        {
-            return GetCosutomTypeValue<byte[]>(key, defaultValue);
-        }
-        public static List<byte> GetList(string key, List<byte> defaultValue)
-        {
-            var t = GetCosutomTypeValue<byte[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static Vector3[] GetArray(string key, Vector3[] defaultValue)
-        {
-            return GetCosutomTypeValue<Vector3[]>(key, defaultValue);
-        }
-        public static List<Vector3> GetList(string key, List<Vector3> defaultValue)
-        {
-            var t = GetCosutomTypeValue<Vector3[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static Vector3Int[] GetArray(string key, Vector3Int[] defaultValue)
-        {
-            return GetCosutomTypeValue<Vector3Int[]>(key, defaultValue);
-        }
-        public static List<Vector3Int> GetList(string key, List<Vector3Int> defaultValue)
-        {
-            var t = GetCosutomTypeValue<Vector3Int[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static Vector2[] GetArray(string key, Vector2[] defaultValue)
-        {
-            return GetCosutomTypeValue<Vector2[]>(key, defaultValue);
-        }
-        public static List<Vector2> GetList(string key, List<Vector2> defaultValue)
-        {
-            var t = GetCosutomTypeValue<Vector2[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static Vector2Int[] GetArray(string key, Vector2Int[] defaultValue)
-        {
-            return GetCosutomTypeValue<Vector2Int[]>(key, defaultValue);
-        }
-        public static List<Vector2Int> GetList(string key, List<Vector2Int> defaultValue)
-        {
-            var t = GetCosutomTypeValue<Vector2Int[]>(key, defaultValue.ToArray());
-            return t.ToList();
-        }
-        public static Vector4[] GetArray(string key, Vector4[] defaultValue)
-        {
-            return GetCosutomTypeValue<Vector4[]>(key, defaultValue);
-        }
-        public static List<Vector4> GetList(string key, List<Vector4> defaultValue)
-        {
-            var t = GetCosutomTypeValue<Vector4[]>(key, defaultValue.ToArray());
-            return t.ToList();
+            var effectiveEnd = defaultValue ?? new List<T>(0);
+            return GetCosutomTypeValue<List<T>>(key, effectiveEnd);
         }
         #endregion
 
