@@ -649,6 +649,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 isEncrypted = useEncryption
             };
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set int Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -659,7 +661,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set int Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
@@ -671,6 +672,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set int List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -682,7 +684,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set int List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
         {
@@ -694,6 +695,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set float Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -706,7 +708,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             PlayerPrefs.SetString(key, jsonString);
 
-            DavanciDebug.Log("Set float Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
@@ -718,6 +719,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set float list : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -729,7 +731,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set float list : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, string[] _value, bool useEncryption = false)
         {
@@ -741,6 +742,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set string Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -751,7 +754,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set string Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<string> _value, bool useEncryption = false)
         {
@@ -763,6 +765,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set string List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -774,7 +777,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set string List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
         {
@@ -786,6 +788,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Bool array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -798,7 +801,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Bool array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
@@ -810,6 +812,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Bool List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -821,7 +824,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Bool List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
         {
@@ -833,6 +835,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Byte Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -844,7 +847,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Byte Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
@@ -856,6 +858,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Byte List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -867,7 +870,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Byte List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
         {
@@ -879,6 +881,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Double Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -890,7 +893,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Double Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
@@ -902,6 +904,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Double List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -913,7 +916,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Double List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, long[] _value, bool useEncryption = false)
         {
@@ -925,6 +927,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Long Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -936,7 +939,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Long Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<long> _value, bool useEncryption = false)
         {
@@ -948,6 +950,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Long List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -959,7 +962,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Long List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
         {
@@ -971,6 +973,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector3 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -981,7 +985,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector3 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
@@ -993,6 +996,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector3 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -1004,7 +1008,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector3 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
         {
@@ -1016,6 +1019,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector3 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1026,7 +1031,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector3 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
@@ -1038,6 +1042,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector3 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -1049,7 +1054,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector3 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
         {
@@ -1061,6 +1065,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector2 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1071,7 +1077,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector2 Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
         {
@@ -1084,6 +1089,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
+            DavanciDebug.Log("Set Vector2 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1094,7 +1101,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector2 List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
         {
@@ -1106,6 +1112,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector2 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1116,7 +1124,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector2 Int Array : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
         {
@@ -1128,6 +1135,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector2 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
             if (useEncryption)
             {
@@ -1139,7 +1147,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector2 Int List : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
         {
@@ -1151,6 +1158,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             };
 
             string jsonString = JsonUtility.ToJson(serialzer);
+            DavanciDebug.Log("Set Vector4 Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1161,7 +1170,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector4 Array: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
         {
@@ -1174,6 +1182,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             string jsonString = JsonUtility.ToJson(serialzer);
 
+            DavanciDebug.Log("Set Vector4 List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+
             if (useEncryption)
             {
                 if (TryEncryption(jsonString, out string output))
@@ -1184,7 +1194,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-            DavanciDebug.Log("Set Vector4 List: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         #endregion
 

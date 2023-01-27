@@ -15,7 +15,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Name,
         Type
     }
-    internal class PlayerPrefsWindow : EditorWindow
+    public class PlayerPrefsWindow : EditorWindow
     {
         #region Private Variables
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();

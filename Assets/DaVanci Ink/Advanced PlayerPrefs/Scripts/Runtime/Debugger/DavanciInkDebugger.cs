@@ -12,13 +12,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         static DavanciDebug()
         {
-            _ = IsProMode;
+            bool t = IsProMode;
         }
         internal static bool IsProMode
         {
             get
             {
-                if(isProMode == false && !isProSet)
+                if(!isProSet)
                 {
 #if UNITY_EDITOR
                     isProMode = UnityEditor.EditorGUIUtility.isProSkin;
