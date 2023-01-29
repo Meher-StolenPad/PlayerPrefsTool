@@ -15,7 +15,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Name,
         Type
     }
-    public class PlayerPrefsWindow : EditorWindow
+    public class AdvancedPlayerPrefsTool : EditorWindow
     {
         #region Private Variables
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
@@ -50,21 +50,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private string ExportPath
         {
-            get => EditorPrefs.GetString(nameof(PlayerPrefsWindow) + "." + nameof(ExportPath));
+            get => EditorPrefs.GetString(nameof(AdvancedPlayerPrefsTool) + "." + nameof(ExportPath));
             set
             {
                 if (SavePathType == SavePathType.Absolute)
-                    EditorPrefs.SetString(nameof(PlayerPrefsWindow) + "." + nameof(ExportPath), value);
+                    EditorPrefs.SetString(nameof(AdvancedPlayerPrefsTool) + "." + nameof(ExportPath), value);
                 else
                     tempExportPath = value;
             }
         }
         private SavePathType SavePathType
         {
-            get => (SavePathType)EditorPrefs.GetInt(nameof(PlayerPrefsWindow) + "." + nameof(SavePathType), 0);
-            set => EditorPrefs.SetInt(nameof(PlayerPrefsWindow) + "." + nameof(SavePathType), (int)value);
+            get => (SavePathType)EditorPrefs.GetInt(nameof(AdvancedPlayerPrefsTool) + "." + nameof(SavePathType), 0);
+            set => EditorPrefs.SetInt(nameof(AdvancedPlayerPrefsTool) + "." + nameof(SavePathType), (int)value);
         }
-        private SavePathType oldSavePathType;
+        private SavePathType oldSavePathType = SavePathType.None;
 
         [SerializeField] string Key = "";
 
@@ -120,12 +120,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 2)]
         public static void ShowWindow()
         {
-            PlayerPrefsWindow PlayerPrefsWindow = (PlayerPrefsWindow)GetWindow(typeof(PlayerPrefsWindow));
-            PlayerPrefsWindow.titleContent = new GUIContent(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolTitle);
-            PlayerPrefsWindow.Show();
-            Vector2 minSize = PlayerPrefsWindow.minSize;
+            AdvancedPlayerPrefsTool AdvancedPlayerPrefsTool = (AdvancedPlayerPrefsTool)GetWindow(typeof(AdvancedPlayerPrefsTool));
+            AdvancedPlayerPrefsTool.titleContent = new GUIContent(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolTitle);
+            AdvancedPlayerPrefsTool.Show();
+            Vector2 minSize = AdvancedPlayerPrefsTool.minSize;
             minSize.x = 600;
-            PlayerPrefsWindow.minSize = minSize;
+            AdvancedPlayerPrefsTool.minSize = minSize;
         }
 
         private void OnEnable()
@@ -924,8 +924,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.BeginHorizontal();
 
                 GUILayout.Label("Export path", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 3));
-
-                SavePathType = (SavePathType)EditorGUILayout.EnumPopup(SavePathType, GUILayout.Width(FullWindowWidth * 3f));
+                
+                SavePathType = (SavePathType)EditorGUILayout.Popup((int)SavePathType, AdvancedPlayerPrefsGlobalVariables.PathTypeList, GUILayout.Width(FullWindowWidth * 4.5f));
 
                 GUILayout.Space(5);
                 GUI.enabled = false;

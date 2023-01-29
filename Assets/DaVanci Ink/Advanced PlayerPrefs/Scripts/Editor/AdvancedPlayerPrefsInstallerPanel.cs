@@ -92,7 +92,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(150), GUILayout.Height(40)))
             {
-                PlayerPrefsWindow.ShowWindow();
+                AdvancedPlayerPrefsTool.ShowWindow();
             }
 
 

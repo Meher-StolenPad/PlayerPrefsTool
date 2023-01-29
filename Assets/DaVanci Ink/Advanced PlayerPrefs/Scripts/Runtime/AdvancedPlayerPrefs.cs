@@ -172,7 +172,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static string GetString(string key, string defaultValue = "")
         {
-            return Decryption(PlayerPrefs.GetString(key, defaultValue));
+            return DecryptionAES(PlayerPrefs.GetString(key, defaultValue));
         }
         public static Vector2 GetVector2(string key, Vector2 defaultValue)
         {
@@ -239,7 +239,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 };
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -268,7 +268,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 };
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -297,7 +297,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -326,7 +326,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -355,7 +355,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -383,7 +383,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -412,7 +412,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -440,7 +440,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -469,7 +469,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -498,7 +498,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -527,7 +527,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(serialzer);
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -556,7 +556,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -595,7 +595,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -623,7 +623,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonConvert.SerializeObject(serialzer);
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -653,7 +653,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -676,7 +676,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -699,7 +699,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -723,7 +723,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -746,7 +746,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -769,7 +769,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -792,7 +792,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -816,7 +816,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -839,7 +839,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -862,7 +862,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -885,7 +885,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -908,7 +908,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -931,7 +931,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -954,7 +954,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -977,7 +977,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1000,7 +1000,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1023,7 +1023,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1046,7 +1046,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1069,7 +1069,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1093,7 +1093,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1116,7 +1116,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1139,7 +1139,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1162,7 +1162,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1186,7 +1186,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (useEncryption)
             {
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1202,7 +1202,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             string savedValue = PlayerPrefs.GetString(key);
 
-            string d = Decryption(savedValue);
+            string d = DecryptionAES(savedValue);
             object returnvalue;
             if (d.TryParseJson(out Serialzer<T> t))
             {
@@ -1247,7 +1247,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 // test if encrypted data
 
-                string decryptedString = Decryption(json);
+                string decryptedString = DecryptionAES(json);
 
                 if (decryptedString.TryParseJson(out Serialzer<object> data))
                 {
@@ -1298,7 +1298,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 string jsonString = JsonUtility.ToJson(serialzer);
 
-                if (TryEncryption(jsonString, out string output))
+                if (TryEncryptionAES(jsonString, out string output))
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
@@ -1801,7 +1801,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Encryption Region
-        internal static bool TryEncryption(string inputData, out string _result)
+        internal static bool TryEncryptionAES(string inputData, out string _result)
         {
             if (AdvancedPlayerPrefsSettings.Instance == null)
             {
@@ -1831,7 +1831,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             _result = Convert.ToBase64String(result);
             return true;
         }
-        internal static string Decryption(string inputData)
+        internal static string DecryptionAES(string inputData)
         {
             string returnstring = inputData;
             if (AdvancedPlayerPrefsSettings.Instance == null)
@@ -1888,5 +1888,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return GetString(AdvancedPlayerPrefsGlobalVariables.APPsCSDK, string.Empty);
         }
         #endregion
+
     }
 }

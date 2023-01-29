@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
-using static DaVanciInk.AdvancedPlayerPrefs.PlayerPrefsWindow;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -14,9 +11,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         Project = 0,
         Assets = 1,
-        Persistant =2,
-        Temporary =3,
-        Absolute =4
+        Persistant = 2,
+        Temporary = 3,
+        Absolute = 4,
+        None = 5
     }
     internal static class AdvancedPlayerPrefsExportManager
     {
@@ -29,7 +27,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             switch (m_savePathType)
             {
                 case SavePathType.Project:
-                    path= Application.dataPath.Replace("/Assets", "");
+                    path = Application.dataPath.Replace("/Assets", "");
                     break;
                 case SavePathType.Assets:
                     path = Application.dataPath;
@@ -68,7 +66,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             else
             {
-                ExportPathFile =AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
+                ExportPathFile = AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
                 File.WriteAllText(ExportPathFile, newBackupString);
             }
             DavanciDebug.Log("File Exported : " + ExportPathFile, Color.green);
@@ -91,7 +89,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             string jsonString = JsonUtility.ToJson(exportSerialzerHolder, true);
             return jsonString;
         }
-        internal static List<PlayerPrefHolder>  ReadBackupFile(string tempPath)
+        internal static List<PlayerPrefHolder> ReadBackupFile(string tempPath)
         {
             string[] filters = AdvancedPlayerPrefsGlobalVariables.OpenFolderFilters;
 
@@ -116,7 +114,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var item in exportSerialzerHolder.exportlist)
             {
-                PlayerPrefHolder ppp =ScriptableObject.CreateInstance <PlayerPrefHolder>();
+                PlayerPrefHolder ppp = ScriptableObject.CreateInstance<PlayerPrefHolder>();
                 ppp.Key = item.key;
                 ppp.TempKey = item.key;
                 ppp.type = item.type;
@@ -242,13 +240,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         ppp.TempValue = ppp.Value;
                         break;
                     case PlayerPrefsType.ArrayVector3:
-                         ppp.arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3 (item.value);
+                        ppp.arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3(item.value);
                         ppp.Value = ppp.arrayVector3;
                         ppp.BackupValues = ppp.Value;
                         ppp.TempValue = ppp.Value;
                         break;
                     case PlayerPrefsType.ArrayVector3Int:
-                        ppp.arrayVector3Int= AdvancedPlayerPrefs.StringToArrayVector3Int(item.value);
+                        ppp.arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(item.value);
                         ppp.Value = ppp.arrayVector3Int;
                         ppp.BackupValues = ppp.Value;
                         ppp.TempValue = ppp.Value;
@@ -277,7 +275,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 ppp.Save();
                 pairs.Add(ppp);
             }
-            DavanciDebug.Log(pairs.Count+" Prefs Imported from < " + Path.GetFileName(path)+">", Color.green);
+            DavanciDebug.Log(pairs.Count + " Prefs Imported from < " + Path.GetFileName(path) + ">", Color.green);
             return pairs;
             //  Refresh();
         }

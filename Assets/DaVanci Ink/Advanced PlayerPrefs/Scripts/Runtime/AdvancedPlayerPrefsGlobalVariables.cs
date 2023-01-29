@@ -121,6 +121,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Vector2Int[]",
             "Vector4[]"
        };
+        internal static readonly string[] PathTypeList = new string[]
+     {
+            "Project",
+            "Assets Folder",
+            "Persistant Data",
+            "Temporary Cache",
+            "Absolute",
+
+     };
 
         internal static readonly Color ShowAdvancedPlayerPrefsButtonColor = new Color32(255, 109, 2, 255);
         internal static readonly Color ShowAdvancedPlayerPrefsTextColor = new Color32(255, 216, 116, 255);

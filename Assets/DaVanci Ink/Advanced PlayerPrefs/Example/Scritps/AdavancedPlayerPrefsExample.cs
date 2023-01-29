@@ -23,14 +23,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         [SerializeField] private Image NoAdsImage;
         [SerializeField] private GameObject TowerPrefab;
         [SerializeField] private Transform TowerParent;
-        [SerializeField] private Material[] TowerMaterials;
         public LayerMask planeLayer;
         private Ray ray;
         RaycastHit hit;
         private void Start()
         {
-            //TowersPosition = AdvancedPlayerPrefs.GetList<Vector3>("ADPP_TowerPositions");
-            TowersPositionColors = AdvancedPlayerPrefs.GetList<Vector4>("ADPP_TowerPositionsColors");
+            TowersPosition = AdvancedPlayerPrefs.GetList<Vector3>("ADPP_TowerPositions");
 
             NoAds = AdvancedPlayerPrefs.GetBool("ADPP_NoAds", false);
 
@@ -44,14 +42,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             FriendsList = AdvancedPlayerPrefs.GetList<string>("ADPP_Friends");
 
             InitNoAdsImage();
-            //foreach (var postion in TowersPosition)
-            //{   
-            //    SpawnTower(postion);
-            //}
-            foreach (var postion in TowersPositionColors)
-            {
+
+            foreach (var postion in TowersPosition)
+            {   
                 SpawnTower(postion);
             }
+           
         }
         public void BuyNoAds()
         {
@@ -72,22 +68,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             var tower = Instantiate(TowerPrefab, TowerParent);
             tower.transform.localPosition = _position;
         }
-        private void SpawnTower(Vector4 _positionColor)
-        {
-            var tower = Instantiate(TowerPrefab, TowerParent);
-            tower.transform.localPosition = new Vector3(_positionColor.x, _positionColor.y, _positionColor.z);
-            var rendrer = tower.GetComponentInChildren<Renderer>();
-            rendrer.material = TowerMaterials[(int)_positionColor.w];
-        }
+    
         private void SaveTowerPositions(Vector3 _position)
         {
             TowersPosition.Add(_position);
             AdvancedPlayerPrefs.SetList("ADPP_TowerPositions", TowersPosition);
-        }
-        private void SaveTowerPositionsColors(Vector4 _positionColor)
-        {
-            TowersPositionColors.Add(_positionColor);
-            AdvancedPlayerPrefs.SetList("ADPP_TowerPositionsColors", TowersPositionColors,true);
         }
         private void Update()
         {
@@ -99,19 +84,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     int colorType = Random.Range(0, 4);
 
-                    //SpawnTower(hit.point);
-                    //SaveTowerPositions(hit.point);
-                    Vector4 posColor = (Vector4)hit.point;
-                    posColor.w = colorType;
-
-                    SpawnTower(posColor);
-                    SaveTowerPositionsColors(posColor);
+                    SpawnTower(hit.point);
+                    SaveTowerPositions(hit.point);
                 }
             }
         }
         public void ShowTool()
         {
-            PlayerPrefsWindow.ShowWindow();
+            AdvancedPlayerPrefsTool.ShowWindow();
         }
     }
 
