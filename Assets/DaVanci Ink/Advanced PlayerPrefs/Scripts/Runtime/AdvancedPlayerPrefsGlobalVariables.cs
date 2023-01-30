@@ -162,6 +162,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static readonly Color YellowebugColor = new Color32(150, 0, 112, 255);
         internal static readonly Color ProYellowDebugColor = new Color32(255, 235, 4, 255);
 
+        internal const string SamplesPackagePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sample.unitypackage";
+
+
 #if UNITY_EDITOR        
         internal static string GetPlayerPrefsSpecificText()
         {

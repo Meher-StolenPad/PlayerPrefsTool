@@ -1,5 +1,7 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
+
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
     public class AdvancedPlayerPrefsInstallerPanel : EditorWindow
@@ -80,17 +82,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
-            int iButtonWidth = 150;
-            GUILayout.Space((Screen.width-20) / 5 - (iButtonWidth-5) / 5);
+            int iButtonWidth = 120;
+            GUILayout.Space((Screen.width-20) / 15 - (iButtonWidth-5) / 10);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
             //style2.normal.background = ShowButtonNormal;
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
-           // style2.hover.background = ShowButtonHover;
+            int oldfontSize = style2.fontSize;
+            style2.fontSize = (int)(50 * (Screen.width / 1920f));
+            // style2.hover.background = ShowButtonHover;
 
-            if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(150), GUILayout.Height(40)))
+            if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(120), GUILayout.Height(40)))
             {
                 AdvancedPlayerPrefsTool.ShowWindow();
             }
@@ -103,8 +107,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
 
             GUILayout.Space(5);
-
-            if (GUILayout.Button(isAlreadyInstalled ? SelectButtonText : SetupButtonText, style2, GUILayout.Width(150), GUILayout.Height(40)))
+            style2.fontSize = oldfontSize;
+            if (GUILayout.Button(isAlreadyInstalled ? SelectButtonText : SetupButtonText, style2, GUILayout.Width(120), GUILayout.Height(40)))
             {
                 if (isAlreadyInstalled)
                 {
@@ -117,6 +121,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     isAlreadyInstalled = true;
                 }
                 //you code here
+            }
+            GUILayout.Space(5);
+
+            style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
+            //style2.normal.background = ShowButtonNormal;
+
+            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
+            // style2.hover.background = ShowButtonHover;
+
+            if (GUILayout.Button("Import Samples", style2, GUILayout.Width(120), GUILayout.Height(40)))
+            {
+                AssetDatabase.ImportPackage(AdvancedPlayerPrefsGlobalVariables.SamplesPackagePath, true);
             }
             GUI.backgroundColor = oldBackgroundColor;
             style2.normal.textColor = Color.white;
