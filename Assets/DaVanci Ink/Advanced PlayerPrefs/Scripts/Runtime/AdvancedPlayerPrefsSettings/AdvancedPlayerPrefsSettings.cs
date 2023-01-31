@@ -51,6 +51,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 
         [HideInInspector] public bool useDeviceKey;
+        [HideInInspector] public bool AutoEncryption;
         [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
 
         internal string GetKey()

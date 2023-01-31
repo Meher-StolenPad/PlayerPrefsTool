@@ -86,6 +86,31 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static readonly string numberPattern = " ({0})";
         private static bool showEncryptionWarning;
         private static bool showDecryptionWarning;
+        private static bool? autoEncryption = null;
+        public static bool? AutoEncryption
+        { 
+            get
+            {
+                if(autoEncryption == null)
+                {
+                    if(AdvancedPlayerPrefsSettings.Instance!= null)
+                    {
+                        autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+                        return autoEncryption;
+                    }
+                    else
+                    {
+                        autoEncryption = false;
+                        return autoEncryption;
+                    }
+                }
+                else
+                {
+                    return autoEncryption;
+                }
+            }
+            set => autoEncryption = value;
+        }
         #endregion
         //DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
         #region Editor Region
@@ -229,6 +254,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #region Set Variable Region
         public static void SetInt(string key, int value, bool useEncryption = false)
         {
+            if(AutoEncryption != null)
+            {
+                useEncryption =(bool)autoEncryption;
+            }
             if (useEncryption)
             {
                 Serialzer<int> serialzer = new Serialzer<int>
@@ -257,6 +286,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetFloat(string key, float value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             if (useEncryption)
             {
                 Serialzer<float> serialzer = new Serialzer<float>
@@ -286,6 +319,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetString(string key, string value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             if (useEncryption)
             {
                 Serialzer<string> serialzer = new Serialzer<string>
@@ -315,6 +352,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetVector3(string key, Vector3 _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3> serialzer = new Serialzer<Vector3>
             {
                 type = PlayerPrefsType.Vector3,
@@ -344,6 +385,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetVector3Int(string key, Vector3Int _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3Int> serialzer = new Serialzer<Vector3Int>
             {
                 type = PlayerPrefsType.Vector3Int,
@@ -373,6 +418,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetByte(string key, byte _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<byte> serialzer = new Serialzer<byte>
             {
                 type = PlayerPrefsType.Byte,
@@ -402,6 +451,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetDoube(string key, double _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<double> serialzer = new Serialzer<double>
             {
                 type = PlayerPrefsType.Double,
@@ -430,6 +483,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetLong(string key, long _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<long> serialzer = new Serialzer<long>
             {
                 type = PlayerPrefsType.Long,
@@ -458,6 +515,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetBool(string key, bool _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<bool> serialzer = new Serialzer<bool>
             {
                 type = PlayerPrefsType.Bool,
@@ -487,6 +548,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetVector2(string key, Vector2 _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2> serialzer = new Serialzer<Vector2>
             {
                 type = PlayerPrefsType.Vector2,
@@ -516,6 +581,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetVector2Int(string key, Vector2Int _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2Int> serialzer = new Serialzer<Vector2Int>
             {
                 type = PlayerPrefsType.Vector2Int,
@@ -545,6 +614,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetVector4(string key, Vector4 _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector4> serialzer = new Serialzer<Vector4>
             {
                 type = PlayerPrefsType.Vector4,
@@ -574,6 +647,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetColor(string key, Color _value, bool hdr, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Color> serialzer = new Serialzer<Color>
             {
                 isEncrypted = useEncryption
@@ -613,6 +690,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetDateTime(string key, DateTime _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<DateTime> serialzer = new Serialzer<DateTime>
             {
                 type = PlayerPrefsType.DateTime,
@@ -642,6 +723,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, int[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<int[]> serialzer = new Serialzer<int[]>
             {
                 type = PlayerPrefsType.ArrayInt,
@@ -664,6 +749,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<int[]> serialzer = new Serialzer<int[]>
             {
                 type = PlayerPrefsType.ArrayInt,
@@ -687,6 +776,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<float[]> serialzer = new Serialzer<float[]>
             {
                 type = PlayerPrefsType.ArrayFloat,
@@ -711,6 +804,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<float[]> serialzer = new Serialzer<float[]>
             {
                 type = PlayerPrefsType.ArrayFloat,
@@ -734,6 +831,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, string[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<string[]> serialzer = new Serialzer<string[]>
             {
                 type = PlayerPrefsType.ArrayString,
@@ -757,6 +858,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<string> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<string[]> serialzer = new Serialzer<string[]>
             {
                 type = PlayerPrefsType.ArrayString,
@@ -780,6 +885,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<bool[]> serialzer = new Serialzer<bool[]>
             {
                 type = PlayerPrefsType.ArrayBool,
@@ -804,6 +913,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<bool[]> serialzer = new Serialzer<bool[]>
             {
                 type = PlayerPrefsType.ArrayBool,
@@ -827,6 +940,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<byte[]> serialzer = new Serialzer<byte[]>
             {
                 type = PlayerPrefsType.ArrayByte,
@@ -850,6 +967,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<byte[]> serialzer = new Serialzer<byte[]>
             {
                 type = PlayerPrefsType.ArrayByte,
@@ -873,6 +994,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<double[]> serialzer = new Serialzer<double[]>
             {
                 type = PlayerPrefsType.ArrayDouble,
@@ -896,6 +1021,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<double[]> serialzer = new Serialzer<double[]>
             {
                 type = PlayerPrefsType.ArrayDouble,
@@ -919,6 +1048,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, long[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<long[]> serialzer = new Serialzer<long[]>
             {
                 type = PlayerPrefsType.ArrayLong,
@@ -942,6 +1075,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<long> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<long[]> serialzer = new Serialzer<long[]>
             {
                 type = PlayerPrefsType.ArrayLong,
@@ -965,6 +1102,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>
             {
                 type = PlayerPrefsType.ArrayVector3,
@@ -988,6 +1129,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3[]> serialzer = new Serialzer<Vector3[]>
             {
                 type = PlayerPrefsType.ArrayVector3,
@@ -1011,6 +1156,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3Int[]> serialzer = new Serialzer<Vector3Int[]>
             {
                 type = PlayerPrefsType.ArrayVector3Int,
@@ -1034,6 +1183,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector3Int[]> serialzer = new Serialzer<Vector3Int[]>
             {
                 type = PlayerPrefsType.ArrayVector3Int,
@@ -1057,6 +1210,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2[]> serialzer = new Serialzer<Vector2[]>
             {
                 type = PlayerPrefsType.ArrayVector2,
@@ -1080,6 +1237,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2[]> serialzer = new Serialzer<Vector2[]>
             {
                 type = PlayerPrefsType.ArrayVector2,
@@ -1104,6 +1265,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2Int[]> serialzer = new Serialzer<Vector2Int[]>
             {
                 type = PlayerPrefsType.ArrayVector2Int,
@@ -1127,6 +1292,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector2Int[]> serialzer = new Serialzer<Vector2Int[]>
             {
                 type = PlayerPrefsType.ArrayVector2Int,
@@ -1150,6 +1319,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector4[]> serialzer = new Serialzer<Vector4[]>
             {
                 type = PlayerPrefsType.ArrayVector4,
@@ -1173,6 +1346,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
         {
+            if (AutoEncryption != null)
+            {
+                useEncryption = (bool)autoEncryption;
+            }
             Serialzer<Vector4[]> serialzer = new Serialzer<Vector4[]>
             {
                 type = PlayerPrefsType.ArrayVector4,

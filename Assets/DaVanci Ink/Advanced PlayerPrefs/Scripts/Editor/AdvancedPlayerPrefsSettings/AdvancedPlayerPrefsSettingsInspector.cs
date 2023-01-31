@@ -29,6 +29,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
             }
         }
+        private bool AutoEncryption 
+        {
+            get => APPSettings.AutoEncryption;
+            set
+            {
+                APPSettings.AutoEncryption = value;
+                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
+            }
+        }
         private DebugMode _DebugMode
         {
             get => APPSettings.debugMode;    
@@ -191,6 +200,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
 
             EditorGUILayout.EndFoldoutHeaderGroup();
+            GUILayout.Space(10);
+
+            GUIContent toggleContent = new GUIContent("Use Auto-Encryption", "If true,all the player prefs will be saved with encryption settings set bellow\n" +
+                "You don't need to set the encryption to true on the SetPrefs call.\n" +
+                "See documentation to get more.");
+            AutoEncryption = EditorGUILayout.Toggle(toggleContent, AutoEncryption, GUILayout.Width(buttonWidth * 4f));
+            GUILayout.Space(10);
 
             string howToUse = "ATTENTION :  \n " +
                 "  When you change your current key or iv,you will lose all the encrypted data \n" +
@@ -199,6 +215,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 "  You can upload your playerPrefs settings again and encrypte them with the new keys \n"
                 ;
             EditorGUILayout.HelpBox(howToUse, MessageType.Info);
+
 
             DrawHorizontalLine(Color.grey);
             EditorGUILayout.Space(5);
@@ -211,7 +228,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (DisplayRuntimeSettings)
             {
-                UseDeviceKey = EditorGUILayout.ToggleLeft("Use Device Key", UseDeviceKey, GUILayout.Width(buttonWidth * 4f));
+                UseDeviceKey = EditorGUILayout.Toggle("Use Device Key", UseDeviceKey, GUILayout.Width(buttonWidth * 4f));
                
             }
         }
