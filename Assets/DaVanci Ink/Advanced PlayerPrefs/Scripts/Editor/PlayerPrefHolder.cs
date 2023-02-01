@@ -1,6 +1,6 @@
+using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,7 +39,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public bool[] arrayBool;
         public byte[] arrayByte;
         public double[] arrayDouble;
-        public long[] arrayLong;    
+        public long[] arrayLong;
         public Vector3[] arrayVector3;
         public Vector3Int[] arrayVector3Int;
         public Vector2Int[] arrayVector2Int;
@@ -125,47 +125,60 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             switch (type)
             {
                 case PlayerPrefsType.ArrayInt:
-                    Value = arrayInt;
+                    Value = JsonConvert.SerializeObject(arrayInt);
                     break;
                 case PlayerPrefsType.ArrayFloat:
-                    Value = arrayFloat;
+                    Value = JsonConvert.SerializeObject(arrayFloat);
                     break;
                 case PlayerPrefsType.ArrayBool:
-                    Value = arrayBool;
+                    Value = JsonConvert.SerializeObject(arrayBool);
                     break;
                 case PlayerPrefsType.ArrayByte:
-                    Value = arrayByte; 
+                    Value = JsonConvert.SerializeObject(arrayByte);
                     break;
                 case PlayerPrefsType.ArrayDouble:
-                    Value = arrayDouble;
+                    Value = JsonConvert.SerializeObject(arrayDouble);
                     break;
                 case PlayerPrefsType.ArrayVector3:
-                    Value = arrayVector3;
+                    Value = JsonConvert.SerializeObject(arrayVector3, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
-                    Value = arrayVector3Int;
+                    Value = JsonConvert.SerializeObject(arrayVector3Int, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     break;
                 case PlayerPrefsType.ArrayString:
-                    Value = arrayString;
+                    Value = JsonConvert.SerializeObject(arrayString);
                     break;
                 case PlayerPrefsType.ArrayLong:
-                    Value = arrayLong;
+                    Value = JsonConvert.SerializeObject(arrayLong);
                     break;
                 case PlayerPrefsType.ArrayVector2:
-                    Value = arrayVector2;
+                    Value = JsonConvert.SerializeObject(arrayVector2, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
-                    Value = arrayVector2Int;
+                    Value = JsonConvert.SerializeObject(arrayVector2Int, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     break;
                 case PlayerPrefsType.ArrayVector4:
-                    Value = arrayVector4;
+                    Value = JsonConvert.SerializeObject(arrayVector4, new JsonSerializerSettings
+                    {
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
                     break;
             }
         }
         public void SaveKey()
         {
-
-
             if (Key != TempKey)
             {
                 PlayerPrefs.DeleteKey(Key);
@@ -231,39 +244,51 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.ArrayInt:
                     AdvancedPlayerPrefs.SetArray(Key, arrayInt, isEncrypted);
+                    TempValue = arrayInt;
                     break;
                 case PlayerPrefsType.ArrayFloat:
                     AdvancedPlayerPrefs.SetArray(Key, arrayFloat, isEncrypted);
+                    TempValue = arrayFloat;
                     break;
                 case PlayerPrefsType.ArrayBool:
                     AdvancedPlayerPrefs.SetArray(Key, arrayBool, isEncrypted);
+                    TempValue = arrayBool;
                     break;
                 case PlayerPrefsType.ArrayByte:
                     AdvancedPlayerPrefs.SetArray(Key, arrayByte, isEncrypted);
+                    TempValue = arrayByte;
                     break;
                 case PlayerPrefsType.ArrayDouble:
                     AdvancedPlayerPrefs.SetArray(Key, arrayDouble, isEncrypted);
+                    TempValue = arrayDouble;
                     break;
                 case PlayerPrefsType.ArrayVector3:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector3, isEncrypted);
+                    TempValue = arrayVector3;
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector3Int, isEncrypted);
+                    TempValue = arrayVector3Int;
                     break;
                 case PlayerPrefsType.ArrayString:
                     AdvancedPlayerPrefs.SetArray(Key, arrayString, isEncrypted);
+                    TempValue = arrayString;
                     break;
                 case PlayerPrefsType.ArrayLong:
                     AdvancedPlayerPrefs.SetArray(Key, arrayLong, isEncrypted);
+                    TempValue = arrayLong;
                     break;
                 case PlayerPrefsType.ArrayVector2:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector2, isEncrypted);
+                    TempValue = arrayVector2;
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector2Int, isEncrypted);
+                    TempValue = arrayVector2Int;
                     break;
                 case PlayerPrefsType.ArrayVector4:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector4, isEncrypted);
+                    TempValue = arrayVector4;
                     break;
                 default:
                     break;
@@ -273,6 +298,71 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             GUI.FocusControl(null);
             TempValue = BackupValues;
+
+            switch (type)
+            {
+                case PlayerPrefsType.ArrayInt:
+                    arrayInt = AdvancedPlayerPrefs.StringToArrayInt(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayInt");
+                    break;
+                case PlayerPrefsType.ArrayFloat:
+                    arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayFloat");
+                    break;
+                case PlayerPrefsType.ArrayBool:
+                    arrayBool = AdvancedPlayerPrefs.StringToArrayBool(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayBool");
+                    break;
+                case PlayerPrefsType.ArrayByte:
+                    arrayByte = AdvancedPlayerPrefs.StringToArrayByte(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayByte");
+                    break;
+                case PlayerPrefsType.ArrayDouble:
+                    arrayDouble = AdvancedPlayerPrefs.StringToArrayDouble(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayDouble");
+                    break;
+                case PlayerPrefsType.ArrayVector3:
+                    arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayVector3");
+                    break;
+                case PlayerPrefsType.ArrayVector3Int:
+                    arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayVector3Int");
+                    break;
+                case PlayerPrefsType.ArrayString:
+                    arrayString = AdvancedPlayerPrefs.StringToArrayString(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayString");
+                    break;
+                case PlayerPrefsType.ArrayLong:
+                    arrayLong = AdvancedPlayerPrefs.StringToArrayLong(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayLong");
+                    break;
+                case PlayerPrefsType.ArrayVector2:
+                    arrayVector2 = AdvancedPlayerPrefs.StringToArrayVector2(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayVector2");
+                    break;
+                case PlayerPrefsType.ArrayVector2Int:
+                    arrayVector2Int = AdvancedPlayerPrefs.StringToArrayVector2Int(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayVector2Int");
+                    break;
+                case PlayerPrefsType.ArrayVector4:
+                    arrayVector4 = AdvancedPlayerPrefs.StringToArrayVector4(BackupValues.ToString());
+                    so = new SerializedObject(this);
+                    ValueProperty = so.FindProperty("arrayVector4");
+
+                    break;
+            }
         }
         public void Delete()
         {
@@ -301,7 +391,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     {
                         var ic = AdvancedPlayerPrefs.StringToFloat(Value.ToString());
                         var it = AdvancedPlayerPrefs.StringToFloat(TempValue.ToString());
-                        returnValue = Mathf.Approximately(ic,it);
+                        returnValue = Mathf.Approximately(ic, it);
                     }
                     else
                     {
@@ -373,40 +463,124 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     returnValue = v3ic == v3it;
                     break;
                 case PlayerPrefsType.ArrayInt:
-                    returnValue = true;
+                    if (TempValue as int[] == null)
+                    {
+                        returnValue = arrayInt.SequenceEqual(AdvancedPlayerPrefs.StringToArrayInt(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayInt.SequenceEqual(TempValue as int[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayFloat:
-                    returnValue = true;
+                    if (TempValue as float[] == null)
+                    {
+                        returnValue = arrayFloat.SequenceEqual(AdvancedPlayerPrefs.StringToArrayFloat(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayFloat.SequenceEqual(TempValue as float[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayBool:
-                    returnValue = true;
+                    if (TempValue as bool[] == null)
+                    {
+                        returnValue = arrayBool.SequenceEqual(AdvancedPlayerPrefs.StringToArrayBool(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayBool.SequenceEqual(TempValue as bool[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayByte:
-                    returnValue = true;
+                    if (TempValue as byte[] == null)
+                    {
+                        returnValue = arrayByte.SequenceEqual(AdvancedPlayerPrefs.StringToArrayByte(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayByte.SequenceEqual(TempValue as byte[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayDouble:
-                    returnValue = true;
+                    if (TempValue as double[] == null)
+                    {
+                        returnValue = arrayDouble.SequenceEqual(AdvancedPlayerPrefs.StringToArrayDouble(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayDouble.SequenceEqual(TempValue as double[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayVector3:
-                    returnValue = true;
+                    if (TempValue as Vector3[] == null)
+                    {
+                        returnValue = arrayVector3.SequenceEqual(AdvancedPlayerPrefs.StringToArrayVector3(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayVector3.SequenceEqual(TempValue as Vector3[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
-                    returnValue = true;
+                    if (TempValue as Vector3Int[] == null)
+                    {
+                        returnValue = arrayVector3Int.SequenceEqual(AdvancedPlayerPrefs.StringToArrayVector3Int(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayVector3Int.SequenceEqual(TempValue as Vector3Int[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayString:
-                    returnValue = true;
+                    if (TempValue as string[] == null)
+                    {
+                        returnValue = arrayString.SequenceEqual(AdvancedPlayerPrefs.StringToArrayString(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayString.SequenceEqual(TempValue as string[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayLong:
-                    returnValue = true;
+                    if (TempValue as long[] == null)
+                    {
+                        returnValue = arrayLong.SequenceEqual(AdvancedPlayerPrefs.StringToArrayLong(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayLong.SequenceEqual(TempValue as long[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayVector2:
-                    returnValue = true;
+                    if (TempValue as Vector2[] == null)
+                    {
+                        returnValue = arrayVector2.SequenceEqual(AdvancedPlayerPrefs.StringToArrayVector2(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayVector2.SequenceEqual(TempValue as Vector2[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
-                    returnValue = true;
+                    if (TempValue as Vector2Int[] == null)
+                    {
+                        returnValue = arrayVector2Int.SequenceEqual(AdvancedPlayerPrefs.StringToArrayVector2Int(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayVector2Int.SequenceEqual(TempValue as Vector2Int[]);
+                    }
                     break;
                 case PlayerPrefsType.ArrayVector4:
-                    returnValue = true;
+                    if (TempValue as Vector4[] == null)
+                    {
+                        returnValue = arrayVector4.SequenceEqual(AdvancedPlayerPrefs.StringToArrayVector4(TempValue.ToString()));
+                    }
+                    else
+                    {
+                        returnValue = arrayVector4.SequenceEqual(TempValue as Vector4[]);
+                    }
                     break;
                 default:
                     break;

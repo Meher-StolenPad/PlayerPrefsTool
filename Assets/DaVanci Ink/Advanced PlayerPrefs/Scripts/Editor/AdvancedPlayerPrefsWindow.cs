@@ -113,11 +113,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string ImportProductName;
 
         private bool isProSKin;
-
+        private bool UseAutoEncryption;
         #endregion
 
         #region Unity editor Tool 
-        [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 2)]
+        [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 1)]
         public static void ShowWindow()
         {
             AdvancedPlayerPrefsTool AdvancedPlayerPrefsTool = (AdvancedPlayerPrefsTool)GetWindow(typeof(AdvancedPlayerPrefsTool));
@@ -125,6 +125,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AdvancedPlayerPrefsTool.Show();
             Vector2 minSize = AdvancedPlayerPrefsTool.minSize;
             minSize.x = 600;
+            minSize.y = 500;
             AdvancedPlayerPrefsTool.minSize = minSize;
         }
 
@@ -147,7 +148,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             so = new SerializedObject(this);
 
             isProSKin = EditorGUIUtility.isProSkin;
-
+            UseAutoEncryption =(bool) AdvancedPlayerPrefs.AutoEncryption;
             //tempExportPath = ExportPath;
         }
         private void OnDisable()
@@ -464,74 +465,86 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.ArrayInt:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayFloat:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
 
                     case PlayerPrefsType.ArrayBool:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayByte:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayDouble:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3Int:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayString:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayLong:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayVector2:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayVector2Int:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     case PlayerPrefsType.ArrayVector4:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.Update();
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
                         }
                         break;
                     default:
@@ -547,7 +560,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[ (int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
 
                 GUI.backgroundColor = Color.green;
-                if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
+                if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
                 {
                     _playerPrefsHolderList[i].SaveKey();
                     DavanciDebug.Log("Save " + _playerPrefsHolderList[i].Key, Color.green);
@@ -561,7 +574,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
                 GUI.backgroundColor = Color.red;
-                if (GUILayout.Button(new GUIContent(DeleteButtonIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
+                if (GUILayout.Button(new GUIContent(DeleteButtonIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.55f)))
                 {
 
                     _playerPrefsHolderList[i].Delete();
@@ -600,7 +613,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
           
 
-            GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 2));
+            GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth *5));
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
 
@@ -802,10 +815,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.BeginHorizontal();
 
+            GUI.enabled = EncryptionSettingsFounded;
+            GUI.enabled = !UseAutoEncryption;
+
             GUILayout.Label("Encryption", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 1.1f));
             EditorGUILayout.Space(3);
-            GUI.enabled = EncryptionSettingsFounded;
+            UseAutoEncryption =(bool) AdvancedPlayerPrefs.AutoEncryption;
 
+            if (UseAutoEncryption)
+            {
+                UseEncryption = UseAutoEncryption;
+            }
             UseEncryption = EditorGUILayout.Toggle(UseEncryption);
             GUI.enabled = true;
 
@@ -846,6 +866,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 GUI.enabled = false;
             }
+         
             if (GUILayout.Button("Add <" + Key + "> Prefs", GUILayout.Width(buttonWidth)))
             {
                 DavanciDebug.Log("a " + AdvancedPlayerPrefsGlobalVariables.EnumList[(int)type] + " with key <" + Key + "> added !", Color.green);

@@ -106,6 +106,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 else
                 {
+                    if (AdvancedPlayerPrefsSettings.Instance!= null)
+                    {
+                        if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
+                        {
+                            autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+                        }
+                    }
+                   
                     return autoEncryption;
                 }
             }
@@ -349,6 +357,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, value);
             }
             DavanciDebug.Log("Set String : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+        }
+        private static void SetString(string value)
+        {
+            PlayerPrefs.SetString(AdvancedPlayerPrefsGlobalVariables.APPsCSDK, value);
         }
         public static void SetVector3(string key, Vector3 _value, bool useEncryption = false)
         {
@@ -2054,7 +2066,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static void SetAPPsCSDK(string APPsCSDK)
         {
-            SetString(AdvancedPlayerPrefsGlobalVariables.APPsCSDK, APPsCSDK);
+            SetString(APPsCSDK);
         }
         internal static bool HasAPPsCSDK()
         {

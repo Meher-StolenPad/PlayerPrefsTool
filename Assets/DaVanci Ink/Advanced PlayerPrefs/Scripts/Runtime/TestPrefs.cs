@@ -19,32 +19,33 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             //Debug.LogWarning("dpzk^pdkzpdpzd$^lz");
             //Debug.Log("poidpoid");
-            //AdvancedPlayerPrefs.SetFloat("TestAgain", 10.2247745f,true);
-            //AdvancedPlayerPrefs.SetVector3("TestVector3", new Vector3(0.5f, 55, 10), true);
-            //AdvancedPlayerPrefs.SetVector2("TestVector2", new Vector2(0.4f, 0.3f), true);
-            //AdvancedPlayerPrefs.SetVector4("TestVector4", new Vector4(55, 66f, 77f, 88f), true);
-            //AdvancedPlayerPrefs.SetColor("TestColor", Color.green,false, true);
-            //AdvancedPlayerPrefs.SetColor("TestColorHDR", Color.blue,true, true);
-            //AdvancedPlayerPrefs.SetBool("TestBool", true, true);
-            //AdvancedPlayerPrefs.SetDateTime("TestDateTime", DateTime.Now, true);
-            //AdvancedPlayerPrefs.SetByte("TestByte", 5,true);
-            //AdvancedPlayerPrefs.SetDoube("TestDouble", 54.444484, true);
-            //AdvancedPlayerPrefs.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
-            //AdvancedPlayerPrefs.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
-            //AdvancedPlayerPrefs.SetArray("TestArrayInt", new int[4] {1,2,3,4}, true);
-            //AdvancedPlayerPrefs.SetArray("TestArraybyte", new byte[2] {1,2}, true);
-            //AdvancedPlayerPrefs.SetArray("TestArrayDouble", new double[2] {1,2}, true);
-            //AdvancedPlayerPrefs.SetArray("TestArrayVector3", new Vector3[2] {Vector3.zero,Vector3.up}, true);
-            //AdvancedPlayerPrefs.SetArray("testintint", new int[2] {0, 55}, true);
-            //AdvancedPlayerPrefs.SetArray("testStringArray", new string[2] {"test","Test2"}, true);
-            //AdvancedPlayerPrefs.SetLong("testLong", 55, true);
-            //AdvancedPlayerPrefs.SetArray("test Vector2 Array", new Vector2[2] { Vector2.down, Vector2.left}, true);
-            //AdvancedPlayerPrefs.SetArray("test Vector2Int Array", new Vector2Int[2] { Vector2Int.down, Vector2Int.left }, true);
-            //AdvancedPlayerPrefs.SetArray("test Vector4Int Array", new Vector4[2] { Vector4.one, Vector4.zero }, true);
-            ////AdvancedPlayerPrefs.SetLong("testLong", 55, true);
-            ////    AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
-
-            ////AdvancedPlayerPrefs.SetArray("TestArrayFloat", new float[4] {1.1f,2.2f,3.3f,4.4f}, true);
+            AdvancedPlayerPrefs.SetFloat("TestAgain", 10.2247745f);
+            AdvancedPlayerPrefs.SetVector3("TestVector3", new Vector3(0.5f, 55, 10));
+            AdvancedPlayerPrefs.SetVector2("TestVector2", new Vector2(0.4f, 0.3f));
+            AdvancedPlayerPrefs.SetVector4("TestVector4", new Vector4(55, 66f, 77f, 88f));
+            AdvancedPlayerPrefs.SetColor("TestColor", Color.green,false);
+            AdvancedPlayerPrefs.SetColor("TestColorHDR", Color.blue,true);
+            AdvancedPlayerPrefs.SetBool("TestBool", true);
+            AdvancedPlayerPrefs.SetDateTime("TestDateTime", DateTime.Now);
+            AdvancedPlayerPrefs.SetByte("TestByte", 5);
+            AdvancedPlayerPrefs.SetDoube("TestDouble", 54.444484, true);
+            AdvancedPlayerPrefs.SetVector2Int("TestVector2Int", new Vector2Int(5,6), true);
+            AdvancedPlayerPrefs.SetVector3Int("TestVector3Int", new Vector3Int(5,6,7), true);
+            AdvancedPlayerPrefs.SetArray("TestArrayInt", new int[4] {1,2,3,4}, true);
+            AdvancedPlayerPrefs.SetArray("TestArraybyte", new byte[2] {1,2}, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayDouble", new double[2] {1,2}, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayVector3", new Vector3[2] {Vector3.zero,Vector3.up}, true);
+            AdvancedPlayerPrefs.SetArray("testintint", new int[2] {0, 55}, true);
+            AdvancedPlayerPrefs.SetArray("testStringArray", new string[2] {"test","Test2"}, true);
+            AdvancedPlayerPrefs.SetLong("testLong", 55, true);
+            AdvancedPlayerPrefs.SetArray("test Vector2 Array", new Vector2[2] { Vector2.down, Vector2.left}, true);
+            AdvancedPlayerPrefs.SetArray("test Vector2Int Array", new Vector2Int[2] { Vector2Int.down, Vector2Int.left }, true);
+            AdvancedPlayerPrefs.SetArray("test Vector4Int Array", new Vector4[2] { Vector4.one, Vector4.zero }, true);
+            AdvancedPlayerPrefs.SetLong("testLong", 55, true);
+            AdvancedPlayerPrefs.SetArray("TestArrayBool", new bool[4] {true,false, true, false }, true);
+           AdvancedPlayerPrefs.SetArray("TestArrayFloat", new float[4] {1.1f,2.2f,3.3f,4.4f}, true);
+           AdvancedPlayerPrefs.SetList("TestArrayLong", new List<long>() {551,545484147775}, true);
+           AdvancedPlayerPrefs.SetList("TestArrayVector4", new List<Vector4>() {Vector4.zero,Vector4.one}, true);
 
             //Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgain"));
             //Debug.Log("Float " + AdvancedPlayerPrefs.GetFloat("TestAgaidddn", 1f));
@@ -82,7 +83,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log(CriptedEncription);
+                Debug.Log(AdvancedPlayerPrefsSettings.Instance.Key);
 
             }
             if (Input.GetKeyDown(KeyCode.D))

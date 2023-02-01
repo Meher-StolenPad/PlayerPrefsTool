@@ -16,9 +16,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string KeyOpenPanelTitle = "Backup Keys path";
 
         internal const string CharsKey = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        internal const string InitialKey = "J5ddq99RUNJawf2QTGfQhtOjaSZ87h5g";
-        internal const string InitialIv = "t9lWGXbFwmuqsxm1";
-        internal const string InitialSavedKey = "J5Ztddo9q9jl9RgWUNwGJaTXwfsb2QoFTGPwfQAmhtCuOjmqaShsZ8Mx7hHm5gM1";
+        internal const string InitialKey = "i8rjckih86IYDf7phLLAxD67SDzVhsfy";
+        internal const string InitialIv = "am0nTXiNOcjEwRZi";
+        internal const string InitialSavedKey = "i8,arjsmck+0ihxn86cTIYPXDf8i7pLNhLUOLA1cxDej67kESDBwzVARhs_ZfyPi";
         internal const string APPsCSDK = "APPsCSDK";
 
         internal const string GetStartedLink = "www.google.com";
@@ -38,8 +38,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const  string EncryptionSettingsFileName = "Advanced Player Prefs Settings.asset";
 
 
-        internal const  string AdvancedPlayerPrefsToolMenuName = "DavanciCode/Advanced Player Prefs Tool %e";
+        internal const  string AdvancedPlayerPrefsToolMenuName = "Window/Advanced Player Prefs/Editor Tool %e";
         internal const  string AdvancedPlayerPrefsToolTitle = "Advanced Player Prefs Tool";
+        internal const  string AdvancedPlayerPrefsSetupMenuName = "Window/Advanced Player Prefs/Setup";
 
         internal const  string RefreshButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/refresh_Icon.png";
         internal const  string SaveButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/save_Icon.png";
@@ -162,7 +163,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static readonly Color YellowebugColor = new Color32(150, 0, 112, 255);
         internal static readonly Color ProYellowDebugColor = new Color32(255, 235, 4, 255);
 
-        internal const string SamplesPackagePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sample.unitypackage";
+        internal const string SamplesPackagePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Samples.unitypackage";
 
 
 #if UNITY_EDITOR        
