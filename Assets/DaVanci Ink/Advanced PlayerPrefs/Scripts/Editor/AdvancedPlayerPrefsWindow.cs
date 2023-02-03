@@ -1409,7 +1409,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
         }
-        private static List<PlayerPrefHolder> GetPlayerPrefs(string companyName,string productName)
+        private static List<PlayerPrefHolder> GetPlayerPrefs(string companyName, string productName)
         {
             List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
 
@@ -1480,20 +1480,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.TempKey = pair.Key;
                     playerPrefHolder.Init();
-                    tempPlayerPrefs.Add(playerPrefHolder);
 
+                    if (!tempPlayerPrefs.Exists(p => p.Key == playerPrefHolder.Key) && !pair.Key.ToLower().Contains("unity"))
+                    {
+                        tempPlayerPrefs.Add(playerPrefHolder);
+                    }
                 }
-
-                // Return the results
-              return tempPlayerPrefs.ToList();
-            }
-            else
-            {
-                // No existing PlayerPrefs saved (which is valid), so just return an empty array
-                return new List<PlayerPrefHolder>();
             }
 #elif UNITY_EDITOR_WIN
-             RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + companyName + "\\" + productName);
+            RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + companyName + "\\" + productName);
 
             if (RegistryKey == null) return new List<PlayerPrefHolder>();
 
@@ -1546,7 +1541,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                         pair.Init();
 
-                        tempPlayerPrefs.Add(pair);
+                        if (!tempPlayerPrefs.Exists(p => p.Key == pair.Key) && !pair.Key.ToLower().Contains("unity"))
+                        {
+                            tempPlayerPrefs.Add(pair);
+                        }
                     }
                 }
             }
@@ -1555,12 +1553,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static void ImportFrom(string importCompanyName, string importProductName)
         {
+            string currentCompanyName = PlayerSettings.companyName;
+            string currentProductName = PlayerSettings.productName;
+
+            PlayerSettings.productName = importProductName;
+            PlayerSettings.companyName = importCompanyName;
+
             var prefs = GetPlayerPrefs(importCompanyName, importProductName);
             int t = prefs.Count;
 
-           
+            PlayerSettings.productName = currentProductName;
+            PlayerSettings.companyName = currentCompanyName;
+
             foreach (var pref in prefs)
             {
+                Debug.Log("Key : " + pref.Key);
                 pref.Save();
             }
             if (t > 0)
