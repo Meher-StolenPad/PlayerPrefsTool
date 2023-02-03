@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dd43ad784555004093e2e51165c1481, type: 3}
   m_Name: Advanced Player Prefs Settings
   m_EditorClassIdentifier: 
-  Key: 4DhnvqBRdBUYLvMKhCEaSNLUcZiT29Jh
-  Iv: CsIJFSZvVcMvjNqB
-  SavedKey: 4DoChn9svq0IBR"JdB/FUY)SLvjZMKyvhC,VEaIcSNCMLU\vcZkjiToN29#qJhYB
-  useDeviceKey: 1
-  AutoEncryption: 1
+  Key: i8rjckih86IYDf7phLLAxD67SDzVhsfy
+  Iv: am0nTXiNOcjEwRZi
+  SavedKey: i8,arjsmck+0ihxn86cTIYPXDf8i7pLNhLUOLA1cxDej67kESDBwzVARhs_ZfyPi
+  useDeviceKey: 0
+  AutoEncryption: 0
   debugMode: 1
+  backupMode: 0

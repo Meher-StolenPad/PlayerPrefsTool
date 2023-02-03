@@ -87,7 +87,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static bool showEncryptionWarning;
         private static bool showDecryptionWarning;
         private static bool? autoEncryption = null;
-        public static bool? AutoEncryption
+        internal static bool? AutoEncryption
         { 
             get
             {
@@ -119,6 +119,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             set => autoEncryption = value;
         }
+        internal static Action OnSettingsCreated;
         #endregion
         //DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
         #region Editor Region
@@ -152,6 +153,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             AssetDatabase.CreateAsset(en, AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsPath + AdvancedPlayerPrefsGlobalVariables.EncryptionSettingsFileName);
             AdvancedPlayerPrefsSettings.Reload();
+            OnSettingsCreated?.Invoke();
         }
 #endif
         #endregion

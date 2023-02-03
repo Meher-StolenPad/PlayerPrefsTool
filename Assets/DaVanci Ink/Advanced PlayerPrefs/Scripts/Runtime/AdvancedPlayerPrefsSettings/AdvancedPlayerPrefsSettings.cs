@@ -17,6 +17,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         EditorOnly,
         Actif
     }
+    internal enum BackupMode
+    {
+        Auto_Update,
+        Manual_Update,  
+        Disable
+    }
 
     [Serializable]
     internal class KeysExporter
@@ -53,8 +59,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         [HideInInspector] public bool useDeviceKey;
         [HideInInspector] public bool AutoEncryption;
-        [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
 
+        [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
+        [HideInInspector] public BackupMode backupMode = BackupMode.Manual_Update;
+        internal static Action OnBackupModeChangedAction;
+        internal void OnBackupModeChanged()
+        {
+            Debug.Log("OnBackupModeChanged" + backupMode);
+            OnBackupModeChangedAction?.Invoke();
+        }
         internal string GetKey()
         {
             return Key;

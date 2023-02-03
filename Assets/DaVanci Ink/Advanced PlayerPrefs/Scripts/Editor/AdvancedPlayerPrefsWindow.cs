@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.ShaderData;
-using Debug = UnityEngine.Debug;
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
     internal enum SortType
@@ -15,7 +13,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Name,
         Type
     }
-    public class AdvancedPlayerPrefsTool : EditorWindow
+    internal class AdvancedPlayerPrefsTool : EditorWindow
     {
         #region Private Variables
         private static readonly System.Text.Encoding encoding = new System.Text.UTF8Encoding();
@@ -117,7 +115,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         #region Unity editor Tool 
         [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 1)]
-        public static void ShowWindow()
+        internal static void ShowWindow()
         {
             AdvancedPlayerPrefsTool AdvancedPlayerPrefsTool = (AdvancedPlayerPrefsTool)GetWindow(typeof(AdvancedPlayerPrefsTool));
             AdvancedPlayerPrefsTool.titleContent = new GUIContent(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolTitle);
@@ -147,7 +145,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             so = new SerializedObject(this);
 
             isProSKin = EditorGUIUtility.isProSkin;
-            UseAutoEncryption =(bool) AdvancedPlayerPrefs.AutoEncryption;
+            UseAutoEncryption = (bool)AdvancedPlayerPrefs.AutoEncryption;
             //tempExportPath = ExportPath;
         }
         private void OnDisable()
@@ -319,11 +317,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.EndHorizontal();
         }
-        private void DecideFieldColor(PlayerPrefHolder playerPrefHolder,bool inSearch,GUIStyle style)
+        private void DecideFieldColor(PlayerPrefHolder playerPrefHolder, bool inSearch, GUIStyle style)
         {
             if (playerPrefHolder.isEncrypted)
             {
-               style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProEncryptedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalEncryptedTextColor; //Color.magenta;
+                style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProEncryptedTextColor : AdvancedPlayerPrefsGlobalVariables.NormalEncryptedTextColor; //Color.magenta;
             }
             if (!playerPrefHolder.IsEqual())
             {
@@ -334,7 +332,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (inSearch)
             {
                 switch (playerPrefHolder.InSearch)
-                {   
+                {
                     case FoundInSearch.Key:
                         style.normal.textColor = isProSKin ? AdvancedPlayerPrefsGlobalVariables.ProSearchTextColor : AdvancedPlayerPrefsGlobalVariables.NormalSearchTextColor;  //Color.yellow;
                         style.fontStyle = FontStyle.Normal;
@@ -372,7 +370,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 style3.fontStyle = FontStyle.Normal;
                 style3.normal.textColor = oldstylecolor;
 
-                DecideFieldColor(_playerPrefsHolderList[i],isSearchDraw,style3);
+                DecideFieldColor(_playerPrefsHolderList[i], isSearchDraw, style3);
 
                 GUILayout.Label(_playerPrefsHolderList[i].TempKey, style3, GUILayout.Width(FullWindowWidth * 3f));
 
@@ -556,7 +554,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 style2.fontStyle = FontStyle.Bold;
                 style2.alignment = TextAnchor.MiddleCenter;
 
-                GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[ (int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
+                GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[(int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
 
                 GUI.backgroundColor = Color.green;
                 if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save <" + _playerPrefsHolderList[i].Key + "> current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
@@ -581,7 +579,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                     if (FiltredPlayerPrefHolderList.Contains(_playerPrefsHolderList[i]))
                         FiltredPlayerPrefHolderList.Remove(_playerPrefsHolderList[i]);
-                    DavanciDebug.Log(_playerPrefsHolderList[i].Key +" is Deleted!", Color.red);
+                    DavanciDebug.Log(_playerPrefsHolderList[i].Key + " is Deleted!", Color.red);
 
                 }
                 GUI.backgroundColor = oldBackgroundColor;
@@ -609,9 +607,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void DrawValueField()
         {
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
-          
 
-            GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth *5));
+
+            GUILayout.Label("Add Player new Prefs", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 5));
             GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
 
@@ -818,7 +816,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.Label("Encryption", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 1.1f));
             EditorGUILayout.Space(3);
-            UseAutoEncryption =(bool) AdvancedPlayerPrefs.AutoEncryption;
+            UseAutoEncryption = (bool)AdvancedPlayerPrefs.AutoEncryption;
 
             if (UseAutoEncryption)
             {
@@ -864,7 +862,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 GUI.enabled = false;
             }
-         
+
             if (GUILayout.Button("Add <" + Key + "> Prefs", GUILayout.Width(buttonWidth)))
             {
                 DavanciDebug.Log("a " + AdvancedPlayerPrefsGlobalVariables.EnumList[(int)type] + " with key <" + Key + "> added !", Color.green);
@@ -943,7 +941,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.BeginHorizontal();
 
                 GUILayout.Label("Export path", EditorStyles.boldLabel, GUILayout.Width(FullWindowWidth * 3));
-                
+
                 SavePathType = (SavePathType)EditorGUILayout.Popup((int)SavePathType, AdvancedPlayerPrefsGlobalVariables.PathTypeList, GUILayout.Width(FullWindowWidth * 4.5f));
 
                 GUILayout.Space(5);
@@ -1379,7 +1377,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Import Export Region
-        public void Import(string importCompanyName, string importProductName)
+        internal void Import(string importCompanyName, string importProductName)
         {
             string currentCompanyName = PlayerSettings.companyName;
             string currentProductName = PlayerSettings.productName;
@@ -1399,7 +1397,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 pref.Save();
             }
+
             Refresh();
+
             if (t > 0)
             {
                 DavanciDebug.Log(t + " Prefs Imported from < " + importProductName + "/" + importCompanyName + ">", Color.green);
@@ -1409,7 +1409,169 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
         }
+        private static List<PlayerPrefHolder> GetPlayerPrefs(string companyName,string productName)
+        {
+            List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
 
+#if UNITY_EDITOR_OSX
+
+            string playerPrefsPath;
+
+            string plistFilename = $"unity.{companyName}.{productName}.plist";
+            // Now construct the fully qualified path
+            playerPrefsPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library/Preferences"), plistFilename);
+
+            // Parse the PlayerPrefs file if it exists
+            if (File.Exists(playerPrefsPath))
+            {
+                // Parse the plist then cast it to a Dictionary
+                object plist = Plist.readPlist(playerPrefsPath);
+
+                Dictionary<string, object> parsed = plist as Dictionary<string, object>;
+
+                // Convert the dictionary data into an array of PlayerPrefPairs
+              
+                foreach (KeyValuePair<string, object> pair in parsed)
+                {
+                    PlayerPrefHolder playerPrefHolder = new PlayerPrefHolder();
+
+                    playerPrefHolder.Key = pair.Key;
+                    playerPrefHolder.Value = pair.Value;
+                    var savedValue = pair.Value;
+                    if (pair.Value.GetType() == typeof(double))
+                    {
+                        playerPrefHolder.type = PlayerPrefsType.Float;
+                        playerPrefHolder.Value = (float)(double)pair.Value;
+
+                        // Some float values may come back as double, so convert them back to floats
+                       // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
+                    }
+                    else if (pair.Value.GetType() == typeof(bool))
+                    {
+                        // Unity PlayerPrefs API doesn't allow bools, so ignore them
+                    }
+                    else if (pair.Value.GetType() == typeof(int) || pair.Value.GetType() == typeof(long))
+                    {
+                        if (AdvancedPlayerPrefs.GetInt(pair.Key, -1) == -1 && AdvancedPlayerPrefs.GetInt(pair.Key, 0) == 0)
+                        {
+                            string savedStringValue = pair.Value.ToString();
+                            savedValue = AdvancedPlayerPrefs.GetFloat(pair.Key);
+                            playerPrefHolder.type = PlayerPrefsType.Float;
+                        }
+                        else
+                        {
+                            playerPrefHolder.type = PlayerPrefsType.Int;
+                        }
+                    }
+                    else
+                    {
+                        ReturnType returnValues = null;
+
+                        savedValue = AdvancedPlayerPrefs.TryGetCostumeType(pair.Key, out returnValues, savedValue.ToString());
+
+                        playerPrefHolder.type = returnValues.PlayerPrefsType;
+                        playerPrefHolder.isEncrypted = returnValues.IsEncrypted;
+                        //tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = pair.Value });
+                    }
+
+                    playerPrefHolder.Value = savedValue;
+                    playerPrefHolder.TempValue = savedValue;
+                    playerPrefHolder.BackupValues = savedValue;
+                    playerPrefHolder.Key = pair.Key;
+                    playerPrefHolder.TempKey = pair.Key;
+                    playerPrefHolder.Init();
+                    tempPlayerPrefs.Add(playerPrefHolder);
+
+                }
+
+                // Return the results
+              return tempPlayerPrefs.ToList();
+            }
+            else
+            {
+                // No existing PlayerPrefs saved (which is valid), so just return an empty array
+                return new List<PlayerPrefHolder>();
+            }
+#elif UNITY_EDITOR_WIN
+             RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + companyName + "\\" + productName);
+
+            if (RegistryKey == null) return new List<PlayerPrefHolder>();
+
+            foreach (string item in RegistryKey.GetValueNames())
+            {
+                if (RegistryKey != null)
+                {
+                    string[] valueNames = RegistryKey.GetValueNames();
+                    //int i = 0;
+                    foreach (string valueName in valueNames)
+                    {
+                        string key = valueName;
+                        int index = key.LastIndexOf("_");
+                        key = key.Remove(index, key.Length - index);
+
+                        object savedValue = RegistryKey.GetValue(valueName);
+                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
+
+                        if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
+                        {
+                            if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
+                            {
+                                string savedStringValue = savedValue.ToString();
+                                savedValue = AdvancedPlayerPrefs.GetFloat(key);
+                                pair.type = PlayerPrefsType.Float;
+                            }
+                            else
+                            {
+                                pair.type = PlayerPrefsType.Int;
+                            }
+                        }
+                        else if (savedValue.GetType() == typeof(byte[]))
+                        {
+                            savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
+
+
+                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
+
+                            pair.type = returnValues.PlayerPrefsType;
+                            pair.isEncrypted = returnValues.IsEncrypted;
+
+
+                        }
+
+                        pair.Value = savedValue;
+                        pair.TempValue = savedValue;
+                        pair.BackupValues = savedValue;
+                        pair.Key = key;
+                        pair.TempKey = key;
+
+                        pair.Init();
+
+                        tempPlayerPrefs.Add(pair);
+                    }
+                }
+            }
+#endif
+            return tempPlayerPrefs;
+        }
+        internal static void ImportFrom(string importCompanyName, string importProductName)
+        {
+            var prefs = GetPlayerPrefs(importCompanyName, importProductName);
+            int t = prefs.Count;
+
+           
+            foreach (var pref in prefs)
+            {
+                pref.Save();
+            }
+            if (t > 0)
+            {
+                DavanciDebug.Log(t + " Prefs Imported from < " + importProductName + "/" + importCompanyName + ">", Color.green);
+            }
+            else
+            {
+                DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
+            }
+        }
         private void GetBackupFromFile(string tempPath)
         {
             //AdvancedPlayerPrefsExportManager.m_exportPath = tempExportPath;

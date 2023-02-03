@@ -1,3 +1,4 @@
+using Codice.Utils;
 using System;
 using System.IO;
 using System.Linq;
@@ -47,7 +48,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
             }
         }
-
+        private BackupMode _BackupMode   
+        {
+            get => APPSettings.backupMode;
+            set
+            {
+                if (APPSettings.backupMode != value)
+                {
+                    APPSettings.backupMode = value;
+                    APPSettings.OnBackupModeChanged();
+                }
+                else
+                {
+                    APPSettings.backupMode = value;
+                }
+                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
+            }
+        }
         private string Key = string.Empty;
         private bool ShowErrorText => Key.Length == 32;
         private GUIStyle Textstyle;
@@ -218,8 +235,29 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
 
             DrawHorizontalLine(Color.grey);
+
+            EditorGUILayout.BeginVertical();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Debug Mode", GUILayout.Width(buttonWidth / 2.5f));
+            _DebugMode = (DebugMode)EditorGUILayout.EnumPopup(_DebugMode, GUILayout.Width(buttonWidth / 1.2f));
+            EditorGUILayout.EndHorizontal();
+
             EditorGUILayout.Space(5);
-            _DebugMode = (DebugMode)EditorGUILayout.EnumPopup("Debug Mode",_DebugMode, GUILayout.Width(buttonWidth*1.5f));
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Backup Mode", GUILayout.Width(buttonWidth / 2.5f));
+            _BackupMode = (BackupMode)EditorGUILayout.EnumPopup(_BackupMode, GUILayout.Width(buttonWidth / 1.2f));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space(5);
+
+            EditorGUILayout.HelpBox("When you change the Product name or the Company Name on the Player Settings,you will lose all you playerPrefs Saved.\n" +
+                "If Backup Mode is Auto_Update,all you playerPrefs will be MOVED to the new Project automaticly.", MessageType.Info);
+
+            EditorGUILayout.EndVertical();
+
+
             EditorGUILayout.Space(5);
 
             DrawHorizontalLine(Color.grey);
