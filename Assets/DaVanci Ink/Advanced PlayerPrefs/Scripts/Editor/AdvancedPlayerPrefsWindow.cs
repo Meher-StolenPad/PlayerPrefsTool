@@ -1317,7 +1317,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     AdvancedPlayerPrefs.SetArray(key, arrayBool, useEncryption);
                     break;
                 case PlayerPrefsType.ArrayDouble:
-                    AdvancedPlayerPrefs.SetArray(key, arrayBool, useEncryption);
+                    AdvancedPlayerPrefs.SetArray(key, arrayDouble, useEncryption);
                     break;
                 case PlayerPrefsType.ArrayByte:
                     AdvancedPlayerPrefs.SetArray(key, arrayByte, useEncryption);
