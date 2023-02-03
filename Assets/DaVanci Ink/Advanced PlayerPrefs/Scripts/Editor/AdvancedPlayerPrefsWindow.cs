@@ -37,7 +37,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private RegistryKey RegistryKey;
         private string CompanyName;
         private string ProductName;
-
         private Vector2 ScrollViewPosition;
 
         private Texture RefreshButtonIcon;
@@ -355,8 +354,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
 
-            ScrollViewPosition = GUILayout.BeginScrollView(ScrollViewPosition, GUIStyle.none, GUI.skin.verticalScrollbar, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
+            ScrollViewPosition = GUILayout.BeginScrollView(ScrollViewPosition, GUIStyle.none, GUI.skin.verticalScrollbar, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
             for (int i = 0; i < _playerPrefsHolderList.Count; i++)
             {
@@ -560,21 +559,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[ (int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
 
                 GUI.backgroundColor = Color.green;
-                if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
+                if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save <" + _playerPrefsHolderList[i].Key + "> current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
                 {
                     _playerPrefsHolderList[i].SaveKey();
                     DavanciDebug.Log("Save " + _playerPrefsHolderList[i].Key, Color.green);
                 }
 
                 GUI.backgroundColor = Color.yellow;
-                if (GUILayout.Button(new GUIContent(RevertButtonIcon, "Reset data to default"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
+                if (GUILayout.Button(new GUIContent(RevertButtonIcon, "Reset <" + _playerPrefsHolderList[i].Key + "> data to default"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
                 {
                     DavanciDebug.Log("Reset " + _playerPrefsHolderList[i].Key, Color.cyan);
                     _playerPrefsHolderList[i].BackUp();
                 }
 
                 GUI.backgroundColor = Color.red;
-                if (GUILayout.Button(new GUIContent(DeleteButtonIcon, "Delete PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.55f)))
+                if (GUILayout.Button(new GUIContent(DeleteButtonIcon, "Delete <" + _playerPrefsHolderList[i].Key + "> PlayerPrefs data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.45f)))
                 {
 
                     _playerPrefsHolderList[i].Delete();
@@ -589,7 +588,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUILayout.EndHorizontal();
                 style3.normal.textColor = oldstylecolor;
             }
-
             EditorGUILayout.EndScrollView();
 
             GUILayout.EndVertical();

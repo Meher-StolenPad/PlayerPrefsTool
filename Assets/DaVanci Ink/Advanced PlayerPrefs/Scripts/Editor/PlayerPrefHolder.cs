@@ -140,16 +140,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Value = JsonConvert.SerializeObject(arrayDouble);
                     break;
                 case PlayerPrefsType.ArrayVector3:
-                    Value = JsonConvert.SerializeObject(arrayVector3, Formatting.Indented, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
+                    Value = JsonConvert.SerializeObject(arrayVector3.GetVector3DataArray());
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
-                    Value = JsonConvert.SerializeObject(arrayVector3Int, Formatting.Indented, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
+                    Value = JsonConvert.SerializeObject(arrayVector3Int.GetVector3IntDataArray());
                     break;
                 case PlayerPrefsType.ArrayString:
                     Value = JsonConvert.SerializeObject(arrayString);
@@ -158,22 +152,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Value = JsonConvert.SerializeObject(arrayLong);
                     break;
                 case PlayerPrefsType.ArrayVector2:
-                    Value = JsonConvert.SerializeObject(arrayVector2, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
+                    Value = JsonConvert.SerializeObject(arrayVector2.GetVector2DataArray());
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
-                    Value = JsonConvert.SerializeObject(arrayVector2Int, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
+                    Value = JsonConvert.SerializeObject(arrayVector2Int.GetVector2IntDataArray());
                     break;
                 case PlayerPrefsType.ArrayVector4:
-                    Value = JsonConvert.SerializeObject(arrayVector4, new JsonSerializerSettings
-                    {
-                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                    });
+                    Value = JsonConvert.SerializeObject(arrayVector4.GetVector4DataArray());
                     break;
             }
         }

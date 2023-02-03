@@ -79,7 +79,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 if (item.Key == AdvancedPlayerPrefsGlobalVariables.APPsCSDK || item.Key.ToLower().Contains("unity")) continue;
 
-                //item.SetValue();
+                item.SetValue();
 
                 ExportSerialzer toExport = new ExportSerialzer
                 {

@@ -917,7 +917,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
-                    Debug.Log("Array : " + output);
                     return;
                 }
             }
