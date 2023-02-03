@@ -134,7 +134,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Value = JsonConvert.SerializeObject(arrayBool);
                     break;
                 case PlayerPrefsType.ArrayByte:
-                    Value = JsonConvert.SerializeObject(arrayByte);
+                    Value = JsonConvert.SerializeObject(arrayByte.Select(b => (int)b).ToArray());
                     break;
                 case PlayerPrefsType.ArrayDouble:
                     Value = JsonConvert.SerializeObject(arrayDouble);
