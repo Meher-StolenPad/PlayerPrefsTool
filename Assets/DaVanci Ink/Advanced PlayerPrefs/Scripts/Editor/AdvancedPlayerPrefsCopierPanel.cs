@@ -6,10 +6,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 {
     public class AdvancedPlayerPrefsCopierPanel : EditorWindow
     {
-        [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsSetupMenuName)]
+        private static AdvancedPlayerPrefsCopierPanel PlayerPrefsWindow;
+        //[MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsSetupMenuName)]
         public static void ShowWindow()
         {
-            AdvancedPlayerPrefsCopierPanel PlayerPrefsWindow = (AdvancedPlayerPrefsCopierPanel)GetWindow(typeof(AdvancedPlayerPrefsCopierPanel), true);
+            PlayerPrefsWindow = (AdvancedPlayerPrefsCopierPanel)GetWindow(typeof(AdvancedPlayerPrefsCopierPanel), true);
             PlayerPrefsWindow.titleContent = new GUIContent("Advanced PlayerPrefs Immegration Panel");
             Vector2 minSize = new Vector2(400, 500);
             Vector2 maxSize = new Vector2(400, 500);
@@ -21,31 +22,32 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefsWindow.Show();
             IsActive = true;
         }
-        private Texture Logo;
+
         private Texture cover;
         private Texture developedBy;
-        private bool isAlreadyInstalled;
-        private readonly string SetupButtonText = "Setup Encryption";
-        private readonly string SelectButtonText = "Select Settings";
-        private Texture2D ShowButtonNormal;
-        private Texture2D ShowButtonHover;
 
-        private Texture2D SelectButtonNormal;
-        private Texture2D SelectButtonHover;
         internal static bool IsActive;
+
+        internal static int PlayerPrefsFound;
+        internal static string CompanyName; 
+        internal static string ProductName; 
+
+        internal static void Init(int count,string companyName,string productName)
+        {
+            PlayerPrefsFound = count;
+            CompanyName = companyName;
+            ProductName = productName;
+        }
         void OnInspectorUpdate()
         {
             Repaint();
         }
         private void OnEnable()
         {
-            Logo = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Logo.png", typeof(Texture));
             cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsPROCover.png", typeof(Texture));
 
             string developedByName = EditorGUIUtility.isProSkin ? "DavanciButtonPro.png" : "DavanciButton.png";
             developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/"+ developedByName, typeof(Texture));
-
-            isAlreadyInstalled = AdvancedPlayerPrefs.SelectSettings(false);
         }
         void OnDisable()
         {
@@ -55,19 +57,25 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void OnGUI()
         {
             var oldBackgroundColor = GUI.backgroundColor;
-            GUIStyle style2 = new GUIStyle(GUI.skin.button);
-            style2.fontSize = 12;
-            style2.fontStyle = FontStyle.Bold;
-            style2.alignment = TextAnchor.MiddleCenter;
+            GUIStyle style2 = new GUIStyle(GUI.skin.button)
+            {
+                fontSize = 12,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter
+            };
             style2.normal.textColor = Color.white;
-           // style2.normal.background = Texture2D.whiteTexture;
+            //style2.wordWrap = true;
 
-            GUIStyle style3 = new GUIStyle(EditorStyles.objectFieldThumb);
+            // style2.normal.background = Texture2D.whiteTexture;
 
-            style3.fontSize = 12;
-            style3.fontStyle = FontStyle.BoldAndItalic;
-            style3.alignment = TextAnchor.UpperLeft;
+            GUIStyle style3 = new GUIStyle(EditorStyles.objectFieldThumb)
+            {
+                fontSize = 12,
+                fontStyle = FontStyle.BoldAndItalic,
+                alignment = TextAnchor.UpperLeft
+            };
             style3.normal.textColor = Color.white;
+            style3.wordWrap = true;
 
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10);
             GUILayout.BeginArea(new Rect(0, 0, 825 / 2 - 10, 240 / 2), cover);
@@ -77,13 +85,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.BeginVertical();
             GUILayout.Label("Version 1.0.0" + " [Release version]", EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
-            GUILayout.Label("Advanced player prefs Installed.Setup required to use encryption!", EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
+            GUILayout.Label("Product Name/Company Name has been changed !", EditorStyles.miniBoldLabel, GUILayout.Width(buttonWidth), GUILayout.Height(20));
             GUILayout.EndVertical();
 
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 120;
-            GUILayout.Space((Screen.width-20) / 15 - (iButtonWidth-5) / 10);
+            GUILayout.Space((Screen.width-20) / 4 - (iButtonWidth-5) / 5);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
@@ -99,43 +107,22 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 AdvancedPlayerPrefsTool.ShowWindow();
             }
 
-
-            style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
-           // style2.normal.background = SelectButtonNormal;
-
-           // style2.hover.background = SelectButtonHover;
-            style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
-
             GUILayout.Space(5);
             style2.fontSize = oldfontSize;
-            if (GUILayout.Button(isAlreadyInstalled ? SelectButtonText : SetupButtonText, style2, GUILayout.Width(120), GUILayout.Height(40)))
-            {
-                if (isAlreadyInstalled)
-                {
-                    AdvancedPlayerPrefs.SelectSettings();
-                }
-                else
-                {
-                    AdvancedPlayerPrefs.CreateSettings();
-                    AdvancedPlayerPrefs.SelectSettings();
-                    isAlreadyInstalled = true;
-                }
-                //you code here
-            }
-            GUILayout.Space(5);
-
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
             //style2.normal.background = ShowButtonNormal;
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             // style2.hover.background = ShowButtonHover;
-
-            if (GUILayout.Button("Import Samples", style2, GUILayout.Width(120), GUILayout.Height(40)))
+            GUI.enabled = false;
+            if (GUILayout.Button("Create Backup", style2, GUILayout.Width(120), GUILayout.Height(40)))
             {
                 AssetDatabase.ImportPackage(AdvancedPlayerPrefsGlobalVariables.SamplesPackagePath, true);
             }
+
             GUI.backgroundColor = oldBackgroundColor;
             style2.normal.textColor = Color.white;
+            GUI.enabled = true;
 
             GUILayout.EndHorizontal();
             GUILayout.Space(5);
@@ -146,39 +133,32 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.BeginVertical();
 
             GUILayout.Label(
-                "NOTE : To Use encryption,you need an encryption settings file,\n  where you could setup your encryption settings.\n\n" +
-                "- Encryption based on AES encryption (2 keys : 32 and 16 bytes)\n" +
-                "- You can export/import your current keys in/from file and use it\n where ever you want.\n\n" +
-                "*Use the setup button to create an Encryption settings file ! \n"
-                , style3, GUILayout.Width(buttonWidth), GUILayout.Height(125));
-
-
+                "NOTE : When you change the " +
+                GetStyledText("ProductName/CompanyName", EditorGUIUtility.isProSkin ? Color.grey : Color.black ) +
+                "of unity project,You will lose all your current PlayerPrefs.\n\n" +
+                "With Advanced PlayerPrefs editor tool,you can immegrate all your PlayerPrefs.If you close this panel,the process will be canceled.\n\n" +
+                 GetStyledText(PlayerPrefsFound.ToString(), EditorGUIUtility.isProSkin ? Color.grey : Color.black) +
+                " Player Prefs Can be moved from " +
+                GetStyledText(ProductName+"/"+CompanyName+
+                "\n\nDo you want to import them ? ", EditorGUIUtility.isProSkin ? Color.grey : Color.black)
+                , style3, GUILayout.Width(buttonWidth), GUILayout.Height(155));
             DrawHorizontalLine(Color.gray);
             DrawBottomButtons();
         }
+
         private void DrawBottomButtons()
         {
 
-            EditorGUILayout.BeginHorizontal();
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10) / 2f;
-            if (GUILayout.Button("Website", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
-            {
-                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.WebsiteLink);
-            }
-
-            GUILayout.FlexibleSpace();
-
-            if (GUILayout.Button("Get Started", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
-            {
-                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.GetStartedLink);
-            }
-
-            EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
 
-            if (GUILayout.Button("Changelogs", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
+            if (GUILayout.Button("Import", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
-                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.ChangeLogsLink);
+                AdvancedPlayerPrefsTool.ImportFrom(CompanyName, ProductName);
+
+                EditorCallBackHolder.UpadteInfo();
+                Debug.Log("Prefs Auto Upadted : " + CompanyName + "/" + ProductName);
+                PlayerPrefsWindow.Close();
             }
 
             GUILayout.FlexibleSpace();
@@ -189,6 +169,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             EditorGUILayout.EndHorizontal();
             GUILayout.Space(3);
+
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(Screen.width / 2 - buttonWidth / 2);
+
+            if (GUILayout.Button(developedBy, GUILayout.Width(buttonWidth), GUILayout.Height(50)))
+            {
+                Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.DavanciInkLink);
+            }
+            EditorGUILayout.EndHorizontal();
         }
         private void DrawHorizontalLine(Color color)
         {
@@ -201,6 +190,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Box(GUIContent.none, horizontalLine);
             GUI.color = c;
         }
-
+        private string GetStyledText(string text, Color color)
+        {
+            return "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" + text +" "+ "</color>";
+        }
     }
 }

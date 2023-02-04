@@ -240,14 +240,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Debug Mode", GUILayout.Width(buttonWidth / 2.5f));
-            _DebugMode = (DebugMode)EditorGUILayout.EnumPopup(_DebugMode, GUILayout.Width(buttonWidth / 1.2f));
+            _DebugMode = (DebugMode)EditorGUILayout.Popup((int)_DebugMode, AdvancedPlayerPrefsGlobalVariables.DebugMode, GUILayout.Width(buttonWidth / 1.1f));
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Backup Mode", GUILayout.Width(buttonWidth / 2.5f));
-            _BackupMode = (BackupMode)EditorGUILayout.EnumPopup(_BackupMode, GUILayout.Width(buttonWidth / 1.2f));
+            _BackupMode = (BackupMode)EditorGUILayout.Popup((int)_BackupMode, AdvancedPlayerPrefsGlobalVariables.BackupMode, GUILayout.Width(buttonWidth / 1.1f));
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);

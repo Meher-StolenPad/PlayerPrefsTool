@@ -403,14 +403,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     returnValue = v4c == v4t;
                     break;
                 case PlayerPrefsType.Color:
+                    
+
                     var cc = AdvancedPlayerPrefs.StringToColor(Value.ToString());
                     var ct = AdvancedPlayerPrefs.StringToColor(TempValue.ToString());
+
                     returnValue = cc == ct;
+
                     break;
                 case PlayerPrefsType.HDRColor:
                     var hcc = AdvancedPlayerPrefs.StringToColor(Value.ToString());
                     var hct = AdvancedPlayerPrefs.StringToColor(TempValue.ToString());
-                    returnValue = hcc == hct;
+
+                    Debug.Log(hcc.ToString());
+                    Debug.Log(hct.ToString());
+                    returnValue = hcc.Equals(hct);
+                    Debug.Log(returnValue);
+
                     break;
                 case PlayerPrefsType.Bool:
                     var bc = AdvancedPlayerPrefs.StringToBool(Value.ToString());

@@ -11,14 +11,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static string CurrentCompanyName;
         private static string CurrentProductName;
 
+        private static string HolderCompanyName;
+        private static string HolderProductName;    
+
         private static float LastCheckTime;
         private static bool Subscribed;
         private static bool InProgress;
+        private static float LastChangeTime;
 
+            
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
-            Debug.Log("Initialize");
             AdvancedPlayerPrefs.OnSettingsCreated += Initialize;
             AdvancedPlayerPrefsSettings.OnBackupModeChangedAction += BackupModeChanged;
             previousProductName = PlayerSettings.productName;
@@ -67,43 +71,74 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 CurrentProductName = PlayerSettings.productName;
                 CurrentCompanyName = PlayerSettings.companyName;
 
-                if (!previousProductName.Equals(CurrentProductName) || !previousCompanyName.Equals(CurrentCompanyName))
+                if (!InProgress)
                 {
-                    if (AdvancedPlayerPrefsSettings.Instance.backupMode == BackupMode.Manual_Update)
+                    if (HolderCompanyName != CurrentCompanyName || HolderProductName != CurrentProductName)
+                    {
+                        HolderCompanyName = CurrentCompanyName;
+                        HolderProductName = CurrentProductName;
+                        LastChangeTime = currentTime;
+                    }
+                    if (currentTime - LastChangeTime >= 5f)
+                    {
+                        CheckChanges(currentTime);
+                    }
+
+                }
+                
+                LastCheckTime = currentTime;
+            }
+        }
+
+        private static void CheckChanges(float currentTime)
+        {
+
+            if (!previousProductName.Equals(CurrentProductName) || !previousCompanyName.Equals(CurrentCompanyName))
+            {
+                if (AdvancedPlayerPrefsSettings.Instance.backupMode == BackupMode.Manual_Update)
+                {
+                    int playerPrefsCount = AdvancedPlayerPrefsTool.GetPlayerPrefsCount(previousCompanyName, previousProductName);
+                    if (playerPrefsCount > 0)
                     {
                         if (AdvancedPlayerPrefsCopierPanel.IsActive)
                         {
-                            Debug.Log("Upddate info there");
                         }
                         else
                         {
+                            AdvancedPlayerPrefsCopierPanel.Init(playerPrefsCount, previousCompanyName,previousProductName);
                             AdvancedPlayerPrefsCopierPanel.ShowWindow();
+                            LastChangeTime = currentTime;
                         }
                     }
                     else
                     {
-                        if (!InProgress)
-                        {
-                            InProgress = true;
-                            AdvancedPlayerPrefsTool.ImportFrom(previousCompanyName, previousProductName);
-                            previousCompanyName = CurrentCompanyName;
-                            previousProductName = CurrentProductName;
-                            Debug.Log("Prefs Auto Upadted : " + CurrentProductName + "/" + CurrentProductName);
-                            InProgress = false;
-                        }
 
-
-
+                        previousCompanyName = CurrentCompanyName;
+                        previousProductName = CurrentProductName;
                     }
-                    Debug.Log("Product/Company name changed to: " + CurrentProductName + "/" + CurrentProductName);
                 }
-                LastCheckTime = currentTime;
+                else
+                {
+                    if (!InProgress)
+                    {
+                        InProgress = true;
+                        AdvancedPlayerPrefsTool.ImportFrom(previousCompanyName, previousProductName);
+                        previousCompanyName = CurrentCompanyName;
+                        previousProductName = CurrentProductName;
+                        Debug.Log("Prefs Auto Upadted : " + CurrentProductName + "/" + CurrentProductName);
+                        InProgress = false;
+                        LastChangeTime = currentTime;
+                    }
+                }
             }
         }
+
         internal static void UpadteInfo()
         {
             previousCompanyName = CurrentCompanyName;
             previousProductName = CurrentProductName;
+            HolderCompanyName = CurrentCompanyName;
+            HolderProductName = CurrentProductName;
         }
     }
 }

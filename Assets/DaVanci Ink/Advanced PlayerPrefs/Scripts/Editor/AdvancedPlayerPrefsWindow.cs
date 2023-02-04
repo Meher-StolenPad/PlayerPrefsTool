@@ -1567,7 +1567,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var pref in prefs)
             {
-                Debug.Log("Key : " + pref.Key);
                 pref.Save();
             }
             if (t > 0)
@@ -1578,6 +1577,20 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
+        }
+        internal static int GetPlayerPrefsCount(string importCompanyName, string importProductName)
+        {
+            string currentCompanyName = PlayerSettings.companyName;
+            string currentProductName = PlayerSettings.productName;
+
+            PlayerSettings.productName = importProductName;
+            PlayerSettings.companyName = importCompanyName;
+
+            var t= GetPlayerPrefs(importCompanyName, importProductName).Count;
+
+            PlayerSettings.productName = currentProductName;
+            PlayerSettings.companyName = currentCompanyName;
+            return t;
         }
         private void GetBackupFromFile(string tempPath)
         {
