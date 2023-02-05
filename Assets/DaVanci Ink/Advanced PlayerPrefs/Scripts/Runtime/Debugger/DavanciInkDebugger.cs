@@ -37,6 +37,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static void Log(string message, Color color)
         {
+            CheckNewSettings();
+            if (dm == DebugMode.SilentMode) return;
+
             if (color.Equals(Color.green))
             {
                 color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProGreenDebugColor : AdvancedPlayerPrefsGlobalVariables.GreenDebugColor;
@@ -53,7 +56,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProGreyDebugColor : AdvancedPlayerPrefsGlobalVariables.GreyDebugColor;
             }
-            CheckNewSettings();
 
             switch (dm)
             {
@@ -70,6 +72,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static void Warning(string message)
         {
             CheckNewSettings();
+            if (dm == DebugMode.SilentMode) return;
+
             switch (dm)
             {
                 case DebugMode.EditorOnly:
@@ -85,6 +89,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static void Error(string message)
         {
             CheckNewSettings();
+            if (dm == DebugMode.SilentMode) return;
+
             switch (dm)
             {
                 case DebugMode.EditorOnly:

@@ -20,7 +20,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     internal enum BackupMode
     {
         Auto_Update,
-        Manual_Update,  
+        Manual_Update,
         Disable
     }
 
@@ -45,6 +45,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
     {
         internal override void OnInitialize()
         {
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+                CheckKey();
+#else
+                CheckKey();
+#endif
+        }
+        internal void Initialize()
+        {
             CheckKey();
         }
         private readonly char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
@@ -52,17 +61,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;
         public string Iv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
         public string SavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
-
+#if UNITY_EDITOR
         private string OldKey = AdvancedPlayerPrefsGlobalVariables.InitialKey;
         private string OldIv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
         private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
-
+#endif
         [HideInInspector] public bool useDeviceKey;
         [HideInInspector] public bool AutoEncryption;
 
         [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
         [HideInInspector] public BackupMode backupMode = BackupMode.Manual_Update;
         internal static Action OnBackupModeChangedAction;
+
         internal void OnBackupModeChanged()
         {
             Debug.Log("OnBackupModeChanged" + backupMode);
@@ -99,9 +109,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
         }
-//        Saved Key : 2v&Vbs.0d8@9szBg5h!cc9gWyr.F2J/vxj=dRHbckvpVfBFmyLGElqlMtXp1CJqg
-//Key : 2vbsd8sz5hc9yr2JxjRHkvfByLlqtXCJ
-//IV : V09gcWFvdcVmEM1g
+        //        Saved Key : 2v&Vbs.0d8@9szBg5h!cc9gWyr.F2J/vxj=dRHbckvpVfBFmyLGElqlMtXp1CJqg
+        //Key : 2vbsd8sz5hc9yr2JxjRHkvfByLlqtXCJ
+        //IV : V09gcWFvdcVmEM1g
         internal void SetSavedKeyFromKeys()
         {
             string randomString = CreateRandomString(32);

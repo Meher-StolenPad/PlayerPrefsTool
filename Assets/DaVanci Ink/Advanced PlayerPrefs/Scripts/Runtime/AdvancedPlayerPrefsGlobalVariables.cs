@@ -134,7 +134,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             "Slient Mode",
             "Editor Only (Recommended)",
-            "Build/Editor Mode"
+            "Build & Editor Mode"
         };
         internal static readonly string[] BackupMode = new string[]
         {

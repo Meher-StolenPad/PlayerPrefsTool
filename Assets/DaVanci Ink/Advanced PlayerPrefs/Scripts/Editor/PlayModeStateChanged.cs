@@ -26,7 +26,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayModeStateChange.ExitingEditMode:
                     if (AdvancedPlayerPrefsSettings.Instance != null)
+                    {
                         AdvancedPlayerPrefsSettings.Instance.SaveOldKeys();
+                        AdvancedPlayerPrefsSettings.Instance.Initialize();
+
+                    }
                     break;
             }
         }

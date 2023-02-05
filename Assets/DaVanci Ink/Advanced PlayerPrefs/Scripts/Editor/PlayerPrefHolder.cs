@@ -65,6 +65,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(Value.ToString());
                     so = new SerializedObject(this);
                     ValueProperty = so.FindProperty("arrayFloat");
+                    // BackupValues = arrayFloat;
                     break;
                 case PlayerPrefsType.ArrayBool:
                     arrayBool = AdvancedPlayerPrefs.StringToArrayBool(Value.ToString());
@@ -230,50 +231,74 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.ArrayInt:
                     AdvancedPlayerPrefs.SetArray(Key, arrayInt, isEncrypted);
                     TempValue = arrayInt;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayFloat:
                     AdvancedPlayerPrefs.SetArray(Key, arrayFloat, isEncrypted);
                     TempValue = arrayFloat;
+                    BackupValues = TempValue;
                     break;
+
                 case PlayerPrefsType.ArrayBool:
                     AdvancedPlayerPrefs.SetArray(Key, arrayBool, isEncrypted);
                     TempValue = arrayBool;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayByte:
                     AdvancedPlayerPrefs.SetArray(Key, arrayByte, isEncrypted);
                     TempValue = arrayByte;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayDouble:
                     AdvancedPlayerPrefs.SetArray(Key, arrayDouble, isEncrypted);
                     TempValue = arrayDouble;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayVector3:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector3, isEncrypted);
                     TempValue = arrayVector3;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector3Int, isEncrypted);
                     TempValue = arrayVector3Int;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayString:
                     AdvancedPlayerPrefs.SetArray(Key, arrayString, isEncrypted);
                     TempValue = arrayString;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayLong:
                     AdvancedPlayerPrefs.SetArray(Key, arrayLong, isEncrypted);
                     TempValue = arrayLong;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayVector2:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector2, isEncrypted);
                     TempValue = arrayVector2;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector2Int, isEncrypted);
                     TempValue = arrayVector2Int;
+                    BackupValues = TempValue;
+
                     break;
                 case PlayerPrefsType.ArrayVector4:
                     AdvancedPlayerPrefs.SetArray(Key, arrayVector4, isEncrypted);
                     TempValue = arrayVector4;
+                    BackupValues = TempValue;
+
                     break;
                 default:
                     break;
@@ -283,69 +308,150 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             GUI.FocusControl(null);
             TempValue = BackupValues;
+            Debug.Log("BackupValues : " + BackupValues);
+            Debug.Log("Value : " + Value);
+
 
             switch (type)
             {
                 case PlayerPrefsType.ArrayInt:
-                    arrayInt = AdvancedPlayerPrefs.StringToArrayInt(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayInt");
+                    if (BackupValues as int[] == null)
+                    {
+                        arrayInt = AdvancedPlayerPrefs.StringToArrayInt(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayInt = BackupValues as int[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayFloat:
-                    arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayFloat");
+
+                    if (BackupValues as float[] == null)
+                    {
+                        arrayFloat = AdvancedPlayerPrefs.StringToArrayFloat(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayFloat = BackupValues as float[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
                 case PlayerPrefsType.ArrayBool:
-                    arrayBool = AdvancedPlayerPrefs.StringToArrayBool(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayBool");
+                    if (BackupValues as bool[] == null)
+                    {
+                        arrayBool = AdvancedPlayerPrefs.StringToArrayBool(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayBool = BackupValues as bool[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
                 case PlayerPrefsType.ArrayByte:
-                    arrayByte = AdvancedPlayerPrefs.StringToArrayByte(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayByte");
+                    if (BackupValues as byte[] == null)
+                    {
+                        arrayByte = AdvancedPlayerPrefs.StringToArrayByte(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayByte = BackupValues as byte[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
                 case PlayerPrefsType.ArrayDouble:
-                    arrayDouble = AdvancedPlayerPrefs.StringToArrayDouble(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayDouble");
+                    if (BackupValues as double[] == null)
+                    {
+                        arrayDouble = AdvancedPlayerPrefs.StringToArrayDouble(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayDouble = BackupValues as double[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayVector3:
-                    arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayVector3");
+                    if (BackupValues as Vector3[] == null)
+                    {
+                        arrayVector3 = AdvancedPlayerPrefs.StringToArrayVector3(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayVector3 = BackupValues as Vector3[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayVector3Int:
-                    arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayVector3Int");
+                    if (BackupValues as Vector3Int[] == null)
+                    {
+                        arrayVector3Int = AdvancedPlayerPrefs.StringToArrayVector3Int(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayVector3Int = BackupValues as Vector3Int[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayString:
-                    arrayString = AdvancedPlayerPrefs.StringToArrayString(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayString");
+                    if (BackupValues as string[] == null)
+                    {
+                        arrayString = AdvancedPlayerPrefs.StringToArrayString(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayString = BackupValues as string[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
                 case PlayerPrefsType.ArrayLong:
-                    arrayLong = AdvancedPlayerPrefs.StringToArrayLong(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayLong");
+                    if (BackupValues as long[] == null)
+                    {
+                        arrayLong = AdvancedPlayerPrefs.StringToArrayLong(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayLong = BackupValues as long[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayVector2:
-                    arrayVector2 = AdvancedPlayerPrefs.StringToArrayVector2(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayVector2");
+                    if (BackupValues as Vector2[] == null)
+                    {
+                        arrayVector2 = AdvancedPlayerPrefs.StringToArrayVector2(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayVector2 = BackupValues as Vector2[];
+                    }
+                    so.ApplyModifiedProperties();
+
                     break;
                 case PlayerPrefsType.ArrayVector2Int:
-                    arrayVector2Int = AdvancedPlayerPrefs.StringToArrayVector2Int(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayVector2Int");
+                    if (BackupValues as Vector2Int[] == null)
+                    {
+                        arrayVector2Int = AdvancedPlayerPrefs.StringToArrayVector2Int(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayVector2Int = BackupValues as Vector2Int[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
                 case PlayerPrefsType.ArrayVector4:
-                    arrayVector4 = AdvancedPlayerPrefs.StringToArrayVector4(BackupValues.ToString());
-                    so = new SerializedObject(this);
-                    ValueProperty = so.FindProperty("arrayVector4");
-
+                    if (BackupValues as Vector4[] == null)
+                    {
+                        arrayVector4 = AdvancedPlayerPrefs.StringToArrayVector4(BackupValues.ToString());
+                    }
+                    else
+                    {
+                        arrayVector4 = BackupValues as Vector4[];
+                    }
+                    so.ApplyModifiedProperties();
                     break;
             }
         }
@@ -403,7 +509,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     returnValue = v4c == v4t;
                     break;
                 case PlayerPrefsType.Color:
-                    
+
 
                     var cc = AdvancedPlayerPrefs.StringToColor(Value.ToString());
                     var ct = AdvancedPlayerPrefs.StringToColor(TempValue.ToString());
@@ -414,12 +520,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.HDRColor:
                     var hcc = AdvancedPlayerPrefs.StringToColor(Value.ToString());
                     var hct = AdvancedPlayerPrefs.StringToColor(TempValue.ToString());
-
-                    Debug.Log(hcc.ToString());
-                    Debug.Log(hct.ToString());
                     returnValue = hcc.Equals(hct);
-                    Debug.Log(returnValue);
-
                     break;
                 case PlayerPrefsType.Bool:
                     var bc = AdvancedPlayerPrefs.StringToBool(Value.ToString());

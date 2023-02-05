@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using DaVanciInk.AdvancedPlayerPrefs;
 using Facebook.Unity.Settings;
 using System;
@@ -92,3 +93,4 @@ public class PrivacyCreatorWizard : ScriptableWizard
        // DestroyImmediate(ObjectHolder);
     }
 }
+#endif

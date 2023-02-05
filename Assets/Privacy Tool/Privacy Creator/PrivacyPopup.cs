@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -27,3 +28,4 @@ public class PrivacyPopup : ScriptableWizard
         helpString = "Copy To Clip board";
     }
 }
+#endif

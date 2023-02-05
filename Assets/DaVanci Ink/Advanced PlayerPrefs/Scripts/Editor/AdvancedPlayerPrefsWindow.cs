@@ -464,6 +464,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
+
                         }
                         break;
                     case PlayerPrefsType.ArrayFloat:
@@ -471,6 +473,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
 
@@ -479,6 +482,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayByte:
@@ -486,6 +490,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayDouble:
@@ -493,6 +498,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3:
@@ -500,6 +506,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3Int:
@@ -507,6 +514,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayString:
@@ -514,6 +522,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayLong:
@@ -521,6 +530,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector2:
@@ -528,6 +538,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector2Int:
@@ -535,6 +546,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector4:
@@ -542,6 +554,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             _playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     default:
