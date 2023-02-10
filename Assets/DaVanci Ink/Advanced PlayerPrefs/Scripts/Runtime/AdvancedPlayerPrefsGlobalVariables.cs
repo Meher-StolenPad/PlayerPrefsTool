@@ -100,11 +100,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             "Double",
             "Long",
 
-            "VVector 2",
-            "Vector 2 Int",
+            "Vector 2",
+            "Vector2 Int",
             "Vector 3",
-            "Vector 3 Int",
-            "VVector 4",
+            "Vector3 Int",
+            "Vector 4",
 
             "Color",
             "HDR Color",
