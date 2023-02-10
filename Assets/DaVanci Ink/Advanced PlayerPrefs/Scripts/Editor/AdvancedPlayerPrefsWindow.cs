@@ -662,9 +662,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[(int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth*1.5f));
 
-                GUI.backgroundColor = Color.grey;
                 var pinned = _playerPrefsHolderList[i].Pinned;
                 var key = _playerPrefsHolderList[i].Key;
+
+                GUI.backgroundColor = pinned ? AdvancedPlayerPrefsGlobalVariables.UnpinButtonColor : AdvancedPlayerPrefsGlobalVariables.PinButtonColor;
 
                 GUIContent g = new GUIContent(
                     pinned ? UnpinButtonIcon : PinButtonIcon,
