@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +12,79 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         Name,
         Type
     }
+    [Serializable]
+    internal class PinnedPrefrences
+    {
+
+        [SerializeField] List<string> PinnedKeys = new List<string>();
+
+        public PinnedPrefrences(bool t)
+        {
+            LoadInit();
+        }
+
+        public PinnedPrefrences()
+        {
+        }
+
+        internal bool ContainsKey(string key)
+        {
+            return PinnedKeys.Contains(key);
+        }
+        internal void HandlePrefrence(string key, bool isPinned)
+        {
+            if (isPinned)
+            {
+                RemovePinned(key);
+                DavanciDebug.Log(key + " Unpinned ", Color.red);
+            }
+            else
+            {
+                AddPinned(key);
+                DavanciDebug.Log(key + " pinned ", Color.green);
+            }
+        }
+        private void AddPinned(string key)
+        {
+            if (PinnedKeys.Contains(key)) return;
+            PinnedKeys.Add(key);
+            Save();
+        }
+        private void RemovePinned(string key)
+        {
+            if (!PinnedKeys.Contains(key)) return;
+            PinnedKeys.Remove(key);
+            Save();
+        }
+        internal void Save()
+        {
+            string t = JsonUtility.ToJson(this);
+            EditorPrefs.SetString("PinnedPrefrences", t);
+        }
+        internal List<string> Load()
+        {
+            var t = JsonUtility.FromJson<PinnedPrefrences>(EditorPrefs.GetString("PinnedPrefrences"));
+
+            if (t == null) return new List<string>();
+            return t.PinnedKeys;
+        }
+        internal void LoadInit()
+        {
+            string tt = EditorPrefs.GetString("PinnedPrefrences");
+            var t = JsonUtility.FromJson<PinnedPrefrences>(tt);
+
+            if (t == null)
+            {
+                PinnedKeys = new List<string>();
+                Save();
+            }
+            else
+            {
+                PinnedKeys = t.PinnedKeys;
+            }
+        }
+    }
+
     internal class AdvancedPlayerPrefsTool : EditorWindow
     {
         #region Private Variables
@@ -43,8 +115,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private Texture DeleteButtonIcon;
         private Texture ApplyAllButtonIcon;
         private Texture ExportButtonIcon;
-
-
+        private Texture PinButtonIcon;
+        private Texture UnpinButtonIcon;
         private string ExportPath
         {
             get => EditorPrefs.GetString(nameof(AdvancedPlayerPrefsTool) + "." + nameof(ExportPath));
@@ -111,6 +183,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private bool isProSKin;
         private bool UseAutoEncryption;
+
+        private PinnedPrefrences pinnedPrefrences;
+
         #endregion
 
         #region Unity editor Tool 
@@ -128,6 +203,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         private void OnEnable()
         {
+            pinnedPrefrences = new PinnedPrefrences(true);
+
             CompanyName = PlayerSettings.companyName;
             ProductName = PlayerSettings.productName;
 
@@ -139,6 +216,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DeleteButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.DeleteButtonIconTexturePath, typeof(Texture));
             ApplyAllButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ApplyAllButtonIconTexturePath, typeof(Texture));
             ExportButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.ExportButtonIconTexturePath, typeof(Texture));
+            PinButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.PinButtonIconTexturePath, typeof(Texture));
+            UnpinButtonIcon = (Texture)AssetDatabase.LoadAssetAtPath(AdvancedPlayerPrefsGlobalVariables.UnpinButtonIconTexturePath, typeof(Texture));
             GetAllPlayerPrefs();
             FiltredPlayerPrefHolderList.Clear();
             EncryptionSettingsFounded = AdvancedPlayerPrefs.SelectSettings(false);
@@ -215,7 +294,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (GUILayout.Button(new GUIContent(RefreshButtonIcon, "Refresh all PlayerPrefs data"), EditorStyles.toolbarButton, GUILayout.Width(FullbuttonWidth)))
             {
-                Refresh();
+                RefreshWithLog();
             }
         }
         private void DrawShowEditorPrefsButton()
@@ -225,7 +304,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             ShowEditorPrefs = GUILayout.Toggle(ShowEditorPrefs, "Show Editor prefs", EditorStyles.miniButton, GUILayout.Width(FullbuttonWidth + 4));
             if (EditorPrefsAvailable != ShowEditorPrefs)
             {
-                Refresh();
+                RefreshWithoutLog();
                 EditorPrefsAvailable = ShowEditorPrefs;
             }
         }
@@ -297,21 +376,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (PlayerPrefsSortType != SortType.Name)
                 {
                     PlayerPrefsSortType = SortType.Name;
-                    Refresh();
+                    RefreshWithoutLog();
                 }
 
             }
-            GUILayout.Label("Value", style, GUILayout.MinWidth(200), GUILayout.Width(FullbuttonWidth * 4));
+            GUILayout.Label("Value", style, GUILayout.MinWidth(200), GUILayout.Width(FullbuttonWidth * 3.5f));
 
             if (GUILayout.Toggle(PlayerPrefsSortType == SortType.Type, "Type", styletoolbar, GUILayout.Width(FullbuttonWidth * 1.5f)))
             {
                 if (PlayerPrefsSortType != SortType.Type)
                 {
                     PlayerPrefsSortType = SortType.Type;
-                    Refresh();
+                    RefreshWithoutLog();
                 }
             }
-            GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.Width((FullbuttonWidth * 1.5f) + 10));
+            GUILayout.Label("Modify", style, GUILayout.MinWidth(110), GUILayout.Width((FullbuttonWidth * 2f) + 10));
 
             GUI.backgroundColor = oldBackgroundColor;
 
@@ -346,7 +425,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void DrawPlayerPrefs(List<PlayerPrefHolder> _playerPrefsHolderList, bool isSearchDraw = false)
         {
             DrawTitles();
-
+            bool lastPrefDrawnPinned = false;
             Color oldBackgroundColor = GUI.backgroundColor;
             GUIStyle style3 = EditorStyles.textField;
 
@@ -357,6 +436,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             for (int i = 0; i < _playerPrefsHolderList.Count; i++)
             {
+                if (lastPrefDrawnPinned && !_playerPrefsHolderList[i].Pinned)
+                {
+                    //draw separation
+                    DrawHorizontalLine(Color.grey, 3f);
+                    GUILayout.Space(1f);
+                    DrawHorizontalLine(Color.grey, 3f);
+                }
+                lastPrefDrawnPinned = _playerPrefsHolderList[i].Pinned;
+
                 if (!ShowEditorPrefs)
                 {
                     if (_playerPrefsHolderList[i].TempKey.ToLower().Contains("unity"))
@@ -403,67 +491,67 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.Int:
                         if (_playerPrefsHolderList[i].isEncrypted)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField(AdvancedPlayerPrefs.StringToInt(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField(AdvancedPlayerPrefs.StringToInt(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         }
                         else
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField((int)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.IntField((int)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 3.5f));
                         }
                         break;
                     case PlayerPrefsType.Float:
                         if (_playerPrefsHolderList[i].isEncrypted)
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField(AdvancedPlayerPrefs.StringToFloat(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField(AdvancedPlayerPrefs.StringToFloat(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         }
                         else
                         {
-                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField((float)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 4));
+                            _playerPrefsHolderList[i].TempValue = EditorGUILayout.FloatField((float)_playerPrefsHolderList[i].TempValue, GUILayout.Width(FullWindowWidth * 3.5f));
                         }
                         break;
                     case PlayerPrefsType.String:
-                        _playerPrefsHolderList[i].TempValue = GUILayout.TextArea(_playerPrefsHolderList[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = GUILayout.TextArea(_playerPrefsHolderList[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Vector3:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3Field("", AdvancedPlayerPrefs.StringToVector3(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3Field("", AdvancedPlayerPrefs.StringToVector3(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Vector2:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2Field("", AdvancedPlayerPrefs.StringToVector2(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2Field("", AdvancedPlayerPrefs.StringToVector2(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Color:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, false, GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, false, GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.HDRColor:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, true, GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, true, GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Vector4:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector4Field("", AdvancedPlayerPrefs.StringToVector4(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector4Field("", AdvancedPlayerPrefs.StringToVector4(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Bool:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Toggle("", AdvancedPlayerPrefs.StringToBool(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Toggle("", AdvancedPlayerPrefs.StringToBool(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.DateTime:
-                        GUILayout.TextArea(AdvancedPlayerPrefs.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), GUILayout.Width(FullWindowWidth * 4));
+                        GUILayout.TextArea(AdvancedPlayerPrefs.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Byte:
-                        _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)AdvancedPlayerPrefs.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4)), 0, 255);
+                        _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)AdvancedPlayerPrefs.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f)), 0, 255);
                         break;
                     case PlayerPrefsType.Double:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.DoubleField(AdvancedPlayerPrefs.StringToDouble(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.DoubleField(AdvancedPlayerPrefs.StringToDouble(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Long:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.LongField(AdvancedPlayerPrefs.StringToLong(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.LongField(AdvancedPlayerPrefs.StringToLong(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Vector2Int:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2IntField("", AdvancedPlayerPrefs.StringToVector2Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2IntField("", AdvancedPlayerPrefs.StringToVector2Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.Vector3Int:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3IntField("", AdvancedPlayerPrefs.StringToVector3Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 4));
+                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3IntField("", AdvancedPlayerPrefs.StringToVector3Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(FullWindowWidth * 3.5f));
                         break;
                     case PlayerPrefsType.ArrayInt:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
 
                         }
@@ -472,7 +560,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -481,7 +569,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -489,7 +577,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -497,7 +585,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -505,7 +593,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -513,7 +601,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -521,7 +609,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -529,7 +617,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -537,7 +625,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -545,7 +633,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -553,7 +641,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 3.5f));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -568,6 +656,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 style2.alignment = TextAnchor.MiddleCenter;
 
                 GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[(int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
+
+                GUI.backgroundColor = Color.grey;
+                if (GUILayout.Button(new GUIContent(_playerPrefsHolderList[i].Pinned ? UnpinButtonIcon : PinButtonIcon, "Pin <" + _playerPrefsHolderList[i].Key + ">"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.4f)))
+                {
+                    pinnedPrefrences.HandlePrefrence(_playerPrefsHolderList[i].Key, _playerPrefsHolderList[i].Pinned);
+                    _playerPrefsHolderList[i].Pinned = !_playerPrefsHolderList[i].Pinned;
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
+                    RefreshWithoutLog();
+                }
 
                 GUI.backgroundColor = Color.green;
                 if (GUILayout.Button(new GUIContent(SaveButtonIcon, "Save <" + _playerPrefsHolderList[i].Key + "> current data"), EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.5f)))
@@ -588,7 +685,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
 
                     _playerPrefsHolderList[i].Delete();
-                    OnDeleteElement += Refresh;
+                    OnDeleteElement += RefreshWithoutLog;
 
                     if (FiltredPlayerPrefHolderList.Contains(_playerPrefsHolderList[i]))
                         FiltredPlayerPrefHolderList.Remove(_playerPrefsHolderList[i]);
@@ -603,15 +700,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.EndVertical();
             OnDeleteElement?.Invoke();
-            OnDeleteElement -= Refresh;
+            OnDeleteElement -= RefreshWithoutLog;
 
         }
-        private void DrawHorizontalLine(Color color)
+        private void DrawHorizontalLine(Color color, float fixedHeight = 1)
         {
             var horizontalLine = new GUIStyle();
             horizontalLine.normal.background = EditorGUIUtility.whiteTexture;
             horizontalLine.margin = new RectOffset(0, 0, 4, 4);
-            horizontalLine.fixedHeight = 1;
+            horizontalLine.fixedHeight = fixedHeight;
             var c = GUI.color;
             GUI.color = color;
             GUILayout.Box(GUIContent.none, horizontalLine);
@@ -1131,6 +1228,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     playerPrefHolder.BackupValues = savedValue;
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.TempKey = pair.Key;
+                    pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
                     playerPrefHolder.Init();
                     tempPlayerPrefs.Add(playerPrefHolder);
 
@@ -1196,6 +1294,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.Key = key;
                         pair.TempKey = key;
 
+                        pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
+
                         pair.Init();
 
                         tempPlayerPrefs[i] = pair;
@@ -1219,6 +1319,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
                     break;
             }
+
+            //Show pinned prefs first
+            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
+
         }
         private void UpdateSearch()
         {
@@ -1260,11 +1364,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             OldSearchFilter = SearchText;
         }
-        private void Refresh()
+        private void RefreshWithLog()
         {
             UpdateRegistry();
             GetAllPlayerPrefs();
             DavanciDebug.Log("Refreshing Prefs!", Color.cyan);
+        }
+        private void RefreshWithoutLog()
+        {
+            UpdateRegistry();
+            GetAllPlayerPrefs();
         }
         #endregion
 
@@ -1357,7 +1466,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 default:
                     break;
             }
-            Refresh();
+            RefreshWithoutLog();
         }
         private void DeleteAll()
         {
@@ -1372,13 +1481,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     Export();
                     PlayerPrefs.DeleteAll();
                     DavanciDebug.Log("All prefs are deleted !", Color.red);
-                    Refresh();
+                    RefreshWithoutLog();
 
                     break;
                 case 1: //Don't create a backup
                     PlayerPrefs.DeleteAll();
                     DavanciDebug.Log("All prefs are deleted !", Color.red);
-                    Refresh();
+                    RefreshWithoutLog();
                     break;
                 case 2: //Cancel process (Basically do nothing for now.)
                     break;
@@ -1411,7 +1520,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 pref.Save();
             }
 
-            Refresh();
+            RefreshWithoutLog();
 
             if (t > 0)
             {
@@ -1599,7 +1708,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerSettings.productName = importProductName;
             PlayerSettings.companyName = importCompanyName;
 
-            var t= GetPlayerPrefs(importCompanyName, importProductName).Count;
+            var t = GetPlayerPrefs(importCompanyName, importProductName).Count;
 
             PlayerSettings.productName = currentProductName;
             PlayerSettings.companyName = currentCompanyName;
@@ -1612,7 +1721,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             var backupPairs = AdvancedPlayerPrefsExportManager.ReadBackupFile(tempPath);
             if (backupPairs != null)
             {
-                Refresh();
+                RefreshWithoutLog();
             }
         }
         private void Export()

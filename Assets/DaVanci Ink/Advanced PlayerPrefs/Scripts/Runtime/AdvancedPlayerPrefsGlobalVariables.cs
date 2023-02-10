@@ -47,6 +47,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string DeleteButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/delete_Icon.png";
         internal const string ApplyAllButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/apply_Icon.png";
         internal const string ExportButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/d_popout_icon.png";
+        internal const string PinButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/pinIcon.png";
+        internal const string UnpinButtonIconTexturePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/unpinIcon.png";
 
         internal const string ToolbarSeachTextField = "ToolbarSeachTextField";
         internal const string ToolbarSearchCancelButton = "ToolbarSeachCancelButton";

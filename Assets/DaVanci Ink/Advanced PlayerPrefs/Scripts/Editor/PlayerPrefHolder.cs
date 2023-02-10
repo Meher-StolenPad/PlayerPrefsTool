@@ -27,7 +27,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         public FoundInSearch InSearch;
         public bool isEncrypted = false;
-
+        public bool Pinned = true;
         public SerializedProperty ValueProperty;
         public SerializedObject so;
 
