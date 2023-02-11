@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -185,20 +186,19 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private bool UseAutoEncryption;
 
         private PinnedPrefrences pinnedPrefrences;
-
         #endregion
-
-        #region Unity editor Tool 
+        private static AdvancedPlayerPrefsTool AdvancedPlayerPrefsToolInstance;
+        #region Unity editor Tool   
         [MenuItem(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolMenuName, priority = 1)]
         internal static void ShowWindow()
         {
-            AdvancedPlayerPrefsTool AdvancedPlayerPrefsTool = (AdvancedPlayerPrefsTool)GetWindow(typeof(AdvancedPlayerPrefsTool));
-            AdvancedPlayerPrefsTool.titleContent = new GUIContent(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolTitle);
-            AdvancedPlayerPrefsTool.Show();
-            Vector2 minSize = AdvancedPlayerPrefsTool.minSize;
+            AdvancedPlayerPrefsToolInstance = (AdvancedPlayerPrefsTool)GetWindow(typeof(AdvancedPlayerPrefsTool));
+            AdvancedPlayerPrefsToolInstance.titleContent = new GUIContent(AdvancedPlayerPrefsGlobalVariables.AdvancedPlayerPrefsToolTitle);
+            AdvancedPlayerPrefsToolInstance.Show();
+            Vector2 minSize = AdvancedPlayerPrefsToolInstance.minSize;
             minSize.x = 600;
             minSize.y = 500;
-            AdvancedPlayerPrefsTool.minSize = minSize;
+            AdvancedPlayerPrefsToolInstance.minSize = minSize;
         }
 
         private void OnEnable()
@@ -225,11 +225,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             isProSKin = EditorGUIUtility.isProSkin;
             UseAutoEncryption = (bool)AdvancedPlayerPrefs.AutoEncryption;
+            AdvancedPlayerPrefs.OnPreferenceUpdated += OnPrefrenceUpdated;
             //tempExportPath = ExportPath;
         }
         private void OnDisable()
         {
             so?.Dispose();
+            AdvancedPlayerPrefs.OnPreferenceUpdated -= OnPrefrenceUpdated;
         }
         #endregion
 
@@ -429,10 +431,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             Color oldBackgroundColor = GUI.backgroundColor;
             GUIStyle style3 = EditorStyles.textField;
 
-             
+
             float FullWindowWidth = (EditorGUIUtility.currentViewWidth - 20) / 10;
             float valueLength = FullWindowWidth * 3.5f;
-                
+
             ScrollViewPosition = GUILayout.BeginScrollView(ScrollViewPosition, GUIStyle.none, GUI.skin.verticalScrollbar, GUILayout.Width(EditorGUIUtility.currentViewWidth));
 
             for (int i = 0; i < _playerPrefsHolderList.Count; i++)
@@ -660,7 +662,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 style2.fontStyle = FontStyle.Bold;
                 style2.alignment = TextAnchor.MiddleCenter;
 
-                GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[(int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth*1.5f));
+                GUILayout.Label(AdvancedPlayerPrefsGlobalVariables.TypeList[(int)_playerPrefsHolderList[i].type], style2, GUILayout.Width(FullWindowWidth * 1.5f));
 
                 var pinned = _playerPrefsHolderList[i].Pinned;
                 var key = _playerPrefsHolderList[i].Key;
@@ -670,13 +672,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 GUIContent g = new GUIContent(
                     pinned ? UnpinButtonIcon : PinButtonIcon,
                     pinned ? "Unpin <" + key + ">" : "Pin <" + key + ">");
-
                 if (GUILayout.Button(g, EditorStyles.miniButton, GUILayout.Width(FullWindowWidth * 0.4f)))
                 {
                     pinnedPrefrences.HandlePrefrence(key, pinned);
                     _playerPrefsHolderList[i].Pinned = !pinned;
-                    PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
-                    RefreshWithoutLog();
+                    PlayerPrefHolderList = PlayerPrefHolderList
+                   .OrderByDescending(x => x.Pinned)
+                   .ThenBy(x => x.originalIndex)
+                   .ToList();
+                    //RefreshWithoutLog();
+                    //  Repaint();
                 }
 
                 GUI.backgroundColor = Color.green;
@@ -1170,11 +1175,69 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + CompanyName + "\\" + ProductName);
         }
+        private void OnPrefrenceUpdated(string _key, PlayerPrefsType playerPrefsType, bool isEncrypted)
+        {
+            PlayerPrefHolder updatePrefHolder = PlayerPrefHolderList.FirstOrDefault(x => x.Key == _key);
+            object savedValue = null;
+            if (isEncrypted)
+            {
+                savedValue = AdvancedPlayerPrefs.TryGetCostumeType(_key, out ReturnType returnValues);
+            }
+            else
+            {
+                switch (playerPrefsType)
+                {
+                    case PlayerPrefsType.Int:
+                        savedValue = PlayerPrefs.GetInt(_key);
+                        break;
+                    case PlayerPrefsType.Float:
+                        savedValue = PlayerPrefs.GetFloat(_key);
+                        break;
+                    case PlayerPrefsType.String:
+                        savedValue = PlayerPrefs.GetString(_key);
+                        break;
+                    default:
+                        savedValue = AdvancedPlayerPrefs.TryGetCostumeType(_key, out ReturnType returnValues);
+                        break;
+                }
+            }
+          
+
+            if (updatePrefHolder != null)
+            {
+                Debug.Log("update ");
+                //Update the value
+                updatePrefHolder.Value = savedValue;
+                updatePrefHolder.TempValue = savedValue;
+                updatePrefHolder.BackupValues = savedValue;
+                updatePrefHolder.isEncrypted= isEncrypted;
+                updatePrefHolder.Init();
+            }
+            else
+            {
+                //add it to the list 
+                Debug.Log("can't find it,create it !");
+                PlayerPrefHolder newPrefHolder = ScriptableObject.CreateInstance<PlayerPrefHolder>();
+                newPrefHolder.Value = savedValue;
+                newPrefHolder.TempValue = savedValue;
+                newPrefHolder.BackupValues = savedValue;
+                newPrefHolder.Key = _key;
+                newPrefHolder.TempKey = _key;
+                newPrefHolder.Pinned = pinnedPrefrences.ContainsKey(_key);
+                newPrefHolder.type = playerPrefsType;
+                newPrefHolder.originalIndex = (ushort)(PlayerPrefHolderList.Count - 1);
+                newPrefHolder.isEncrypted = isEncrypted;
+                newPrefHolder.Init();
+                PlayerPrefHolderList.Add(newPrefHolder);
+                if (newPrefHolder.Pinned)
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
+            }
+            Repaint();
+        }
         private void GetAllPlayerPrefs()
         {
             PlayerPrefHolderList.Clear();
 #if UNITY_EDITOR_OSX
-
             string playerPrefsPath;
 
             string plistFilename = $"unity.{CompanyName}.{ProductName}.plist";
@@ -1192,7 +1255,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 // Convert the dictionary data into an array of PlayerPrefPairs
                 List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>(parsed.Count);
-
+                int i = 0;
                 foreach (KeyValuePair<string, object> pair in parsed)
                 {
                     PlayerPrefHolder playerPrefHolder = new PlayerPrefHolder();
@@ -1241,10 +1304,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     playerPrefHolder.BackupValues = savedValue;
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.TempKey = pair.Key;
-                    pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
+                    playerPrefHolder.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
                     playerPrefHolder.Init();
                     tempPlayerPrefs.Add(playerPrefHolder);
-
+                    playerPrefHolder.originalIndex = (ushort)i;
+                    i++;
                 }
 
                 // Return the results
@@ -1279,7 +1343,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
                             {
-                                string savedStringValue = savedValue.ToString();
                                 savedValue = AdvancedPlayerPrefs.GetFloat(key);
                                 pair.type = PlayerPrefsType.Float;
                             }
@@ -1292,13 +1355,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         {
                             savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
 
-
                             savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
 
                             pair.type = returnValues.PlayerPrefsType;
                             pair.isEncrypted = returnValues.IsEncrypted;
-
-
                         }
 
                         pair.Value = savedValue;
@@ -1306,7 +1366,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.BackupValues = savedValue;
                         pair.Key = key;
                         pair.TempKey = key;
-
+                        pair.originalIndex = (ushort)i;
                         pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
 
                         pair.Init();

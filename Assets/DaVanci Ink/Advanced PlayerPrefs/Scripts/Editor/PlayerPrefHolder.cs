@@ -45,7 +45,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public Vector2Int[] arrayVector2Int;
         public Vector2[] arrayVector2;
         public Vector4[] arrayVector4 = null;
-
+        public ushort originalIndex; 
         public void RefreshField()
         {
             Init();

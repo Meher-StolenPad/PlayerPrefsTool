@@ -119,6 +119,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             set => autoEncryption = value;
         }
         internal static Action OnSettingsCreated;
+
+        internal static Action<string,PlayerPrefsType,bool> OnPreferenceUpdated;
+
         #endregion
         //DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
         #region Editor Region
@@ -290,6 +293,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetInt(key, value);
             }
             DavanciDebug.Log("Set Int : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Int, useEncryption);
         }
         public static void SetFloat(string key, float value, bool useEncryption = false)
         {
@@ -322,6 +327,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetFloat(key, value);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Float, useEncryption);
             DavanciDebug.Log("Set Float : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetString(string key, string value, bool useEncryption = false)
@@ -354,6 +361,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 PlayerPrefs.SetString(key, value);
             }
             DavanciDebug.Log("Set String : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.String, useEncryption);
         }
         private static void SetString(string value)
         {
@@ -388,7 +397,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Vector3, useEncryption);
             DavanciDebug.Log("Set Vector 3 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
+          
         }
         public static void SetVector3Int(string key, Vector3Int _value, bool useEncryption = false)
         {
@@ -419,6 +431,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Vector3Int, useEncryption);
             DavanciDebug.Log("Set Vector 3 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetByte(string key, byte _value, bool useEncryption = false)
@@ -449,6 +463,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Byte, useEncryption);
             DavanciDebug.Log("Set Byte : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
         }
@@ -480,6 +496,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Double, useEncryption);
             DavanciDebug.Log("Set Double : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetLong(string key, long _value, bool useEncryption = false)
@@ -510,6 +528,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Long, useEncryption);
             DavanciDebug.Log("Set Long : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetBool(string key, bool _value, bool useEncryption = false)
@@ -541,6 +561,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Bool, useEncryption);
             DavanciDebug.Log("Set Bool : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector2(string key, Vector2 _value, bool useEncryption = false)
@@ -572,6 +594,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Vector2, useEncryption);
             DavanciDebug.Log("Set Vector 2 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector2Int(string key, Vector2Int _value, bool useEncryption = false)
@@ -603,6 +627,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Vector2Int, useEncryption);
             DavanciDebug.Log("Set Vector 2 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetVector4(string key, Vector4 _value, bool useEncryption = false)
@@ -634,6 +660,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Vector4, useEncryption);
             DavanciDebug.Log("Set Vector 4: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetColor(string key, Color _value, bool hdr, bool useEncryption = false)
@@ -675,6 +703,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.Color, useEncryption);
             DavanciDebug.Log("Set Color: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetDateTime(string key, DateTime _value, bool useEncryption = false)
@@ -706,6 +736,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 PlayerPrefs.SetString(key, jsonString);
             }
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.DateTime, useEncryption);
             DavanciDebug.Log("Set DateTime: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
         public static void SetArray(string key, int[] _value, bool useEncryption = false)
@@ -727,10 +759,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
         }
         public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
@@ -752,10 +788,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
         }
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
         {
@@ -777,11 +817,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
-
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
         }
         public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
@@ -803,10 +846,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
         }
         public static void SetArray(string key, string[] _value, bool useEncryption = false)
         {
@@ -828,10 +875,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
         }
         public static void SetList(string key, List<string> _value, bool useEncryption = false)
         {
@@ -853,10 +904,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
         }
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
         {
@@ -878,10 +933,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
         }
         public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
@@ -903,10 +962,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
         }
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
         {
@@ -928,10 +991,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
         }
         public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
@@ -953,10 +1020,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
         }
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
         {
@@ -978,10 +1049,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
         }
         public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
@@ -1003,10 +1078,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
         }
         public static void SetArray(string key, long[] _value, bool useEncryption = false)
         {
@@ -1028,10 +1107,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
         }
         public static void SetList(string key, List<long> _value, bool useEncryption = false)
         {
@@ -1053,10 +1136,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
         }
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
         {
@@ -1078,10 +1165,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3, useEncryption);
         }
         public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
@@ -1103,10 +1194,23 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+
+                    Serialzer<object> tt = new Serialzer<object>
+                    {
+                        type = PlayerPrefsType.ArrayVector3,
+                        value = _value.ToArray(),
+                        isEncrypted = useEncryption
+                    };
+                    if(OnPreferenceUpdated!= null)
+                       OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3, useEncryption);
                     return;
                 }
             }
+            object valuestring = (object)JsonUtility.FromJson<Serialzer<Vector3[]>>(jsonString).value;
+
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, serialzer.type, useEncryption);
         }
         public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
         {
@@ -1128,10 +1232,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
         }
         public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
@@ -1153,10 +1261,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
         }
         public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
         {
@@ -1178,10 +1290,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
         }
         public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
         {
@@ -1204,10 +1320,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
         }
         public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
         {
@@ -1229,10 +1349,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
         }
         public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
         {
@@ -1254,10 +1378,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
         }
         public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
         {
@@ -1279,10 +1407,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector4, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector4, useEncryption);
         }
         public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
         {
@@ -1305,10 +1437,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     serialzer.isEncrypted = false;
                     PlayerPrefs.SetString(key, output);
+                    if (OnPreferenceUpdated != null)
+                        OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector4, useEncryption);
                     return;
                 }
             }
             PlayerPrefs.SetString(key, jsonString);
+            if (OnPreferenceUpdated != null)
+                OnPreferenceUpdated.Invoke(key, PlayerPrefsType.ArrayVector4, useEncryption);
         }
         #endregion
 

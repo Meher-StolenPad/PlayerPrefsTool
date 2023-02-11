@@ -54,9 +54,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (!NoAds)
             {
                 NoAds = true;
-                AdvancedPlayerPrefs.SetBool("ADPP_NoAds", NoAds);
                 NoAdsImage.color = Color.green;
             }
+            else
+            {
+                NoAds = false;
+                NoAdsImage.color = Color.red;
+            }
+            AdvancedPlayerPrefs.SetBool("ADPP_NoAds", NoAds);
+
         }
         private void InitNoAdsImage()
         {
@@ -88,6 +94,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     SaveTowerPositions(hit.point);
                 }
             }
+
         }
         public void ShowTool()
         {
