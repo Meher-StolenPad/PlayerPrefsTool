@@ -23,6 +23,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         [SerializeField] private Image NoAdsImage;
         [SerializeField] private GameObject TowerPrefab;
         [SerializeField] private Transform TowerParent;
+        [SerializeField] private Transform Ground;  
         public LayerMask planeLayer;
         private Ray ray;
         RaycastHit hit;
@@ -45,7 +46,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var postion in TowersPosition)
             {   
-                SpawnTower(postion);
+                SpawnTower(postion,true);
             }
            
         }
@@ -69,10 +70,21 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             NoAdsImage.color = NoAds ? Color.green : Color.red;
         }
 
-        private void SpawnTower(Vector3 _position)
+        private Vector3 SpawnTower(Vector3 _position,bool isLocalpos=false)
         {
-            var tower = Instantiate(TowerPrefab, TowerParent);
-            tower.transform.localPosition = _position;
+            if (isLocalpos)
+            {
+                var tower = Instantiate(TowerPrefab, TowerParent);
+                tower.transform.localPosition=_position;
+                return _position;
+            }
+            else
+            {
+                var tower = Instantiate(TowerPrefab, _position, Quaternion.identity);
+                tower.transform.SetParent(TowerParent);
+                return tower.transform.localPosition;
+
+            }
         }
     
         private void SaveTowerPositions(Vector3 _position)
@@ -82,6 +94,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void Update()
         {
+            Ground.Rotate(Vector3.up,50f*Time.deltaTime);
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -89,9 +102,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, planeLayer))
                 {
                     int colorType = Random.Range(0, 4);
-
-                    SpawnTower(hit.point);
-                    SaveTowerPositions(hit.point);
+                    SaveTowerPositions(SpawnTower(hit.point));
                 }
             }
 
@@ -100,6 +111,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
            // AdvancedPlayerPrefsTool.ShowWindow();
         }
+
     }
+
 
 }

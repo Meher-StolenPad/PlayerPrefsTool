@@ -19,11 +19,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             //Debug.LogWarning("dpzk^pdkzpdpzd$^lz");
             //Debug.Log("poidpoid");
-            AdvancedPlayerPrefs.SetFloat("TestAgain", 10.2247745f);
+            AdvancedPlayerPrefs.SetFloat("TestAgain", 222.22f);
             AdvancedPlayerPrefs.SetVector3("TestVector3", new Vector3(0.5f, 55, 10));
             AdvancedPlayerPrefs.SetVector2("TestVector2", new Vector2(0.4f, 0.3f));
             AdvancedPlayerPrefs.SetVector4("TestVector4", new Vector4(55, 66f, 77f, 88f));
-            AdvancedPlayerPrefs.SetColor("TestColor", Color.green,false);
+            AdvancedPlayerPrefs.SetColor("TestColor", Color.red,false);
             AdvancedPlayerPrefs.SetColor("TestColorHDR", Color.blue,true);
             AdvancedPlayerPrefs.SetBool("TestBool", true);
             AdvancedPlayerPrefs.SetDateTime("TestDateTime", DateTime.Now);
