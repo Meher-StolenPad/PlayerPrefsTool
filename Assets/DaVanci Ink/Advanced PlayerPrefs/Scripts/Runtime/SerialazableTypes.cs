@@ -54,12 +54,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
     }
     [Serializable]
-    public struct Vector3Data
+    internal struct Vector3Data
     {
         public float x;
         public float y;
         public float z;
-        public Vector3Data(float x, float y, float z)
+        internal Vector3Data(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
@@ -71,7 +71,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
     }
     [Serializable]
-    public struct Vector3IntData
+    internal struct Vector3IntData
     {
         public int x;
         public int y;
@@ -88,7 +88,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }   
     }
     [Serializable]
-    public struct Vector2IntData
+    internal struct Vector2IntData
     {
         public int x;
         public int y;
@@ -103,7 +103,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return new Vector2IntData(x.x, x.y);
         }
     }
-    public struct Vector2Data
+    internal struct Vector2Data
     {
         public float x;
         public float y;
@@ -118,7 +118,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
     }
     [Serializable]
-    public struct Vector4Data
+    internal struct Vector4Data
     {
         public float x;
         public float y;

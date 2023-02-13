@@ -185,7 +185,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private bool isProSKin;
         private bool UseAutoEncryption;
 
-        private PinnedPrefrences pinnedPrefrences;
+        private static PinnedPrefrences pinnedPrefrences;
         #endregion
         private static AdvancedPlayerPrefsTool AdvancedPlayerPrefsToolInstance;
         #region Unity editor Tool   
@@ -330,9 +330,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 foreach (var item in PlayerPrefHolderList)
                 {
                     item.Save();
-                    DavanciDebug.Log("All Changes are saved !", Color.green);
-
                 }
+                DavanciDebug.Log("All Changes are saved !", Color.green);
+
             }
         }
         private void DrawRevertAll()
@@ -599,9 +599,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.ArrayVector3:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            _playerPrefsHolderList[i].so.Update();
+                            //_playerPrefsHolderList[i].so.Update();
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
+                            //_playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3Int:
@@ -1205,7 +1205,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             if (updatePrefHolder != null)
             {
-                Debug.Log("update ");
                 //Update the value
                 updatePrefHolder.Value = savedValue;
                 updatePrefHolder.TempValue = savedValue;
@@ -1216,7 +1215,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             else
             {
                 //add it to the list 
-                Debug.Log("can't find it,create it !");
                 PlayerPrefHolder newPrefHolder = ScriptableObject.CreateInstance<PlayerPrefHolder>();
                 newPrefHolder.Value = savedValue;
                 newPrefHolder.TempValue = savedValue;
@@ -1258,7 +1256,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 int i = 0;
                 foreach (KeyValuePair<string, object> pair in parsed)
                 {
-                    PlayerPrefHolder playerPrefHolder = new PlayerPrefHolder();
+                    PlayerPrefHolder playerPrefHolder = ScriptableObject.CreateInstance<PlayerPrefHolder>();
 
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.Value = pair.Value;
@@ -1625,10 +1623,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Dictionary<string, object> parsed = plist as Dictionary<string, object>;
 
                 // Convert the dictionary data into an array of PlayerPrefPairs
-              
+               int i = 0;
                 foreach (KeyValuePair<string, object> pair in parsed)
                 {
-                    PlayerPrefHolder playerPrefHolder = new PlayerPrefHolder();
+                    PlayerPrefHolder playerPrefHolder = ScriptableObject.CreateInstance<PlayerPrefHolder>();
 
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.Value = pair.Value;
@@ -1674,12 +1672,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     playerPrefHolder.BackupValues = savedValue;
                     playerPrefHolder.Key = pair.Key;
                     playerPrefHolder.TempKey = pair.Key;
+                    playerPrefHolder.originalIndex = (ushort)i;
+                    playerPrefHolder.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
                     playerPrefHolder.Init();
 
                     if (!tempPlayerPrefs.Exists(p => p.Key == playerPrefHolder.Key) && !pair.Key.ToLower().Contains("unity"))
                     {
                         tempPlayerPrefs.Add(playerPrefHolder);
                     }
+                    i++;
                 }
             }
 #elif UNITY_EDITOR_WIN
@@ -1692,7 +1693,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (RegistryKey != null)
                 {
                     string[] valueNames = RegistryKey.GetValueNames();
-                    //int i = 0;
+                    int i = 0;
                     foreach (string valueName in valueNames)
                     {
                         string key = valueName;
@@ -1733,13 +1734,15 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.BackupValues = savedValue;
                         pair.Key = key;
                         pair.TempKey = key;
-
+                        pair.originalIndex = (ushort)i;
+                        pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
                         pair.Init();
 
                         if (!tempPlayerPrefs.Exists(p => p.Key == pair.Key) && !pair.Key.ToLower().Contains("unity"))
                         {
                             tempPlayerPrefs.Add(pair);
                         }
+                        i++;
                     }
                 }
             }

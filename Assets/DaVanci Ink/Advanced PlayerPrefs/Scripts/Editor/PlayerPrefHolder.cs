@@ -308,10 +308,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             GUI.FocusControl(null);
             TempValue = BackupValues;
-            Debug.Log("BackupValues : " + BackupValues);
-            Debug.Log("Value : " + Value);
-
-
             switch (type)
             {
                 case PlayerPrefsType.ArrayInt:

@@ -20,13 +20,16 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         [SerializeField] private List<Vector4> TowersPositionColors = new List<Vector4>();
 
         [Header("References")]
-        [SerializeField] private Image NoAdsImage;
+        [SerializeField] private Image NoAdsImage;  
         [SerializeField] private GameObject TowerPrefab;
         [SerializeField] private Transform TowerParent;
         [SerializeField] private Transform Ground;  
+
         public LayerMask planeLayer;
         private Ray ray;
-        RaycastHit hit;
+        private RaycastHit hit;
+        private float RotationSpeed = 50f;
+
         private void Start()
         {
             TowersPosition = AdvancedPlayerPrefs.GetList<Vector3>("ADPP_TowerPositions");
@@ -46,7 +49,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             foreach (var postion in TowersPosition)
             {   
-                SpawnTower(postion,true);
+                SpawnTower(postion);
             }
            
         }
@@ -70,21 +73,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             NoAdsImage.color = NoAds ? Color.green : Color.red;
         }
 
-        private Vector3 SpawnTower(Vector3 _position,bool isLocalpos=false)
+        private void SpawnTower(Vector3 _position)
         {
-            if (isLocalpos)
-            {
-                var tower = Instantiate(TowerPrefab, TowerParent);
-                tower.transform.localPosition=_position;
-                return _position;
-            }
-            else
-            {
-                var tower = Instantiate(TowerPrefab, _position, Quaternion.identity);
-                tower.transform.SetParent(TowerParent);
-                return tower.transform.localPosition;
-
-            }
+            var tower = Instantiate(TowerPrefab, TowerParent);
+           tower.transform.localPosition = _position;
         }
     
         private void SaveTowerPositions(Vector3 _position)
@@ -94,7 +86,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void Update()
         {
-            Ground.Rotate(Vector3.up,50f*Time.deltaTime);
+            Ground.Rotate(Vector3.up, RotationSpeed * Time.deltaTime);
             if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -102,7 +94,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, planeLayer))
                 {
                     int colorType = Random.Range(0, 4);
-                    SaveTowerPositions(SpawnTower(hit.point));
+                    Vector3 localPosition = TowerParent.InverseTransformPoint(hit.point);
+                    SpawnTower(localPosition);
+                    SaveTowerPositions(localPosition);
                 }
             }
 
