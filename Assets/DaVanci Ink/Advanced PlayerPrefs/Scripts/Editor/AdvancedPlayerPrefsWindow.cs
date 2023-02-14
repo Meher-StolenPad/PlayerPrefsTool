@@ -1602,7 +1602,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
         }
-        private static List<PlayerPrefHolder> GetPlayerPrefs(string companyName, string productName)
+        private static List<PlayerPrefHolder> GetPlayerPrefs(string _companyName, string _productName)
         {
             List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
 
@@ -1610,7 +1610,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             string playerPrefsPath;
 
-            string plistFilename = $"unity.{importCompanyName}.{importProductName}.plist";
+            string plistFilename = $"unity.{_companyName}.{_productName}.plist";
             // Now construct the fully qualified path
             playerPrefsPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library/Preferences"), plistFilename);
 
@@ -1684,7 +1684,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
 #elif UNITY_EDITOR_WIN
-            RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + companyName + "\\" + productName);
+            RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + _companyName + "\\" + _productName);
 
             if (RegistryKey == null) return new List<PlayerPrefHolder>();
 
