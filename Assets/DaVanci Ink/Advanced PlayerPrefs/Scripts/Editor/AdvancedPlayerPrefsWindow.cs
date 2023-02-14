@@ -1236,6 +1236,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             PlayerPrefHolderList.Clear();
 #if UNITY_EDITOR_OSX
+
             string playerPrefsPath;
 
             string plistFilename = $"unity.{CompanyName}.{ProductName}.plist";
@@ -1537,6 +1538,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 default:
                     break;
             }
+            PlayerPrefs.Save();
             RefreshWithoutLog();
         }
         private void DeleteAll()
