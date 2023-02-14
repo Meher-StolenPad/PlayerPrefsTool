@@ -90,7 +90,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 120;
-            GUILayout.Space((Screen.width-20) / 4 - (iButtonWidth-5) / 5);
+            GUILayout.Space((buttonWidth*3.5f - 20) / 15 - (iButtonWidth - 5) / 10);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
@@ -98,7 +98,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             int oldfontSize = style2.fontSize;
-            style2.fontSize = (int)(17 * (Screen.dpi / 160f));
+            style2.fontSize = 10;
             // style2.hover.background = ShowButtonHover;
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(120), GUILayout.Height(40)))
@@ -170,7 +170,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space(3);
 
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Space(Screen.width / 2 - buttonWidth / 2);
+
+            GUILayout.Space((buttonWidth + 10) / 2);
 
             if (GUILayout.Button(developedBy, GUILayout.Width(buttonWidth), GUILayout.Height(50)))
             {
