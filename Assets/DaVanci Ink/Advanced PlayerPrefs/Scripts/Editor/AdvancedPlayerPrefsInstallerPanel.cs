@@ -91,7 +91,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             int oldfontSize = style2.fontSize;
-            style2.fontSize = (int)(17 * (Screen.dpi / 160f));
+            float aspectRatio = Screen.width / (float)Screen.height;
+            float referenceAspectRatio = 16f / 9f;
+            style2.fontSize = (int)(40* (Screen.dpi / 160f) * (aspectRatio / referenceAspectRatio));
             // style2.hover.background = ShowButtonHover;
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(120), GUILayout.Height(40)))
