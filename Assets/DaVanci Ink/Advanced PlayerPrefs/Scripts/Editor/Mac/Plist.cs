@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
@@ -46,11 +47,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         #region Public Functions
 
-        public static object readPlist(string path)
+        public static async Task<object> ReadPlistAsync(string path)
         {
             using (FileStream f = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                return readPlist(f, plistType.Auto);
+                return await Task.Run(() => readPlist(f, plistType.Auto));
             }
         }
 

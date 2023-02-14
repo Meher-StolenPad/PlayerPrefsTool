@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
@@ -1201,7 +1202,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         break;
                 }
             }
-          
+
 
             if (updatePrefHolder != null)
             {
@@ -1209,7 +1210,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 updatePrefHolder.Value = savedValue;
                 updatePrefHolder.TempValue = savedValue;
                 updatePrefHolder.BackupValues = savedValue;
-                updatePrefHolder.isEncrypted= isEncrypted;
+                updatePrefHolder.isEncrypted = isEncrypted;
                 updatePrefHolder.Init();
             }
             else
@@ -1232,7 +1233,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             Repaint();
         }
-        private void GetAllPlayerPrefs()
+        private async void GetAllPlayerPrefs()
         {
             PlayerPrefHolderList.Clear();
 #if UNITY_EDITOR_OSX
@@ -1247,8 +1248,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             // Parse the PlayerPrefs file if it exists
             if (File.Exists(playerPrefsPath))
             {
+                object plist = await Plist.ReadPlistAsync(playerPrefsPath);
+
+                // Now you can access the result of the readPlist method using the Result property of the Task
                 // Parse the plist then cast it to a Dictionary
-                object plist = Plist.readPlist(playerPrefsPath);
+                // object plist = Plist.readPlist(playerPrefsPath);
 
                 Dictionary<string, object> parsed = plist as Dictionary<string, object>;
 
@@ -1268,7 +1272,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         playerPrefHolder.Value = (float)(double)pair.Value;
 
                         // Some float values may come back as double, so convert them back to floats
-                       // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
+                        // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
                     }
                     else if (pair.Value.GetType() == typeof(bool))
                     {
@@ -1379,7 +1383,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
 #else
-     throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
+            throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
 #endif
 
             switch (PlayerPrefsSortType)
