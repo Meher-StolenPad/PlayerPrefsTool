@@ -1610,7 +1610,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             string playerPrefsPath;
 
-            string plistFilename = $"unity.{companyName}.{productName}.plist";
+            string plistFilename = $"unity.{importCompanyName}.{importProductName}.plist";
             // Now construct the fully qualified path
             playerPrefsPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library/Preferences"), plistFilename);
 
