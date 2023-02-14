@@ -79,7 +79,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             float buttonWidth = (EditorGUIUtility.currentViewWidth - 10);
             GUILayout.BeginArea(new Rect(0, 0, 825 / 2 - 10, 240 / 2), cover);
-
             GUILayout.EndArea();
             GUILayout.Space(110);
 
@@ -99,7 +98,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsButtonColor;
             int oldfontSize = style2.fontSize;
-            style2.fontSize = (int)(50 * (Screen.width / 1920f));
+            style2.fontSize = (int)(17 * (Screen.dpi / 160f));
             // style2.hover.background = ShowButtonHover;
 
             if (GUILayout.Button("Show Player Prefs Tool\n CTRL+E", style2, GUILayout.Width(120), GUILayout.Height(40)))
@@ -157,7 +156,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 AdvancedPlayerPrefsTool.ImportFrom(CompanyName, ProductName);
 
                 EditorCallBackHolder.UpadteInfo();
-                Debug.Log("Prefs Auto Upadted : " + CompanyName + "/" + ProductName);
+                Debug.Log("PlayerPrefs Auto Updated : " + CompanyName + "/" + ProductName);
                 PlayerPrefsWindow.Close();
             }
 

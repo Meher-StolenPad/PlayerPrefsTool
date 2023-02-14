@@ -1735,7 +1735,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         pair.Key = key;
                         pair.TempKey = key;
                         pair.originalIndex = (ushort)i;
-                        pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
                         pair.Init();
 
                         if (!tempPlayerPrefs.Exists(p => p.Key == pair.Key) && !pair.Key.ToLower().Contains("unity"))
