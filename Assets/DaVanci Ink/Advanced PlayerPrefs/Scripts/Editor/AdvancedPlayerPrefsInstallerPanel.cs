@@ -83,7 +83,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 120;
-            GUILayout.Space((Screen.width-20) / 15 - (iButtonWidth-5) / 10);
+            GUILayout.Space(buttonWidth / 15 - (iButtonWidth-5) / 10);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
