@@ -1613,12 +1613,75 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 DavanciDebug.Warning("No Prefs founded at < " + importProductName + "/" + importCompanyName + ">");
             }
         }
-        private static List<PlayerPrefHolder> GetPlayerPrefs(string _companyName, string _productName)
+        private static List<PlayerPrefHolder> GetPlayerPrefsWindows(string _companyName, string _productName)
         {
             List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
+            RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + _companyName + "\\" + _productName);
 
-#if UNITY_EDITOR_OSX
+            if (RegistryKey == null) return new List<PlayerPrefHolder>();
 
+            foreach (string item in RegistryKey.GetValueNames())
+            {
+                if (RegistryKey != null)
+                {
+                    string[] valueNames = RegistryKey.GetValueNames();
+                    int i = 0;
+                    foreach (string valueName in valueNames)
+                    {
+                        string key = valueName;
+                        int index = key.LastIndexOf("_");
+                        key = key.Remove(index, key.Length - index);
+
+                        object savedValue = RegistryKey.GetValue(valueName);
+                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
+
+                        if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
+                        {
+                            if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
+                            {
+                                string savedStringValue = savedValue.ToString();
+                                savedValue = AdvancedPlayerPrefs.GetFloat(key);
+                                pair.type = PlayerPrefsType.Float;
+                            }
+                            else
+                            {
+                                pair.type = PlayerPrefsType.Int;
+                            }
+                        }
+                        else if (savedValue.GetType() == typeof(byte[]))
+                        {
+                            savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
+
+
+                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
+
+                            pair.type = returnValues.PlayerPrefsType;
+                            pair.isEncrypted = returnValues.IsEncrypted;
+
+
+                        }
+
+                        pair.Value = savedValue;
+                        pair.TempValue = savedValue;
+                        pair.BackupValues = savedValue;
+                        pair.Key = key;
+                        pair.TempKey = key;
+                        pair.originalIndex = (ushort)i;
+                        pair.Init();
+
+                        if (!tempPlayerPrefs.Exists(p => p.Key == pair.Key) && !pair.Key.ToLower().Contains("unity"))
+                        {
+                            tempPlayerPrefs.Add(pair);
+                        }
+                        i++;
+                    }
+                }
+            }
+            return tempPlayerPrefs;
+        }
+        private static async Task<List<PlayerPrefHolder>>  GetPlayerPrefsMacOS(string _companyName, string _productName)
+        {
+            List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
             string playerPrefsPath;
 
             string plistFilename = $"unity.{_companyName}.{_productName}.plist";
@@ -1629,7 +1692,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (File.Exists(playerPrefsPath))
             {
                 // Parse the plist then cast it to a Dictionary
-                object plist = Plist.readPlist(playerPrefsPath);
+                object plist = await Plist.ReadPlistAsync(playerPrefsPath);
 
                 Dictionary<string, object> parsed = plist as Dictionary<string, object>;
 
@@ -1694,71 +1757,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     i++;
                 }
             }
-#elif UNITY_EDITOR_WIN
-            RegistryKey RegistryKey = Registry.CurrentUser.OpenSubKey(@"Software\Unity\UnityEditor\" + _companyName + "\\" + _productName);
-
-            if (RegistryKey == null) return new List<PlayerPrefHolder>();
-
-            foreach (string item in RegistryKey.GetValueNames())
-            {
-                if (RegistryKey != null)
-                {
-                    string[] valueNames = RegistryKey.GetValueNames();
-                    int i = 0;
-                    foreach (string valueName in valueNames)
-                    {
-                        string key = valueName;
-                        int index = key.LastIndexOf("_");
-                        key = key.Remove(index, key.Length - index);
-
-                        object savedValue = RegistryKey.GetValue(valueName);
-                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
-
-                        if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
-                        {
-                            if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
-                            {
-                                string savedStringValue = savedValue.ToString();
-                                savedValue = AdvancedPlayerPrefs.GetFloat(key);
-                                pair.type = PlayerPrefsType.Float;
-                            }
-                            else
-                            {
-                                pair.type = PlayerPrefsType.Int;
-                            }
-                        }
-                        else if (savedValue.GetType() == typeof(byte[]))
-                        {
-                            savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
-
-
-                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
-
-                            pair.type = returnValues.PlayerPrefsType;
-                            pair.isEncrypted = returnValues.IsEncrypted;
-
-
-                        }
-
-                        pair.Value = savedValue;
-                        pair.TempValue = savedValue;
-                        pair.BackupValues = savedValue;
-                        pair.Key = key;
-                        pair.TempKey = key;
-                        pair.originalIndex = (ushort)i;
-                        pair.Init();
-
-                        if (!tempPlayerPrefs.Exists(p => p.Key == pair.Key) && !pair.Key.ToLower().Contains("unity"))
-                        {
-                            tempPlayerPrefs.Add(pair);
-                        }
-                        i++;
-                    }
-                }
-            }
-#endif
             return tempPlayerPrefs;
         }
+        private static List<PlayerPrefHolder> GetPlayerPrefs(string importCompanyName, string importProductName)
+        {
+#if UNITY_EDITOR_OSX
+            return = GetPlayerPrefsMacOS(importCompanyName, importProductName);
+
+#elif UNITY_EDITOR_WIN
+            return GetPlayerPrefsWindows(importCompanyName, importProductName);
+#endif
+        }
+
         internal static void ImportFrom(string importCompanyName, string importProductName)
         {
             string currentCompanyName = PlayerSettings.companyName;
@@ -1766,8 +1776,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             PlayerSettings.productName = importProductName;
             PlayerSettings.companyName = importCompanyName;
-
-            var prefs = GetPlayerPrefs(importCompanyName, importProductName);
+            var prefs = GetPlayerPrefs(importCompanyName,currentCompanyName);
             int t = prefs.Count;
 
             PlayerSettings.productName = currentProductName;
