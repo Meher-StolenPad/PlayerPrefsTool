@@ -1762,8 +1762,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static List<PlayerPrefHolder> GetPlayerPrefs(string importCompanyName, string importProductName)
         {
 #if UNITY_EDITOR_OSX
-            return = GetPlayerPrefsMacOS(importCompanyName, importProductName);
-
+            return GetPlayerPrefsMacOS(importCompanyName, importProductName).Result;
+                
 #elif UNITY_EDITOR_WIN
             return GetPlayerPrefsWindows(importCompanyName, importProductName);
 #endif
