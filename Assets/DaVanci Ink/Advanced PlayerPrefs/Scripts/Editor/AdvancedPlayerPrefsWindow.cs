@@ -1233,11 +1233,93 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             Repaint();
         }
-        private async void GetAllPlayerPrefs()
+        private void GetAllPlayerPrefs()
         {
             PlayerPrefHolderList.Clear();
 #if UNITY_EDITOR_OSX
+            GetAllPlayerPrefsMac();
+#elif UNITY_EDITOR_WIN
+            GetAllPlayerPrefsWindows();
+#else
+            throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
+#endif
+            switch (PlayerPrefsSortType)
+            {
+                case SortType.Name:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
+                    break;
+                case SortType.Type:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
+                    break;
+            }
 
+            //Show pinned prefs first
+            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
+        }
+        private void GetAllPlayerPrefsWindows()
+        {
+            if (RegistryKey == null) return;
+
+            foreach (string item in RegistryKey.GetValueNames())
+            {
+                if (RegistryKey != null)
+                {
+                    string[] valueNames = RegistryKey.GetValueNames();
+                    PlayerPrefHolder[] tempPlayerPrefs = new PlayerPrefHolder[valueNames.Length];
+
+                    int i = 0;
+                    foreach (string valueName in valueNames)
+                    {
+                        string key = valueName;
+                        int index = key.LastIndexOf("_");
+                        key = key.Remove(index, key.Length - index);
+
+                        object savedValue = RegistryKey.GetValue(valueName);
+                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
+
+                        if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
+                        {
+                            if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
+                            {
+                                savedValue = AdvancedPlayerPrefs.GetFloat(key);
+                                pair.type = PlayerPrefsType.Float;
+                            }
+                            else
+                            {
+                                pair.type = PlayerPrefsType.Int;
+                            }
+                        }
+                        else if (savedValue.GetType() == typeof(byte[]))
+                        {
+                            savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
+
+                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
+
+                            pair.type = returnValues.PlayerPrefsType;
+                            pair.isEncrypted = returnValues.IsEncrypted;
+                        }
+
+                        pair.Value = savedValue;
+                        pair.TempValue = savedValue;
+                        pair.BackupValues = savedValue;
+                        pair.Key = key;
+                        pair.TempKey = key;
+                        pair.originalIndex = (ushort)i;
+                        pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
+
+                        pair.Init();
+
+                        tempPlayerPrefs[i] = pair;
+
+                        i++;
+                    }
+                    PlayerPrefHolderList = tempPlayerPrefs.ToList();
+
+                }
+            }
+        }
+        private async void GetAllPlayerPrefsMacOS()
+        {
             string playerPrefsPath;
 
             string plistFilename = $"unity.{CompanyName}.{ProductName}.plist";
@@ -1322,83 +1404,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 // No existing PlayerPrefs saved (which is valid), so just return an empty array
                 PlayerPrefHolderList = new List<PlayerPrefHolder>();
             }
-#elif UNITY_EDITOR_WIN
-            if (RegistryKey == null) return;
-
-            foreach (string item in RegistryKey.GetValueNames())
-            {
-                if (RegistryKey != null)
-                {
-                    string[] valueNames = RegistryKey.GetValueNames();
-                    PlayerPrefHolder[] tempPlayerPrefs = new PlayerPrefHolder[valueNames.Length];
-
-                    int i = 0;
-                    foreach (string valueName in valueNames)
-                    {
-                        string key = valueName;
-                        int index = key.LastIndexOf("_");
-                        key = key.Remove(index, key.Length - index);
-
-                        object savedValue = RegistryKey.GetValue(valueName);
-                        PlayerPrefHolder pair = ScriptableObject.CreateInstance<PlayerPrefHolder>();
-
-                        if (savedValue.GetType() == typeof(int) || savedValue.GetType() == typeof(long))
-                        {
-                            if (AdvancedPlayerPrefs.GetInt(key, -1) == -1 && AdvancedPlayerPrefs.GetInt(key, 0) == 0)
-                            {
-                                savedValue = AdvancedPlayerPrefs.GetFloat(key);
-                                pair.type = PlayerPrefsType.Float;
-                            }
-                            else
-                            {
-                                pair.type = PlayerPrefsType.Int;
-                            }
-                        }
-                        else if (savedValue.GetType() == typeof(byte[]))
-                        {
-                            savedValue = encoding.GetString((byte[])savedValue).TrimEnd('\0');
-
-                            savedValue = AdvancedPlayerPrefs.TryGetCostumeType(key, out ReturnType returnValues, savedValue.ToString());
-
-                            pair.type = returnValues.PlayerPrefsType;
-                            pair.isEncrypted = returnValues.IsEncrypted;
-                        }
-
-                        pair.Value = savedValue;
-                        pair.TempValue = savedValue;
-                        pair.BackupValues = savedValue;
-                        pair.Key = key;
-                        pair.TempKey = key;
-                        pair.originalIndex = (ushort)i;
-                        pair.Pinned = pinnedPrefrences.ContainsKey(pair.Key);
-
-                        pair.Init();
-
-                        tempPlayerPrefs[i] = pair;
-
-                        i++;
-                    }
-                    PlayerPrefHolderList = tempPlayerPrefs.ToList();
-
-                }
-            }
-#else
-            throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
-#endif
-
-            switch (PlayerPrefsSortType)
-            {
-                case SortType.Name:
-                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
-                    break;
-                case SortType.Type:
-                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
-                    break;
-            }
-
-            //Show pinned prefs first
-            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
-
         }
         private void UpdateSearch()
         {
@@ -1451,9 +1456,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             UpdateRegistry();
             GetAllPlayerPrefs();
         }
-        #endregion
+#endregion
 
-        #region ADD/Remove Prefs Region
+#region ADD/Remove Prefs Region
         internal void AddPlayerPref(string key, PlayerPrefsType playerPrefsType, object value, bool useEncryption)
         {
             switch (playerPrefsType)
@@ -1573,9 +1578,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
             }
         }
-        #endregion
+#endregion
 
-        #region Import Export Region
+#region Import Export Region
         internal void Import(string importCompanyName, string importProductName)
         {
             string currentCompanyName = PlayerSettings.companyName;
@@ -1809,7 +1814,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             AdvancedPlayerPrefsExportManager.Export(PlayerPrefHolderList, ExportPath, SavePathType);
         }
-        #endregion
+#endregion
     }
 
 }

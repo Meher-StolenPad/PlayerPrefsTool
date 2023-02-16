@@ -3186,7 +3186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b615510fa9cfef4dbf4acd8400fe12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  t: 0
 --- !u!1 &1470230927
 GameObject:
   m_ObjectHideFlags: 0
@@ -3225,7 +3224,7 @@ MonoBehaviour:
   TowersPosition: []
   TowersPositionColors: []
   NoAdsImage: {fileID: 2004132359}
-  TowerPrefab: {fileID: 886275932035167891, guid: fe40f371b6e9d6048a1dff21010a13a8,
+  TowerPrefab: {fileID: 6667558187599344020, guid: fe40f371b6e9d6048a1dff21010a13a8,
     type: 3}
   TowerParent: {fileID: 2106119279}
   Ground: {fileID: 327048847}
