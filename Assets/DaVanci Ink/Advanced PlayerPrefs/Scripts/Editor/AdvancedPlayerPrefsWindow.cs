@@ -1237,24 +1237,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             PlayerPrefHolderList.Clear();
 #if UNITY_EDITOR_OSX
-            GetAllPlayerPrefsMac();
+            GetAllPlayerPrefsMacOS();
 #elif UNITY_EDITOR_WIN
             GetAllPlayerPrefsWindows();
 #else
             throw new NotSupportedException("Advanced PlayerPrefs doesn't support this Unity Editor platform");
 #endif
-            switch (PlayerPrefsSortType)
-            {
-                case SortType.Name:
-                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
-                    break;
-                case SortType.Type:
-                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
-                    break;
-            }
-
-            //Show pinned prefs first
-            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
         }
         private void GetAllPlayerPrefsWindows()
         {
@@ -1317,6 +1305,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 }
             }
+            switch (PlayerPrefsSortType)
+            {
+                case SortType.Name:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
+                    break;
+                case SortType.Type:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
+                    break;
+            }
+
+            //Show pinned prefs first
+            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
         }
         private async void GetAllPlayerPrefsMacOS()
         {
@@ -1404,6 +1404,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 // No existing PlayerPrefs saved (which is valid), so just return an empty array
                 PlayerPrefHolderList = new List<PlayerPrefHolder>();
             }
+            switch (PlayerPrefsSortType)
+            {
+                case SortType.Name:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.Key).ToList();
+                    break;
+                case SortType.Type:
+                    PlayerPrefHolderList = PlayerPrefHolderList.OrderBy(go => go.type).ToList();
+                    break;
+            }
+
+            //Show pinned prefs first
+            PlayerPrefHolderList = PlayerPrefHolderList.OrderByDescending(x => x.Pinned).ToList();
         }
         private void UpdateSearch()
         {
