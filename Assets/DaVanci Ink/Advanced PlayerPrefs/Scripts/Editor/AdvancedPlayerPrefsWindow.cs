@@ -600,9 +600,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.ArrayVector3:
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
-                            //_playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            //_playerPrefsHolderList[i].so.ApplyModifiedProperties();
+                            _playerPrefsHolderList[i].so.Update();
+                           EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
+                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
                     case PlayerPrefsType.ArrayVector3Int:

@@ -342,7 +342,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &121529549
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1881,7 +1881,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &751118041
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2120,7 +2120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &859372781
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2716,8 +2716,8 @@ Camera:
   m_GameObject: {fileID: 1262997522}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0.1216505, b: 0.31132078, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2758,7 +2758,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1262997522}
   m_LocalRotation: {x: 0.31748608, y: -0, z: -0, w: 0.948263}
-  m_LocalPosition: {x: 0, y: 13.9, z: -17.9}
+  m_LocalPosition: {x: 0, y: 21.7, z: -26.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 218831109}
@@ -3135,7 +3135,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1465742214}
   - component: {fileID: 1465742213}
-  - component: {fileID: 1465742215}
   m_Layer: 0
   m_Name: GameObject (1)
   m_TagString: Untagged
@@ -3174,18 +3173,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1465742215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1465742212}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b615510fa9cfef4dbf4acd8400fe12d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1470230927
 GameObject:
   m_ObjectHideFlags: 0
@@ -3412,7 +3399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1659768248
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3993,7 +3980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2004132358
 RectTransform:
   m_ObjectHideFlags: 0

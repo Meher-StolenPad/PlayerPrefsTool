@@ -73,18 +73,18 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             Locked = true;
 
+            var delai = TowersPosition.Count > 5 ? 5f / TowersPosition.Count : 3f / TowersPosition.Count;
             foreach (var position in TowersPosition)
             {
-
                 SpawnTower(position);
-                yield return new WaitForSeconds(3f / TowersPosition.Count);
+                yield return new WaitForSeconds(delai);
             }
             Locked = false;
         }
         private void SpawnTower(Vector3 _position)
         {
             var tower = Instantiate(TowerPrefab, TowerParent);
-            tower.transform.localPosition = _position + Vector3.up * 10; ;
+            tower.transform.localPosition = _position + Vector3.up * 10;
             tower.m_Position = _position;
             tower.MoveToPosition();
         }
@@ -112,7 +112,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
 
         }
-        public void ShowTool()
+        internal void ShowTool()
         {
             // AdvancedPlayerPrefsTool.ShowWindow();
         }
