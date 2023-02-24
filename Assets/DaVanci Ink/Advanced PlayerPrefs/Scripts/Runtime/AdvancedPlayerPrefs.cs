@@ -86,36 +86,54 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static bool showEncryptionWarning;
         private static bool showDecryptionWarning;
         private static bool? autoEncryption = null;
+        //internal static bool? AutoEncryption
+        //{ 
+        //    get
+        //    {
+        //        if(autoEncryption == null)
+        //        {
+        //            if(AdvancedPlayerPrefsSettings.Instance!= null)
+        //            {
+        //                autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+        //                return autoEncryption;
+        //            }
+        //            else
+        //            {
+        //                autoEncryption = false;
+        //                return autoEncryption;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (AdvancedPlayerPrefsSettings.Instance!= null)
+        //            {
+        //                if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
+        //                {
+        //                    autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+        //                }
+        //            }
+
+        //            return autoEncryption;
+        //        }
+        //    }
+        //    set => autoEncryption = value;
+        //}
         internal static bool? AutoEncryption
-        { 
+        {
             get
             {
-                if(autoEncryption == null)
+                if (autoEncryption == null)
                 {
-                    if(AdvancedPlayerPrefsSettings.Instance!= null)
-                    {
-                        autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
-                        return autoEncryption;
-                    }
-                    else
-                    {
-                        autoEncryption = false;
-                        return autoEncryption;
-                    }
+                    autoEncryption = AdvancedPlayerPrefsSettings.Instance?.AutoEncryption ?? false;
                 }
-                else
+                else if (AdvancedPlayerPrefsSettings.Instance != null && autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
                 {
-                    if (AdvancedPlayerPrefsSettings.Instance!= null)
-                    {
-                        if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
-                        {
-                            autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
-                        }
-                    }
-                   
-                    return autoEncryption;
+                    autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
                 }
+
+                return autoEncryption;
             }
+
             set => autoEncryption = value;
         }
         internal static Action OnSettingsCreated;
@@ -123,7 +141,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static Action<string,PlayerPrefsType,bool> OnPreferenceUpdated;
 
         #endregion
-        //DavanciDebug.Warning(AdvancedPlayerPrefsGlobalVariables.NoEncryptionSettingsWarning);
         #region Editor Region
 #if UNITY_EDITOR
         internal static bool SelectSettings(bool select = true)
@@ -185,6 +202,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Get Variable Region
+        /// <summary>
+        /// Gets the integer value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static int GetInt(string key, int defaultValue = int.MinValue)
         {
             int returnInt = PlayerPrefs.GetInt(key, defaultValue);
@@ -193,9 +216,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             {
                 returnInt = GetCosutomTypeValue<int>(key, defaultValue);
             }
-
             return returnInt;
         }
+        /// <summary>
+        /// Gets the Float value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static float GetFloat(string key, float defaultValue = float.MinValue)
         {
             float returnFloat = PlayerPrefs.GetFloat(key, defaultValue);
@@ -207,55 +235,135 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             return returnFloat;
         }
+        /// <summary>
+        /// Gets the string value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static string GetString(string key, string defaultValue = "")
         {
             return DecryptionAES(PlayerPrefs.GetString(key, defaultValue));
         }
+        /// <summary>
+        /// Gets the Vector2 value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static Vector2 GetVector2(string key, Vector2 defaultValue)
         {
             return GetCosutomTypeValue<Vector2>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the Vector3 value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static Vector3 GetVector3(string key, Vector3 defaultValue)
         {
             return GetCosutomTypeValue<Vector3>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the Vector4 value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static Vector4 GetVector4(string key, Vector4 defaultValue)
         {
             return GetCosutomTypeValue<Vector4>(key, defaultValue);
         }
-        public static Color GetColor(string key, Color defaultValue, bool hdr)
+        /// <summary>
+        /// Gets the Color value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
+        public static Color GetColor(string key, Color defaultValue)
         {
             return GetCosutomTypeValue<Color>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the bool value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static bool GetBool(string key, bool defaultValue = false)
         {
             return GetCosutomTypeValue<bool>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the byte value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static byte GetByte(string key, byte defaultValue = byte.MinValue)
         {
             return GetCosutomTypeValue<byte>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the double value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static double GetDouble(string key, double defaultValue = double.MinValue)
         {
             return GetCosutomTypeValue<double>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the long value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static long Getlong(string key, long defaultValue = long.MinValue)
         {
             return GetCosutomTypeValue<long>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the Vector2Int value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static Vector2Int GetVector2Int(string key, Vector2Int defaultValue)
         {
             return GetCosutomTypeValue<Vector2Int>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets the Vector3Int value for the given key in PlayerPrefs
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value to return if the preference doesn't exist.</param>
+        /// <returns>The value of the preference,or the default value if the key is not found in PlayerPrefs.</returns>
         public static Vector3Int GetVector3Int(string key, Vector3Int defaultValue)
         {
             return GetCosutomTypeValue<Vector3Int>(key, defaultValue);
         }
+        /// <summary>
+        /// Gets an array of the specified type from PlayerPrefs with the given key.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the array.</typeparam>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value of the array. If the key is not found in PlayerPrefs, this value will be returned.</param>
+        /// <returns>An array of the specified type, or the default value if the key is not found in PlayerPrefs.</returns>
         public static T[] GetArray<T>(string key,T[] defaultValue = null)
         {   
             var effectiveEnd = defaultValue ?? new T[0];
             return GetCosutomTypeValue<T[]>(key, effectiveEnd);   
         }
+        /// <summary>
+        /// Gets a List of the specified type from PlayerPrefs with the given key.
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the List.</typeparam>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="defaultValue">The default value of the List. If the key is not found in PlayerPrefs, this value will be returned.</param>
+        /// <returns>A List of the specified type, or the default value if the key is not found in PlayerPrefs.</returns>
         public static List<T> GetList<T>(string key, List<T> defaultValue = null)
         {
             var effectiveEnd = defaultValue ?? new List<T>(0);
@@ -264,6 +372,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         #endregion
 
         #region Set Variable Region
+        /// <summary>
+        /// Sets an integer value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetInt(string key, int value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -295,6 +410,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DavanciDebug.Log("Set Int : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Int, useEncryption);
         }
+        /// <summary>
+        /// Sets a float value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetFloat(string key, float value, bool useEncryption = false)
         {
             if (AutoEncryption != null)
@@ -329,6 +451,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Float, useEncryption);
             DavanciDebug.Log("Set Float : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a string value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetString(string key, string value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -365,6 +494,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             PlayerPrefs.SetString(AdvancedPlayerPrefsGlobalVariables.APPsCSDK, value);
         }
+        /// <summary>
+        /// Sets a Vector 3 value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetVector3(string key, Vector3 _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -398,6 +534,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DavanciDebug.Log("Set Vector 3 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
           
         }
+        /// <summary>
+        /// Sets a Vector 3 Int value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetVector3Int(string key, Vector3Int _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -430,6 +573,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Vector3Int, useEncryption);
             DavanciDebug.Log("Set Vector 3 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Byte value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetByte(string key, byte _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -462,6 +612,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DavanciDebug.Log("Set Byte : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
 
         }
+        /// <summary>
+        /// Sets a Double value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetDoube(string key, double _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -493,6 +650,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Double, useEncryption);
             DavanciDebug.Log("Set Double : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Long value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetLong(string key, long _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -524,6 +688,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Long, useEncryption);
             DavanciDebug.Log("Set Long : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Bool value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetBool(string key, bool _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -556,6 +727,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Bool, useEncryption);
             DavanciDebug.Log("Set Bool : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Vector2 value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetVector2(string key, Vector2 _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -588,6 +766,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Vector2, useEncryption);
             DavanciDebug.Log("Set Vector 2 : " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Vector2Int value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetVector2Int(string key, Vector2Int _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -620,6 +805,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Vector2Int, useEncryption);
             DavanciDebug.Log("Set Vector 2 Int: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Vector4 value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetVector4(string key, Vector4 _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -652,6 +844,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Vector4, useEncryption);
             DavanciDebug.Log("Set Vector 4: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a Color value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="hdr">Set true if the Color is HDR Color.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetColor(string key, Color _value, bool hdr, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -694,6 +894,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.Color, useEncryption);
             DavanciDebug.Log("Set Color: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a DateTime value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetDateTime(string key, DateTime _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -726,6 +933,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.DateTime, useEncryption);
             DavanciDebug.Log("Set DateTime: " + key + ", Use Encryption : " + useEncryption, Color.cyan);
         }
+        /// <summary>
+        /// Sets a int array value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, int[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -752,6 +966,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
         }
+        /// <summary>
+        /// Sets a int List value for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<int> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -779,6 +1000,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayInt, useEncryption);
         }
+        /// <summary>
+        /// Sets a float array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, float[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -806,6 +1034,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
         }
+        /// <summary>
+        /// Sets a float List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<float> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -833,6 +1068,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayFloat, useEncryption);
         }
+        /// <summary>
+        /// Sets a float List array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, string[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -860,6 +1102,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
         }
+        /// <summary>
+        /// Sets a string List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<string> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -887,6 +1136,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayString, useEncryption);
         }
+        /// <summary>
+        /// Sets a bool array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, bool[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -914,6 +1170,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
         }
+        /// <summary>
+        /// Sets a bool List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<bool> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -941,6 +1204,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayBool, useEncryption);
         }
+        /// <summary>
+        /// Sets a byte array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, byte[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -968,6 +1238,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
         }
+        /// <summary>
+        /// Sets a byte List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<byte> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -995,6 +1272,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayByte, useEncryption);
         }
+        /// <summary>
+        /// Sets a double array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, double[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1022,6 +1306,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
         }
+        /// <summary>
+        /// Sets a double List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<double> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1049,6 +1340,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayDouble, useEncryption);
         }
+        /// <summary>
+        /// Sets a long array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, long[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1076,6 +1374,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
         }
+        /// <summary>
+        /// Sets a long List array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<long> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1103,6 +1408,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayLong, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector3 array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, Vector3[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1130,6 +1442,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector3, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector3 List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<Vector3> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1166,6 +1485,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, serialzer.type, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector3Int array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, Vector3Int[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1193,6 +1519,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector3Int List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<Vector3Int> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1220,6 +1553,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector3Int, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector2 array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, Vector2[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1247,6 +1587,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector2 List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<Vector2> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1275,6 +1622,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector2, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector2Int array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, Vector2Int[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1302,6 +1656,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector2Int List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<Vector2Int> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1329,6 +1690,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector2Int, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector4 array for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetArray(string key, Vector4[] _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
@@ -1356,6 +1724,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             PlayerPrefs.SetString(key, jsonString);
             OnPreferenceUpdated?.Invoke(key, PlayerPrefsType.ArrayVector4, useEncryption);
         }
+        /// <summary>
+        /// Sets a Vector4 List for the given key in PlayerPrefs with an optional encryption option.
+        /// </summary>
+        /// <param name="key">The key of the preference.</param>
+        /// <param name="_value">The value of the preference.</param>
+        /// <param name="useEncryption">Whether or not to encrypt the preference value using AES encryption.<br/>
+        /// Note: If AutoEncryption is enabled in the settings, you can ignore this parameter.</param>
         public static void SetList(string key, List<Vector4> _value, bool useEncryption = false)
         {
             if (AutoEncryption != null) useEncryption = (bool)AutoEncryption || useEncryption;
