@@ -14,6 +14,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public string key; //set any string of 32 chars
         public string iv = "1234567887654321"; //set any string of 16 chars
         public int CoinsCount;
+        public List<bool> _DailyLogin;
 
         public float TraveledDistance { get; private set; }
         public string PlayerName { get; private set; }
@@ -82,10 +83,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<bool> DailyLogin = new List<bool>(7);
 
             // Save the list to player prefs using AdvancedPlayerPrefs, with encryption enabled
-            AdvancedPlayerPrefs.SetList("DailyLogin", DailyLogin, true);
-
+            AdvancedPlayerPrefs.SetList("DailyLogin", DailyLogin, false);
+            Debug.Log(PlayerPrefs.GetString("DailyLogin"));
             // Retrieve the list from player prefs using AdvancedPlayerPrefs
-            DailyLogin = AdvancedPlayerPrefs.GetList<bool>("DailyLogin");
+            _DailyLogin = AdvancedPlayerPrefs.GetList<bool>("DailyLogin");
 
 
             // Set a float value to the "TraveledDistance" key in AdvancedPlayerPrefs with encryption disabled.

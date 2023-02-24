@@ -86,54 +86,36 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static bool showEncryptionWarning;
         private static bool showDecryptionWarning;
         private static bool? autoEncryption = null;
-        //internal static bool? AutoEncryption
-        //{ 
-        //    get
-        //    {
-        //        if(autoEncryption == null)
-        //        {
-        //            if(AdvancedPlayerPrefsSettings.Instance!= null)
-        //            {
-        //                autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
-        //                return autoEncryption;
-        //            }
-        //            else
-        //            {
-        //                autoEncryption = false;
-        //                return autoEncryption;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (AdvancedPlayerPrefsSettings.Instance!= null)
-        //            {
-        //                if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
-        //                {
-        //                    autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
-        //                }
-        //            }
-
-        //            return autoEncryption;
-        //        }
-        //    }
-        //    set => autoEncryption = value;
-        //}
         internal static bool? AutoEncryption
-        {
+        { 
             get
             {
-                if (autoEncryption == null)
+                if(autoEncryption == null)
                 {
-                    autoEncryption = AdvancedPlayerPrefsSettings.Instance?.AutoEncryption ?? false;
+                    if(AdvancedPlayerPrefsSettings.Instance!= null)
+                    {
+                        autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+                        return autoEncryption;
+                    }
+                    else
+                    {
+                        autoEncryption = false;
+                        return autoEncryption;
+                    }
                 }
-                else if (AdvancedPlayerPrefsSettings.Instance != null && autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
+                else
                 {
-                    autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+                    if (AdvancedPlayerPrefsSettings.Instance!= null)
+                    {
+                        if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
+                        {
+                            autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
+                        }
+                    }
+                   
+                    return autoEncryption;
                 }
-
-                return autoEncryption;
             }
-
             set => autoEncryption = value;
         }
         internal static Action OnSettingsCreated;
@@ -2114,12 +2096,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<int> returnlist = new List<int>();
             foreach (var item in splitString)
             {
-                if (!string.IsNullOrEmpty(item))
+                if(int.TryParse(item,out int result))
                 {
-                    int t = int.Parse(item);
-                    returnlist.Add(t);
+                    returnlist.Add(result);
                 }
-
             }
             int[] outVector3 = returnlist.ToArray();
             return outVector3;
@@ -2133,10 +2113,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<long> returnlist = new List<long>();
             foreach (var item in splitString)
             {
-                if (!string.IsNullOrEmpty(item))
+                if (long.TryParse(item, out long result))
                 {
-                    long t = long.Parse(item);
-                    returnlist.Add(t);
+                    returnlist.Add(result);
                 }
 
             }
@@ -2154,8 +2133,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<float> returnlist = new List<float>();
             foreach (var item in splitString)
             {
-                float t = float.Parse(item);
-                returnlist.Add(t);
+                if (float.TryParse(item, out float result))
+                {
+                    returnlist.Add(result);
+                }
             }
             float[] outVector3 = returnlist.ToArray();
             return outVector3;
@@ -2189,8 +2170,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<bool> returnlist = new List<bool>();
             foreach (var item in splitString)
             {
-                bool t = bool.Parse(item);
-                returnlist.Add(t);
+                if(bool.TryParse(item,out bool result))
+                {
+                    returnlist.Add(result);
+                }
             }
             bool[] outVector3 = returnlist.ToArray();
             return outVector3;
@@ -2204,12 +2187,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<byte> returnlist = new List<byte>();
             foreach (var item in splitString)
             {
-                if (!string.IsNullOrEmpty(item))
-                {
-                    byte t = byte.Parse(item);
-                    returnlist.Add(t);
+                if(byte.TryParse(item,out byte result)) 
+                { 
+                    returnlist.Add(result); 
                 }
-
+          
             }
             byte[] outVector3 = returnlist.ToArray();
             return outVector3;
@@ -2223,11 +2205,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             List<double> returnlist = new List<double>();
             foreach (var item in splitString)
             {
-                if (!string.IsNullOrEmpty(item))
+                if (double.TryParse(item, out double result))
                 {
-                    double t = double.Parse(item);
-                    returnlist.Add(t);
-
+                    returnlist.Add(result);
                 }
             }
             double[] outVector3 = returnlist.ToArray();
