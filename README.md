@@ -1,6 +1,6 @@
 # Advanced Playerprefs
 
-![Game Screenshot1](logo.png)
+![Game Screenshot1](Logo.png)
 
 ## Description
 This repository contains the source code and assets for the Advanced PlayerPrefs Unity asset, a powerful tool that enhances the PlayerPrefs system in Unity. It provides secure and efficient storage and management of player preferences, with advanced encryption techniques and a user-friendly editor tool.
