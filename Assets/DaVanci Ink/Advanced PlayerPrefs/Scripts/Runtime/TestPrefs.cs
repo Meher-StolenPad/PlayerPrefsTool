@@ -84,6 +84,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             // Save the list to player prefs using AdvancedPlayerPrefs, with encryption enabled
             AdvancedPlayerPrefs.SetList("DailyLogin", DailyLogin, false);
+
+            AdvancedPlayerPrefs.SetList("DailyLogin", DailyLogin);
+
+
             Debug.Log(PlayerPrefs.GetString("DailyLogin"));
             // Retrieve the list from player prefs using AdvancedPlayerPrefs
             _DailyLogin = AdvancedPlayerPrefs.GetList<bool>("DailyLogin");

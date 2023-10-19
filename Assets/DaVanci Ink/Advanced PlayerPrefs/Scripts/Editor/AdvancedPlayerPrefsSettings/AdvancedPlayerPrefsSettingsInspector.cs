@@ -68,8 +68,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string Key = string.Empty;
         private bool ShowErrorText => Key.Length == 32;
         private GUIStyle Textstyle;
-        private GUIStyle Intstyle;  
-        private string LogError = "Key must be in 32 bits and Iv must be in 16 bits";
+        private GUIStyle Intstyle;
+        private string LogError = "Key must be 32 bytes and Iv must be 16 bytes";
         private bool ShowKeys;
 
         private void OnEnable()
@@ -98,9 +98,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             if (GUILayout.Button("Refresh Keys", GUILayout.Width(newbuttonWidth)))
             {
                 int dialogResult = EditorUtility.DisplayDialogComplex(
-                  "All Player Prefs encrypted will be undercreptable !",
-                  "Do you want to create a backup file for your current keys before proceed  ?",
-                  "Yes", "Don't Create", "Cancel");
+    "All Player Prefs encrypted will be unencryptable!",
+    "Do you want to create a backup file for your current keys before proceeding?",
+    "Yes", "Don't Create", "Cancel");
 
                 switch (dialogResult)
                 {
@@ -171,9 +171,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     if (ShowErrorText)
                     {
                         int dialogResult = EditorUtility.DisplayDialogComplex(
-                 "All Player Prefs encrypted will be undercreptable !",
-                 "Do you want to create a backup file for your current keys before proceed  ?",
-                 "Yes", "Don't Create", "Cancel");
+ "All Player Prefs encrypted will be unencryptable!",
+ "Do you want to create a backup file for your current keys before proceeding?",
+ "Yes", "Don't Create", "Cancel");
 
                         switch (dialogResult)
                         {
@@ -225,12 +225,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             AutoEncryption = EditorGUILayout.Toggle(toggleContent, AutoEncryption, GUILayout.Width(buttonWidth * 4f));
             GUILayout.Space(10);
 
-            string howToUse = "ATTENTION :  \n " +
-                "  When you change your current key or iv,you will lose all the encrypted data \n" +
-                "  Make Sure before you change the encryption settings to create a backup for your old keys \n" +
-                "  Or use the Advanced playerPrefs tool to Decrypte all your player Prefs,and create a backup file \n" +
-                "  You can upload your playerPrefs settings again and encrypte them with the new keys \n"
-                ;
+            string howToUse = "ATTENTION:\n" +
+                   "When you change your current key or iv, you will lose all the encrypted data.\n" +
+                   "Make sure that before you change the encryption settings, you create a backup of your old keys.\n" +
+                   "Alternatively, use the Advanced PlayerPrefs tool to decrypt all your player prefs and create a backup file.\n" +
+                   "You can then upload your player prefs settings again and encrypt them with the new keys.\n";
+
             EditorGUILayout.HelpBox(howToUse, MessageType.Info);
 
 
@@ -252,8 +252,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             EditorGUILayout.Space(5);
 
-            EditorGUILayout.HelpBox("When you change the Product name or the Company Name on the Player Settings,you will lose all you playerPrefs Saved.\n" +
-                "If Backup Mode is Auto_Update,all you playerPrefs will be MOVED to the new Project automaticly.", MessageType.Info);
+            EditorGUILayout.HelpBox("When you change the Product name or the Company Name on the Player Settings, you will lose all your saved PlayerPrefs. \n" +
+                            "If Backup Mode is set to Auto-Update, all your PlayerPrefs will be automatically moved to the new project.", MessageType.Info);
 
             EditorGUILayout.EndVertical();
 

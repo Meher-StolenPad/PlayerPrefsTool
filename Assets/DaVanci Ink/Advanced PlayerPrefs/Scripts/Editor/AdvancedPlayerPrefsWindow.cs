@@ -238,13 +238,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
 
         #region GUI Region
+        bool isNotFirstDraw = false;
+
         private void OnGUI()
         {
+
             GUILayout.BeginVertical();
             DrawToolbarGUI();
             if (!String.IsNullOrEmpty(SearchText))
             {
                 UpdateSearch();
+
                 DrawPlayerPrefs(FiltredPlayerPrefHolderList, true);
             }
             else
@@ -267,6 +271,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
+            if (!isNotFirstDraw)
+            {
+                isNotFirstDraw = true;
+            }
         }
         private void DrawToolbarGUI()
         {
@@ -281,6 +289,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void DrawSearchField()
         {
+#if UNITY_2020
             float buttonWidth = (EditorGUIUtility.currentViewWidth) / 3f;
 
             SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSeachTextField), GUILayout.Width(buttonWidth + 15));
@@ -289,6 +298,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 SearchText = "";
                 GUI.FocusControl(null);
             }
+#elif UNITY_2021_1_OR_NEWER
+            float buttonWidth = (EditorGUIUtility.currentViewWidth) / 3f;
+
+            SearchText = GUILayout.TextField(SearchText, 25, GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSeachTextField2021), GUILayout.Width(buttonWidth + 15));
+            if (GUILayout.Button("", GUI.skin.FindStyle(AdvancedPlayerPrefsGlobalVariables.ToolbarSearchCancelButton2021)))
+            {
+                SearchText = "";
+                GUI.FocusControl(null);
+            }
+#endif
+
         }
         private void DrawRefreshButton()
         {
@@ -559,6 +579,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
 
@@ -568,6 +591,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+
+                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -577,6 +604,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+
+                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -585,6 +616,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+
+                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -593,7 +628,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
+                            var t = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -601,7 +639,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
-                           EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
+                                if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
+                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
                         break;
@@ -609,6 +650,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -617,6 +661,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -625,6 +672,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -633,6 +683,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -641,6 +694,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -649,6 +705,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
                         {
                             _playerPrefsHolderList[i].so.Update();
+                            if (!isNotFirstDraw)
+                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
+
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
                         }
@@ -1468,9 +1527,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             UpdateRegistry();
             GetAllPlayerPrefs();
         }
-#endregion
+        #endregion
 
-#region ADD/Remove Prefs Region
+        #region ADD/Remove Prefs Region
         internal void AddPlayerPref(string key, PlayerPrefsType playerPrefsType, object value, bool useEncryption)
         {
             switch (playerPrefsType)
@@ -1590,9 +1649,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
             }
         }
-#endregion
+        #endregion
 
-#region Import Export Region
+        #region Import Export Region
         internal void Import(string importCompanyName, string importProductName)
         {
             string currentCompanyName = PlayerSettings.companyName;
@@ -1691,7 +1750,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return tempPlayerPrefs;
         }
-        private static async Task<List<PlayerPrefHolder>>  GetPlayerPrefsMacOS(string _companyName, string _productName)
+        private static async Task<List<PlayerPrefHolder>> GetPlayerPrefsMacOS(string _companyName, string _productName)
         {
             List<PlayerPrefHolder> tempPlayerPrefs = new List<PlayerPrefHolder>();
             string playerPrefsPath;
@@ -1709,7 +1768,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 Dictionary<string, object> parsed = plist as Dictionary<string, object>;
 
                 // Convert the dictionary data into an array of PlayerPrefPairs
-               int i = 0;
+                int i = 0;
                 foreach (KeyValuePair<string, object> pair in parsed)
                 {
                     PlayerPrefHolder playerPrefHolder = ScriptableObject.CreateInstance<PlayerPrefHolder>();
@@ -1723,7 +1782,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         playerPrefHolder.Value = (float)(double)pair.Value;
 
                         // Some float values may come back as double, so convert them back to floats
-                       // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
+                        // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
                     }
                     else if (pair.Value.GetType() == typeof(bool))
                     {
@@ -1788,7 +1847,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             PlayerSettings.productName = importProductName;
             PlayerSettings.companyName = importCompanyName;
-            var prefs = GetPlayerPrefs(importCompanyName,currentCompanyName);
+            var prefs = GetPlayerPrefs(importCompanyName, currentCompanyName);
             int t = prefs.Count;
 
             PlayerSettings.productName = currentProductName;
@@ -1835,7 +1894,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             AdvancedPlayerPrefsExportManager.Export(PlayerPrefHolderList, ExportPath, SavePathType);
         }
-#endregion
+        #endregion
     }
 
 }

@@ -52,22 +52,22 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 m_exportPath = GetPathByType(_savePathType);
 
             var backupstring = CreateBackup(PlayerPrefHolderList);
-            string newBackupString = AdvancedPlayerPrefsGlobalVariables.BackupCreatedText;
-            string playerprefsSpecific = "//Player prefs for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'
-                + "//Created at : " + DateTime.Now + "\n//Created by " + UnityEditor.CloudProjectSettings.userName + '\n';
-            newBackupString += playerprefsSpecific;
 
-            newBackupString += backupstring;
+            string playerprefsSpecific = AdvancedPlayerPrefsGlobalVariables.GetPlayerPrefsSpecificText();
+                //"//Player prefs for product  : " + Application.productName + " , Company :  " + Application.companyName + '\n'
+                //+ "//Created on : " + DateTime.Now + "\n//Created by : " + UnityEditor.CloudProjectSettings.userName + '\n';
+
+            playerprefsSpecific += backupstring;
 
             string ExportPathFile = m_exportPath + "/PPbackup.txt";
             if (!File.Exists(ExportPathFile))
             {
-                File.WriteAllText(ExportPathFile, newBackupString);
+                File.WriteAllText(ExportPathFile, playerprefsSpecific);
             }
             else
             {
                 ExportPathFile = AdvancedPlayerPrefs.NextAvailableFilename(ExportPathFile);
-                File.WriteAllText(ExportPathFile, newBackupString);
+                File.WriteAllText(ExportPathFile, playerprefsSpecific);
             }
             DavanciDebug.Log("File Exported : " + ExportPathFile, Color.green);
         }
