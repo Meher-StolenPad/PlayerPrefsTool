@@ -106,8 +106,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public static string FromColor(Color color)
         {
             return ColorUtility.ToHtmlStringRGB(color);
-            // int r = (int)color.r, g = (int)color.g, b = (int)color.b;
-            // return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
         }
     }
 }

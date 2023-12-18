@@ -585,6 +585,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                             EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
                             _playerPrefsHolderList[i].so.ApplyModifiedProperties();
 
+
                         }
                         break;
                     case PlayerPrefsType.ArrayFloat:

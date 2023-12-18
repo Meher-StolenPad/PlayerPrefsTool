@@ -20,11 +20,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string InitialSavedKey = "i8,arjsmck+0ihxn86cTIYPXDf8i7pLNhLUOLA1cxDej67kESDBwzVARhs_ZfyPi";
         internal const string APPsCSDK = "APPsCSDK";
 
-        internal const string GetStartedLink = "www.google.com";
-        internal const string WebsiteLink = "www.google.com";
+        internal const string GetStartedLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro/#get_started";
+        internal const string WebsiteLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro";
         internal const string ChangeLogsLink = "www.google.com";
-        internal const string DocumentationLink = "www.google.com";
-        internal const string DavanciInkLink = "www.google.com";
+        internal const string DocumentationLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro/#doc";
+        internal const string DavanciInkLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro";
 
         internal const string NoSettingsWarning = "No Advanced PlayerPrefs settings found in the project! Prefs will be saved and loaded without encryption." +
    "Check the Advanced PlayerPrefs Setup Panel or the Advanced PlayerPrefs Tool to create a settings file.";

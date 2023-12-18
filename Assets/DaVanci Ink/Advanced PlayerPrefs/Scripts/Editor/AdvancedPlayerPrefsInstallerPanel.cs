@@ -177,10 +177,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
 
+            GUI.enabled = false;
             if (GUILayout.Button("Changelogs", GUILayout.Width(buttonWidth), GUILayout.Height(30)))
             {
                 Application.OpenURL(AdvancedPlayerPrefsGlobalVariables.ChangeLogsLink);
             }
+            GUI.enabled = true;
 
             GUILayout.FlexibleSpace();
 
