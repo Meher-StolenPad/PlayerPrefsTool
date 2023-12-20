@@ -15,7 +15,6 @@ MonoBehaviour:
   Key: i8rjckih86IYDf7phLLAxD67SDzVhsfy
   Iv: am0nTXiNOcjEwRZi
   SavedKey: i8,arjsmck+0ihxn86cTIYPXDf8i7pLNhLUOLA1cxDej67kESDBwzVARhs_ZfyPi
-  useDeviceKey: 0
-  AutoEncryption: 1
+  AutoEncryption: 0
   debugMode: 1
   backupMode: 1

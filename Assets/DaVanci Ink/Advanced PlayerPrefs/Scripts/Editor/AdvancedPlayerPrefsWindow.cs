@@ -539,179 +539,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.String:
                         _playerPrefsHolderList[i].TempValue = GUILayout.TextArea(_playerPrefsHolderList[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(valueLength));
                         break;
-                    case PlayerPrefsType.Vector3:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3Field("", AdvancedPlayerPrefs.StringToVector3(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Vector2:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2Field("", AdvancedPlayerPrefs.StringToVector2(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Color:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, false, GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.HDRColor:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.ColorField(GUIContent.none, AdvancedPlayerPrefs.StringToColor(_playerPrefsHolderList[i].TempValue.ToString()), true, true, true, GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Vector4:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector4Field("", AdvancedPlayerPrefs.StringToVector4(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Bool:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Toggle("", AdvancedPlayerPrefs.StringToBool(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.DateTime:
-                        GUILayout.TextArea(AdvancedPlayerPrefs.StringToDateTime(_playerPrefsHolderList[i].TempValue.ToString()).ToString(), GUILayout.Width(valueLength));
-                        break;
+                   
                     case PlayerPrefsType.Byte:
                         _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)AdvancedPlayerPrefs.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength)), 0, 255);
-                        break;
-                    case PlayerPrefsType.Double:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.DoubleField(AdvancedPlayerPrefs.StringToDouble(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Long:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.LongField(AdvancedPlayerPrefs.StringToLong(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Vector2Int:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector2IntField("", AdvancedPlayerPrefs.StringToVector2Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.Vector3Int:
-                        _playerPrefsHolderList[i].TempValue = EditorGUILayout.Vector3IntField("", AdvancedPlayerPrefs.StringToVector3Int(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength));
-                        break;
-                    case PlayerPrefsType.ArrayInt:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-
-
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayFloat:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-
-                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-
-                    case PlayerPrefsType.ArrayBool:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-
-                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayByte:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-
-                                _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayDouble:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            var t = EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayVector3:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                                if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayVector3Int:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayString:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayLong:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayVector2:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayVector2Int:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
-                        break;
-                    case PlayerPrefsType.ArrayVector4:
-                        if (_playerPrefsHolderList[i].ValueProperty != null && _playerPrefsHolderList[i].so != null)
-                        {
-                            _playerPrefsHolderList[i].so.Update();
-                            if (!isNotFirstDraw)
-                            _playerPrefsHolderList[i].ValueProperty.isExpanded = false;
-
-                            EditorGUILayout.PropertyField(_playerPrefsHolderList[i].ValueProperty, GUIContent.none, true, GUILayout.Width(valueLength));
-                            _playerPrefsHolderList[i].so.ApplyModifiedProperties();
-                        }
                         break;
                     default:
                         break;
@@ -836,163 +666,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     valuetempString = EditorGUILayout.TextField(valuetempString, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200), GUILayout.MinHeight(100), GUILayout.ExpandWidth(true));
                     value = valuetempString;
                     break;
-                case PlayerPrefsType.Vector2:
-                    valuetempVector2 = EditorGUILayout.Vector2Field("", valuetempVector2, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempVector2;
-                    break;
-                case PlayerPrefsType.Vector3:
-                    valuetempVector3 = EditorGUILayout.Vector3Field("", valuetempVector3, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempVector3;
-                    break;
-                case PlayerPrefsType.Vector4:
-                    valuetempVecotr4 = EditorGUILayout.Vector4Field("", valuetempVecotr4, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempVecotr4;
-                    break;
-                case PlayerPrefsType.Color:
-                    valuetempColor = EditorGUILayout.ColorField(valuetempColor, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempColor;
-                    break;
-                case PlayerPrefsType.Bool:
-                    valuetempBool = EditorGUILayout.ToggleLeft("", valuetempBool, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempBool;
-                    break;
+               
                 case PlayerPrefsType.Byte:
                     valuetempByte = (byte)Mathf.Clamp(EditorGUILayout.IntField((int)valuetempByte, GUILayout.Width(FullWindowWidth * 4f)), 0, 255);
                     value = valuetempByte;
                     break;
-                case PlayerPrefsType.Double:
-                    valuetempDouble = EditorGUILayout.DoubleField(valuetempDouble, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempDouble;
-                    break;
-                case PlayerPrefsType.Long:
-                    valuetempLong = EditorGUILayout.LongField(valuetempLong, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempLong;
-                    break;
-                case PlayerPrefsType.Vector2Int:
-                    valuetempVector2Int = EditorGUILayout.Vector2IntField("", valuetempVector2Int, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempVector2Int;
-                    break;
-                case PlayerPrefsType.Vector3Int:
-                    valuetempVector3Int = EditorGUILayout.Vector3IntField("", valuetempVector3Int, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempVector3Int;
-                    break;
-                case PlayerPrefsType.HDRColor:
-                    valuetempHDRColor = EditorGUILayout.ColorField(GUIContent.none, valuetempHDRColor, true, true, true, GUILayout.Width(FullWindowWidth * 4f));
-                    value = valuetempHDRColor;
-                    break;
-                case PlayerPrefsType.DateTime:
-                    value = DateTime.MinValue;
-                    GUILayout.TextArea(valueDateTime.ToString(), EditorStyles.toolbarTextField, GUILayout.Width(FullWindowWidth * 4f));
-                    break;
-                case PlayerPrefsType.ArrayInt:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayInt");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayFloat:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayFloat");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayBool:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayBool");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayDouble:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayDouble");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayByte:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayByte");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayVector3:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayVector3");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayVector3Int:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayVector3Int");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayString:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayString");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayLong:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayLong");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayVector2:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayVector2");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayVector2Int:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayVector2Int");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-                case PlayerPrefsType.ArrayVector4:
-                    so.Update();
-                    ValueProperty = so.FindProperty("arrayVector4");
-                    if (ValueProperty != null)
-                    {
-                        EditorGUILayout.PropertyField(ValueProperty, GUIContent.none, true, GUILayout.Width(FullWindowWidth * 4));
-                        so.ApplyModifiedProperties();
-                    }
-                    break;
-
             }
             EditorGUILayout.Space(3);
             GUILayout.EndVertical();
@@ -1082,30 +760,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             valuetempint = 0;
             valuetempfloat = 0;
             valuetempString = string.Empty;
-            valuetempDouble = 0;
-            valuetempLong = 0;
             valuetempByte = 0;
-            valuetempVector2 = Vector2.zero;
-            valuetempVector2Int = Vector2Int.zero;
-            valuetempVector3 = Vector3.zero;
-            valuetempVector3Int = Vector3Int.zero;
-            valuetempVector3Int = Vector3Int.zero;
-            valuetempVecotr4 = Vector4.zero;
-            valuetempColor = Color.white;
-            valuetempHDRColor = Color.white;
-            valuetempBool = false;
-            valueDateTime = DateTime.Now;
-            arrayInt = new int[0];
-            arrayFloat = new float[0];
-            arrayBool = new bool[0];
-            arrayByte = new byte[0];
-            arrayDouble = new double[0];
-            arrayLong = new long[0];
-            arrayVector3 = new Vector3[0];
-            arrayVector3Int = new Vector3Int[0];
-            arrayVector2 = new Vector2[0];
-            arrayVector2Int = new Vector2Int[0];
-            arrayVector4 = new Vector4[0];
         }
 
         private void DrawExportFields()
@@ -1544,78 +1199,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.String:
                     AdvancedPlayerPrefs.SetString(key, (string)value, useEncryption);
                     break;
-                case PlayerPrefsType.Vector2:
-                    AdvancedPlayerPrefs.SetVector2(key, (Vector2)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Vector3:
-                    AdvancedPlayerPrefs.SetVector3(key, (Vector3)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Vector4:
-                    AdvancedPlayerPrefs.SetVector4(key, (Vector4)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Color:
-                    AdvancedPlayerPrefs.SetColor(key, (Color)value, false, useEncryption);
-                    break;
-                case PlayerPrefsType.HDRColor:
-                    AdvancedPlayerPrefs.SetColor(key, (Color)value, true, useEncryption);
-                    break;
-                case PlayerPrefsType.Bool:
-                    AdvancedPlayerPrefs.SetBool(key, (bool)value, useEncryption);
-                    break;
+               
                 case PlayerPrefsType.Byte:
                     AdvancedPlayerPrefs.SetByte(key, (byte)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Double:
-                    AdvancedPlayerPrefs.SetDoube(key, (double)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Long:
-                    AdvancedPlayerPrefs.SetLong(key, (long)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Vector2Int:
-                    AdvancedPlayerPrefs.SetVector2Int(key, (Vector2Int)value, useEncryption);
-                    break;
-                case PlayerPrefsType.Vector3Int:
-                    AdvancedPlayerPrefs.SetVector3Int(key, (Vector3Int)value, useEncryption);
-                    break;//valueArrayInt
-                case PlayerPrefsType.ArrayInt:
-
-                    AdvancedPlayerPrefs.SetArray(key, arrayInt, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayFloat:
-
-                    AdvancedPlayerPrefs.SetArray(key, arrayFloat, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayBool:
-
-                    AdvancedPlayerPrefs.SetArray(key, arrayBool, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayDouble:
-                    AdvancedPlayerPrefs.SetArray(key, arrayDouble, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayByte:
-                    AdvancedPlayerPrefs.SetArray(key, arrayByte, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayVector3:
-                    AdvancedPlayerPrefs.SetArray(key, arrayVector3, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayVector3Int:
-                    AdvancedPlayerPrefs.SetArray(key, arrayVector3Int, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayString:
-                    AdvancedPlayerPrefs.SetArray(key, arrayString, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayLong:
-                    AdvancedPlayerPrefs.SetArray(key, arrayLong, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayVector2:
-                    AdvancedPlayerPrefs.SetArray(key, arrayVector2, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayVector2Int:
-                    AdvancedPlayerPrefs.SetArray(key, arrayVector2Int, useEncryption);
-                    break;
-                case PlayerPrefsType.ArrayVector4:
-                    AdvancedPlayerPrefs.SetArray(key, arrayVector4, useEncryption);
-                    break;
+                    break;             
                 default:
                     break;
             }
@@ -1781,13 +1368,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     {
                         playerPrefHolder.type = PlayerPrefsType.Float;
                         playerPrefHolder.Value = (float)(double)pair.Value;
-
-                        // Some float values may come back as double, so convert them back to floats
-                        // tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = (float)(double)pair.Value });
                     }
                     else if (pair.Value.GetType() == typeof(bool))
                     {
-                        // Unity PlayerPrefs API doesn't allow bools, so ignore them
                     }
                     else if (pair.Value.GetType() == typeof(int) || pair.Value.GetType() == typeof(long))
                     {
@@ -1810,7 +1393,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                         playerPrefHolder.type = returnValues.PlayerPrefsType;
                         playerPrefHolder.isEncrypted = returnValues.IsEncrypted;
-                        //tempPlayerPrefs.Add(new PlayerPrefHolder() { Key = pair.Key, Value = pair.Value });
                     }
 
                     playerPrefHolder.Value = savedValue;
@@ -1840,7 +1422,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return GetPlayerPrefsWindows(importCompanyName, importProductName);
 #endif
         }
-
         internal static void ImportFrom(string importCompanyName, string importProductName)
         {
             string currentCompanyName = PlayerSettings.companyName;
@@ -1883,8 +1464,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private void GetBackupFromFile(string tempPath)
         {
-            //AdvancedPlayerPrefsExportManager.m_exportPath = tempExportPath;
-
             var backupPairs = AdvancedPlayerPrefsExportManager.ReadBackupFile(tempPath);
             if (backupPairs != null)
             {

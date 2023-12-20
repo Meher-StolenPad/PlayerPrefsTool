@@ -38,7 +38,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private void OnEnable()
         {
             Logo = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/Logo.png", typeof(Texture));
-            cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsPROCover.png", typeof(Texture));
+            cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsCover.png", typeof(Texture));
 
             string developedByName = EditorGUIUtility.isProSkin ? "DavanciButtonPro.png" : "DavanciButton.png";
             developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/"+ developedByName, typeof(Texture));

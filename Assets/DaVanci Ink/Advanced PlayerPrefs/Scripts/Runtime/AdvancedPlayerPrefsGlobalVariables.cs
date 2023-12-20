@@ -18,13 +18,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal const string InitialKey = "i8rjckih86IYDf7phLLAxD67SDzVhsfy";
         internal const string InitialIv = "am0nTXiNOcjEwRZi";
         internal const string InitialSavedKey = "i8,arjsmck+0ihxn86cTIYPXDf8i7pLNhLUOLA1cxDej67kESDBwzVARhs_ZfyPi";
-        internal const string APPsCSDK = "APPsCSDK";
 
-        internal const string GetStartedLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro/#get_started";
-        internal const string WebsiteLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro";
+        internal const string GetStartedLink = "https://tools.davanciink.com/AdvancedPlayerPrefs/#get_started";
+        internal const string WebsiteLink = "https://tools.davanciink.com/AdvancedPlayerPrefs";
         internal const string ChangeLogsLink = "www.google.com";
-        internal const string DocumentationLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro/#doc";
-        internal const string DavanciInkLink = "https://tools.davanciink.com/AdvancedPlayerPrefsPro";
+        internal const string DocumentationLink = "https://tools.davanciink.com/AdvancedPlayerPrefs/#doc";
+        internal const string DavanciInkLink = "https://tools.davanciink.com/AdvancedPlayerPrefs";
 
         internal const string NoSettingsWarning = "No Advanced PlayerPrefs settings found in the project! Prefs will be saved and loaded without encryption." +
    "Check the Advanced PlayerPrefs Setup Panel or the Advanced PlayerPrefs Tool to create a settings file.";
@@ -59,71 +58,17 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
         internal static readonly string[] EnumList = new string[]
         {
-            "Legacy/Int",
-            "Legacy/Float",
-            "Legacy/String",
-
-            "Primitive/Byte",
-            "Primitive/Bool",
-            "Primitive/Double",
-            "Primitive/Long",
-
-            "Vectors/Vector 2",
-            "Vectors/Vector 2 Int",
-            "Vectors/Vector 3",
-            "Vectors/Vector 3 Int",
-            "Vectors/Vector 4",
-
-            "Colors/Color",
-            "Colors/HDRColor",
-            "DateTime",
-
-            "Collections/Primitives/Int",
-            "Collections/Primitives/Float",
-            "Collections/Primitives/String",
-            "Collections/Primitives/Double",
-            "Collections/Primitives/Long",
-            "Collections/Primitives/Bool",
-            "Collections/Primitives/Byte",
-            "Collections/Vectors/Vector3",
-            "Collections/Vectors/Vector3 Int",
-            "Collections/Vectors/Vector2",
-            "Collections/Vectors/Vector2 Int",
-            "Collections/Vectors/Vector4"
+            "Int",
+            "Float",
+            "String",
+            "Byte"
         };
         internal static readonly string[] TypeList = new string[]
        {
             "Int",
             "Float",
             "String",
-
-            "Byte",
-            "Bool",
-            "Double",
-            "Long",
-
-            "Vector 2",
-            "Vector2 Int",
-            "Vector 3",
-            "Vector3 Int",
-            "Vector 4",
-
-            "Color",
-            "HDR Color",
-            "DateTime",
-
-            "Int[]",
-            "Float[]",
-            "String[]",
-            "Double[]",
-            "Long[]",
-            "Bool[]",
-            "Byte[]",
-            "Vector3[]",
-            "Vector3Int[]",
-            "Vector2[]",
-            "Vector2Int[]",
-            "Vector4[]"
+            "Byte"
        };
         internal static readonly string[] PathTypeList = new string[]
         {

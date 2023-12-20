@@ -28,7 +28,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     if (AdvancedPlayerPrefsSettings.Instance != null)
                     {
                         AdvancedPlayerPrefsSettings.Instance.SaveOldKeys();
-                        AdvancedPlayerPrefsSettings.Instance.Initialize();
 
                     }
                     break;

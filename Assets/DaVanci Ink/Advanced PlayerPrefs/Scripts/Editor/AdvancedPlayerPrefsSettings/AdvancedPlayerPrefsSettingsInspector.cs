@@ -21,15 +21,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             get => EditorPrefs.GetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
             set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
         }
-        private bool UseDeviceKey
-        {
-            get => APPSettings.useDeviceKey;
-            set
-            {
-                APPSettings.useDeviceKey = value;
-                if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
-            }
-        }
         private bool AutoEncryption 
         {
             get => APPSettings.AutoEncryption;
@@ -256,19 +247,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                             "If Backup Mode is set to Auto-Update, all your PlayerPrefs will be automatically moved to the new project.", MessageType.Info);
 
             EditorGUILayout.EndVertical();
-
-
-            EditorGUILayout.Space(5);
-
-            DrawHorizontalLine(Color.grey);
-
-            DisplayRuntimeSettings = EditorGUILayout.BeginFoldoutHeaderGroup(DisplayRuntimeSettings, "Runtime Settings");
-
-            if (DisplayRuntimeSettings)
-            {
-                UseDeviceKey = EditorGUILayout.Toggle("Use Device Key", UseDeviceKey, GUILayout.Width(buttonWidth * 4f));
-               
-            }
         }
        
         private void DrawHorizontalLine(Color color)

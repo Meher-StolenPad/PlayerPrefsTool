@@ -43,19 +43,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
     internal class AdvancedPlayerPrefsSettings : DavanciInkSingleton<AdvancedPlayerPrefsSettings>
     {
-        internal override void OnInitialize()
-        {
-#if UNITY_EDITOR
-            if (Application.isPlaying)
-                CheckKey();
-#else
-                CheckKey();
-#endif
-        }
-        internal void Initialize()
-        {
-            CheckKey();
-        }
         private readonly char[] Chars = AdvancedPlayerPrefsGlobalVariables.CharsKey.ToCharArray();
 
         public string Key = AdvancedPlayerPrefsGlobalVariables.InitialKey;
@@ -66,7 +53,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private string OldIv = AdvancedPlayerPrefsGlobalVariables.InitialIv;
         private string OldSavedKey = AdvancedPlayerPrefsGlobalVariables.InitialSavedKey;
 #endif
-        [HideInInspector] public bool useDeviceKey;
         [HideInInspector] public bool AutoEncryption;
 
         [HideInInspector] public DebugMode debugMode = DebugMode.EditorOnly;
@@ -89,7 +75,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal void SaveKey()
         {
             SetSavedKeyFromKeys();
-            AdvancedPlayerPrefs.SetAPPsCSDK(SavedKey);
         }
         internal void GetKeysFromSavedKey()
         {
@@ -109,9 +94,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
             }
         }
-        //        Saved Key : 2v&Vbs.0d8@9szBg5h!cc9gWyr.F2J/vxj=dRHbckvpVfBFmyLGElqlMtXp1CJqg
-        //Key : 2vbsd8sz5hc9yr2JxjRHkvfByLlqtXCJ
-        //IV : V09gcWFvdcVmEM1g
         internal void SetSavedKeyFromKeys()
         {
             string randomString = CreateRandomString(32);
@@ -187,28 +169,6 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             return result.ToString();
         }
-
-        internal void CheckKey()
-        {
-            if (useDeviceKey)
-            {
-                if (AdvancedPlayerPrefs.HasAPPsCSDK())
-                {
-                    //load old saved key
-                    DavanciDebug.Log("Load Device Key!", Color.grey);
-                    SavedKey = AdvancedPlayerPrefs.GetAPPsCSDK();
-                    GetKeysFromSavedKey();
-                }
-                else
-                {
-                    DavanciDebug.Log("Device Key Created !", Color.grey);
-                    // create new key and save it
-                    RefreshKeys();
-                    SaveKey();
-                }
-            }
-        }
-
 #if UNITY_EDITOR
         public void SaveOldKeys()
         {
