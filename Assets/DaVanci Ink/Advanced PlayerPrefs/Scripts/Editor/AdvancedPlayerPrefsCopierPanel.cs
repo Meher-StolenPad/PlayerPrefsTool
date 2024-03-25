@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -29,10 +28,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static bool IsActive;
 
         internal static int PlayerPrefsFound;
-        internal static string CompanyName; 
-        internal static string ProductName; 
+        internal static string CompanyName;
+        internal static string ProductName;
 
-        internal static void Init(int count,string companyName,string productName)
+        internal static void Init(int count, string companyName, string productName)
         {
             PlayerPrefsFound = count;
             CompanyName = companyName;
@@ -47,7 +46,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsPROCover.png", typeof(Texture));
 
             string developedByName = EditorGUIUtility.isProSkin ? "DavanciButtonPro.png" : "DavanciButton.png";
-            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/"+ developedByName, typeof(Texture));
+            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/" + developedByName, typeof(Texture));
         }
         void OnDisable()
         {
@@ -90,7 +89,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 120;
-            GUILayout.Space((buttonWidth*3.5f - 20) / 15 - (iButtonWidth - 5) / 10);
+            GUILayout.Space((buttonWidth * 3.5f - 20) / 15 - (iButtonWidth - 5) / 10);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
@@ -133,12 +132,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             GUILayout.Label(
                 "NOTE : When you change the " +
-                GetStyledText("ProductName/CompanyName", EditorGUIUtility.isProSkin ? Color.grey : Color.black ) +
+                GetStyledText("ProductName/CompanyName", EditorGUIUtility.isProSkin ? Color.grey : Color.black) +
                 "of unity project,You will lose all your current PlayerPrefs.\n\n" +
                 "With Advanced PlayerPrefs editor tool,you can immegrate all your PlayerPrefs.If you close this panel,the process will be canceled.\n\n" +
                  GetStyledText(PlayerPrefsFound.ToString(), EditorGUIUtility.isProSkin ? Color.grey : Color.black) +
                 " Player Prefs Can be moved from " +
-                GetStyledText(ProductName+"/"+CompanyName+
+                GetStyledText(ProductName + "/" + CompanyName +
                 "\n\nDo you want to import them ? ", EditorGUIUtility.isProSkin ? Color.grey : Color.black)
                 , style3, GUILayout.Width(buttonWidth), GUILayout.Height(155));
             DrawHorizontalLine(Color.gray);
@@ -192,7 +191,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private string GetStyledText(string text, Color color)
         {
-            return "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" + text +" "+ "</color>";
+            return "<color=#" + ColorUtility.ToHtmlStringRGBA(color) + ">" + text + " " + "</color>";
         }
     }
 }

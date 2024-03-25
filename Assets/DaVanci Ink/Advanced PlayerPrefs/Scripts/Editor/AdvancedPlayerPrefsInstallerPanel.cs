@@ -1,6 +1,5 @@
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
 {
@@ -41,7 +40,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             cover = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/AdvancedPlayerPrefsCover.png", typeof(Texture));
 
             string developedByName = EditorGUIUtility.isProSkin ? "DavanciButtonPro.png" : "DavanciButton.png";
-            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/"+ developedByName, typeof(Texture));
+            developedBy = (Texture)AssetDatabase.LoadAssetAtPath("Assets/DaVanci Ink/Advanced PlayerPrefs/Sprites/" + developedByName, typeof(Texture));
 
             isAlreadyInstalled = AdvancedPlayerPrefs.SelectSettings(false);
 
@@ -51,7 +50,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             SelectButtonNormal = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonColor);
             SelectButtonHover = MakeBackgroundTexture(10, 10, AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor);
         }
-        
+
         private void OnGUI()
         {
             var oldBackgroundColor = GUI.backgroundColor;
@@ -60,7 +59,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             style2.fontStyle = FontStyle.Bold;
             style2.alignment = TextAnchor.MiddleCenter;
             style2.normal.textColor = Color.white;
-           // style2.normal.background = Texture2D.whiteTexture;
+            // style2.normal.background = Texture2D.whiteTexture;
 
             GUIStyle style3 = new GUIStyle(EditorStyles.objectFieldThumb);
 
@@ -83,7 +82,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             DrawHorizontalLine(Color.gray);
             GUILayout.BeginHorizontal();
             int iButtonWidth = 120;
-            GUILayout.Space((buttonWidth-20) / 15 - (iButtonWidth-5) / 10);
+            GUILayout.Space((buttonWidth - 20) / 15 - (iButtonWidth - 5) / 10);
 
 
             style2.hover.textColor = EditorGUIUtility.isProSkin ? AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColor : AdvancedPlayerPrefsGlobalVariables.ShowAdvancedPlayerPrefsTextColorNormal;
@@ -102,9 +101,9 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
 
             style2.hover.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonTextColor;
-           // style2.normal.background = SelectButtonNormal;
+            // style2.normal.background = SelectButtonNormal;
 
-           // style2.hover.background = SelectButtonHover;
+            // style2.hover.background = SelectButtonHover;
             style2.normal.textColor = AdvancedPlayerPrefsGlobalVariables.SetupButtonColor;
 
             GUILayout.Space(5);
@@ -194,7 +193,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUILayout.Space(3);
 
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Space((buttonWidth+10)/2);
+            GUILayout.Space((buttonWidth + 10) / 2);
 
             if (GUILayout.Button(developedBy, GUILayout.Width(buttonWidth), GUILayout.Height(50)))
             {

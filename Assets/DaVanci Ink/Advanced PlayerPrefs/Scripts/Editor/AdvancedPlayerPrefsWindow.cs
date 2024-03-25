@@ -539,7 +539,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     case PlayerPrefsType.String:
                         _playerPrefsHolderList[i].TempValue = GUILayout.TextArea(_playerPrefsHolderList[i].TempValue.ToString(), EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(valueLength));
                         break;
-                   
+
                     case PlayerPrefsType.Byte:
                         _playerPrefsHolderList[i].TempValue = Mathf.Clamp(EditorGUILayout.IntField((int)AdvancedPlayerPrefs.StringToByte(_playerPrefsHolderList[i].TempValue.ToString()), GUILayout.Width(valueLength)), 0, 255);
                         break;
@@ -666,7 +666,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     valuetempString = EditorGUILayout.TextField(valuetempString, GUILayout.ExpandHeight(true), GUILayout.MinWidth(200), GUILayout.MinHeight(100), GUILayout.ExpandWidth(true));
                     value = valuetempString;
                     break;
-               
+
                 case PlayerPrefsType.Byte:
                     valuetempByte = (byte)Mathf.Clamp(EditorGUILayout.IntField((int)valuetempByte, GUILayout.Width(FullWindowWidth * 4f)), 0, 255);
                     value = valuetempByte;
@@ -1199,10 +1199,10 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.String:
                     AdvancedPlayerPrefs.SetString(key, (string)value, useEncryption);
                     break;
-               
+
                 case PlayerPrefsType.Byte:
                     AdvancedPlayerPrefs.SetByte(key, (byte)value, useEncryption);
-                    break;             
+                    break;
                 default:
                     break;
             }

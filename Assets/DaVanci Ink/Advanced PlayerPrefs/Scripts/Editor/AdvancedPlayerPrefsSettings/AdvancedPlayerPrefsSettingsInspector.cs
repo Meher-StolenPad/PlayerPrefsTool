@@ -1,7 +1,3 @@
-using Codice.Utils;
-using System;
-using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace DaVanciInk.AdvancedPlayerPrefs
@@ -17,11 +13,11 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplaySetKeys), value);
         }
         private static bool DisplayRuntimeSettings
-        {   
+        {
             get => EditorPrefs.GetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings));
             set => EditorPrefs.SetBool(nameof(AdvancedPlayerPrefsSettingsInspector) + "." + nameof(DisplayRuntimeSettings), value);
         }
-        private bool AutoEncryption 
+        private bool AutoEncryption
         {
             get => APPSettings.AutoEncryption;
             set
@@ -32,14 +28,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         private DebugMode _DebugMode
         {
-            get => APPSettings.debugMode;    
+            get => APPSettings.debugMode;
             set
             {
                 APPSettings.debugMode = value;
                 if (!EditorUtility.IsDirty(APPSettings)) EditorUtility.SetDirty(APPSettings);
             }
         }
-        private BackupMode _BackupMode   
+        private BackupMode _BackupMode
         {
             get => APPSettings.backupMode;
             set
@@ -79,7 +75,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             GUI.enabled = false;
             base.OnInspectorGUI();
             GUILayout.Space(10);
-          
+
             GUI.enabled = true;
             GUILayout.FlexibleSpace();
             GUILayout.Space(10);
@@ -141,7 +137,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Label("Key", GUILayout.Width(buttonWidth * 0.1f));
                 Key = GUILayout.TextArea(Key, EditorStyles.textArea, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true), GUILayout.Width(buttonWidth * 0.9f));
-                if(Key.Length != 32)
+                if (Key.Length != 32)
                 {
                     Intstyle.normal.textColor = Color.red;
                 }
@@ -149,7 +145,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 {
                     Intstyle.normal.textColor = EditorGUIUtility.isProSkin ? Color.white : Color.black;
                 }
-                EditorGUILayout.IntField(Key.Length,Intstyle, GUILayout.Width(buttonWidth * 0.1f));
+                EditorGUILayout.IntField(Key.Length, Intstyle, GUILayout.Width(buttonWidth * 0.1f));
                 EditorGUILayout.EndHorizontal();
                 GUILayout.Space(5);
 
@@ -191,7 +187,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
                 if (GUILayout.Button("Import Keys", GUILayout.Width(buttonWidth)))
                 {
-                   Key= APPSettings.ReadBackupFile();
+                    Key = APPSettings.ReadBackupFile();
                 }
                 EditorGUILayout.EndHorizontal();
 
@@ -248,7 +244,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
 
             EditorGUILayout.EndVertical();
         }
-       
+
         private void DrawHorizontalLine(Color color)
         {
             var horizontalLine = new GUIStyle();

@@ -12,14 +12,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static string CurrentProductName;
 
         private static string HolderCompanyName;
-        private static string HolderProductName;    
+        private static string HolderProductName;
 
         private static float LastCheckTime;
         private static bool Subscribed;
         private static bool InProgress;
         private static float LastChangeTime;
 
-            
+
         [InitializeOnLoadMethod]
         private static void Initialize()
         {
@@ -55,7 +55,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     EditorApplication.update += CheckForProductNameChange;
                     Subscribed = true;
                 }
-            }  
+            }
         }
         private static void CheckForProductNameChange()
         {
@@ -85,7 +85,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     }
 
                 }
-                
+
                 LastCheckTime = currentTime;
             }
         }
@@ -105,7 +105,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                         }
                         else
                         {
-                            AdvancedPlayerPrefsCopierPanel.Init(playerPrefsCount, previousCompanyName,previousProductName);
+                            AdvancedPlayerPrefsCopierPanel.Init(playerPrefsCount, previousCompanyName, previousProductName);
                             AdvancedPlayerPrefsCopierPanel.ShowWindow();
                             LastChangeTime = currentTime;
                         }

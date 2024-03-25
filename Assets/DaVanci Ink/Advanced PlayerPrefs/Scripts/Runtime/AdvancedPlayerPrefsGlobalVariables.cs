@@ -122,8 +122,8 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static readonly Color YellowebugColor = new Color32(150, 0, 112, 255);
         internal static readonly Color ProYellowDebugColor = new Color32(255, 235, 4, 255);
 
-        internal static readonly Color PinButtonColor = new Color32(15,211,255,255);
-        internal static readonly Color UnpinButtonColor = new Color32(70,177,201,255);
+        internal static readonly Color PinButtonColor = new Color32(15, 211, 255, 255);
+        internal static readonly Color UnpinButtonColor = new Color32(70, 177, 201, 255);
 
         internal const string SamplesPackagePath = "Assets/DaVanci Ink/Advanced PlayerPrefs/Samples.unitypackage";
 
@@ -132,7 +132,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         internal static string GetPlayerPrefsSpecificText()
         {
             return BackupCreatedText +
-                "//Product : " + Application.productName + '\n'+
+                "//Product : " + Application.productName + '\n' +
                 "//Company :  " + Application.companyName + '\n'
                 + "//Created on : " + DateTime.Now +
                 "\n//Created by : " + UnityEditor.CloudProjectSettings.userName + '\n';

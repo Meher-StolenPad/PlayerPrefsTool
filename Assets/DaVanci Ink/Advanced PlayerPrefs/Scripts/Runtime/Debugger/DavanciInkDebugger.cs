@@ -18,7 +18,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         {
             get
             {
-                if(!isProSet)
+                if (!isProSet)
                 {
 #if UNITY_EDITOR
                     isProMode = UnityEditor.EditorGUIUtility.isProSkin;
@@ -50,7 +50,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             }
             else if (color.Equals(Color.red))
             {
-                color =IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProRedDebugColor : AdvancedPlayerPrefsGlobalVariables.RedDebugColor;
+                color = IsProMode ? AdvancedPlayerPrefsGlobalVariables.ProRedDebugColor : AdvancedPlayerPrefsGlobalVariables.RedDebugColor;
             }
             else if (color.Equals(Color.grey))
             {

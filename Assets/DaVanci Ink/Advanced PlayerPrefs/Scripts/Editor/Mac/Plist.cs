@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 namespace DaVanciInk.AdvancedPlayerPrefs
-{   
+{
     public static class Plist
     {
         private static List<int> offsetTable = new List<int>();

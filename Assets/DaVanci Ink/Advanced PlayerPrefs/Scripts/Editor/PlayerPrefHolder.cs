@@ -1,6 +1,4 @@
-using Newtonsoft.Json;
 using System;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -45,7 +43,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         public Vector2Int[] arrayVector2Int;
         public Vector2[] arrayVector2;
         public Vector4[] arrayVector4 = null;
-        public ushort originalIndex; 
+        public ushort originalIndex;
         public void RefreshField()
         {
             Init();
@@ -80,7 +78,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 case PlayerPrefsType.String:
                     AdvancedPlayerPrefs.SetString(Key, Value.ToString(), isEncrypted);
                     break;
-            
+
                 case PlayerPrefsType.Byte:
                     AdvancedPlayerPrefs.SetByte(Key, AdvancedPlayerPrefs.StringToByte(Value.ToString()), isEncrypted);
                     break;
@@ -129,13 +127,13 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                     break;
                 case PlayerPrefsType.String:
                     returnValue = String.Equals(TempValue, Value);
-                    break;  
+                    break;
                 case PlayerPrefsType.Byte:
                     var byc = AdvancedPlayerPrefs.StringToByte(Value.ToString());
                     var byt = AdvancedPlayerPrefs.StringToByte(TempValue.ToString());
                     returnValue = byc == byt;
                     break;
-               
+
                 default:
                     break;
             }

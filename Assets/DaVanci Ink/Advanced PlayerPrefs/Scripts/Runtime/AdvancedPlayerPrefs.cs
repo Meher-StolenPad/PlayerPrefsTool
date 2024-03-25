@@ -7,8 +7,6 @@ using System.Text;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using System.Runtime.CompilerServices;
-using System.Linq;
-using System.Text.RegularExpressions;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -60,12 +58,12 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         private static bool showDecryptionWarning;
         private static bool? autoEncryption = null;
         internal static bool? AutoEncryption
-        { 
+        {
             get
             {
-                if(autoEncryption == null)
+                if (autoEncryption == null)
                 {
-                    if(AdvancedPlayerPrefsSettings.Instance!= null)
+                    if (AdvancedPlayerPrefsSettings.Instance != null)
                     {
                         autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
                         return autoEncryption;
@@ -78,14 +76,14 @@ namespace DaVanciInk.AdvancedPlayerPrefs
                 }
                 else
                 {
-                    if (AdvancedPlayerPrefsSettings.Instance!= null)
+                    if (AdvancedPlayerPrefsSettings.Instance != null)
                     {
                         if (autoEncryption != AdvancedPlayerPrefsSettings.Instance.AutoEncryption)
                         {
                             autoEncryption = AdvancedPlayerPrefsSettings.Instance.AutoEncryption;
                         }
                     }
-                   
+
                     return autoEncryption;
                 }
             }
@@ -93,7 +91,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
         }
         internal static Action OnSettingsCreated;
 
-        internal static Action<string,PlayerPrefsType,bool> OnPreferenceUpdated;
+        internal static Action<string, PlayerPrefsType, bool> OnPreferenceUpdated;
 
         #endregion
         #region Editor Region
@@ -201,7 +199,7 @@ namespace DaVanciInk.AdvancedPlayerPrefs
             return DecryptionAES(PlayerPrefs.GetString(key, defaultValue));
         }
 
-      
+
         /// <summary>
         /// Gets the byte value for the given key in PlayerPrefs
         /// </summary>
